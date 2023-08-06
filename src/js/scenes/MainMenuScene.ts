@@ -24,7 +24,7 @@ export default class MainMenuScene extends Phaser.Scene {
         if (this.clickCounter === 1) {
             // Set the background and show text
             this.createBackground();
-            this.sound.play('mainMusic', { loop: true });
+            this.sound.play('mainMusic', { loop: true, volume: 0.1 });
             this.mainMenuText = this.add.text(255, 560, 'Press any key to enter\nthe city...', {
                 fontSize: '20px',
                 color: '#000',

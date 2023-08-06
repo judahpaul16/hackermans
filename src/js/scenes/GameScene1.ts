@@ -12,6 +12,7 @@ export default class GameScene1 extends Phaser.Scene {
     private guideNPC?: NPC;
     private enemy?: Enemy;
     private chatBubble?: Phaser.GameObjects.Sprite;
+    private dialogueText?: Phaser.GameObjects.Text;
     private platforms?: Phaser.Physics.Arcade.StaticGroup;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private debugKey?: Phaser.Input.Keyboard.Key;
@@ -95,7 +96,7 @@ export default class GameScene1 extends Phaser.Scene {
         this.moveLeftKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.moveRightKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.jumpKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        
+
         // HUD setup
         createHUD(this, this.player);
 
@@ -241,21 +242,28 @@ export default class GameScene1 extends Phaser.Scene {
     private handleInteract(scene: Phaser.Scene, player: Player, npc: NPC, interactKey: Phaser.Input.Keyboard.Key) {
 
         if (Phaser.Input.Keyboard.JustDown(this.interactKey!)) {
+        
+            // Start playing guideNPC's audio corresponding to dialogue1
+            this.sound.stopByKey('guideNPCDialogue1');
+            this.sound.play('guideNPCDialogue1', { volume: 1 });
 
-            // Cancel previous delayedCall and destroy chatBubble immediately if 'F' is pressed again
+            // Cancel previous delayedCall and reset dialogue immediately if 'F' is pressed again
             if (this.chatBubble && this.chatBubble.anims && this.chatBubble.anims.isPlaying) {
+
                 if (this.timerEvent) {
                     this.timerEvent.remove(false);
                     this.timerEvent = null;
                 }
                 this.chatBubble.anims.play('chat_bubble_reverse', true);
                 this.time.delayedCall(500, () => {
+                    this.dialogueText?.destroy();
                     this.chatBubble?.destroy();
                 });
                 return;
             }
 
             if(this.chatBubble) {
+                this.dialogueText?.destroy();
                 this.chatBubble.destroy();
             }
 
@@ -263,10 +271,35 @@ export default class GameScene1 extends Phaser.Scene {
             newChatBubble.flipX = true;
             newChatBubble.play('chat_bubble', true);
 
+            // Add this to set up the typewriter effect
+            const dialogue = "Things haven't been the same since the 7/11 attacks.\nBut, if you follow my lead, we might just\nmake it out of here alive.";
+            let textContent = "";
+            const textSpeed = 50; // Speed of typewriter effect in milliseconds
+            console.log((newChatBubble.width * 0.1 / 2));
+            this.dialogueText = this.add.text(
+                newChatBubble.x - (newChatBubble.width * 0.1 / 2) - 235,
+                newChatBubble.y - (newChatBubble.height * 0.1 / 2) - 15,
+                "",
+                { font: "16px", color: "#000", align: "center"}
+            );
+
+            let charIndex = 0;
+
+            this.time.addEvent({
+                delay: textSpeed,
+                callback: () => {
+                    textContent += dialogue[charIndex];
+                    this.dialogueText?.setText(textContent);
+                    charIndex++;
+                },
+                repeat: dialogue.length - 1
+            });
+
             // Save the TimerEvent returned by delayedCall
-            this.timerEvent = this.time.delayedCall(5000, () => {
+            this.timerEvent = this.time.delayedCall(9000, () => {
                 if (!newChatBubble.anims) return;
                 newChatBubble.anims.play('chat_bubble_reverse', true);
+                this.dialogueText?.destroy();
                 this.time.delayedCall(500, () => {
                     newChatBubble.destroy();
                 });

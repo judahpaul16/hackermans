@@ -2,16 +2,21 @@ import Phaser from 'phaser';
 import mainMenuBG from '../../assets/videos/mainMenuBG.mp4';
 import platformImg from '../../assets/sprites/platforms/rock.png';
 import streetImg from '../../assets/sprites/platforms/street.png';
+
 import playerImg from '../../assets/sprites/players/player_1/player.png';
 import playerJSON from '../../assets/sprites/players/player_1/player.json';
 import player2Img from '../../assets/sprites/players/player_2/player.png';
 import player2JSON from '../../assets/sprites/players/player_2/player.json';
+
 import avatarImg from '../../assets/sprites/ui/avatar.png';
 import healthBarFrameImg from '../../assets/sprites/ui/health_bar_bg.png';
+
 import cloudImg from '../../assets/sprites/entities/cloud/cloud.png';
 import cloudJSON from '../../assets/sprites/entities/cloud/cloud.json';
+
 import chatBubbleImg from '../../assets/sprites/entities/chat_bubble/chat_bubble.png';
 import chatBubbleJSON from '../../assets/sprites/entities/chat_bubble/chat_bubble.json';
+
 import farBuildings from '../../assets/sprites/backgrounds/far-buildings.png';
 import backBuildings from '../../assets/sprites/backgrounds/back-buildings.png';
 import middle from '../../assets/sprites/backgrounds/middle.png';
@@ -19,9 +24,10 @@ import foreground from '../../assets/sprites/backgrounds/foreground.png';
 import foreground2 from '../../assets/sprites/backgrounds/foreground-2.png';
 import foregroundEmpty from '../../assets/sprites/backgrounds/foreground-empty.png';
 import cyberpunkStreet from '../../assets/sprites/backgrounds/cyberpunk-street.png';
+
 import mainMusicSrc from '../../assets/audio/music/mainMusic.mp3';
-import flashingBlueLight from '../../assets/sprites/entities/lights/flashing-blue-light.png';
-import flashingBlueLightJSON from '../../assets/sprites/entities/lights/flashing-blue-light.json';
+
+import guideNPCDialogue1 from '../../assets/audio/dialogue/guideNPC1.mp3';
 
 export default class BootScene extends Phaser.Scene {
     constructor() {
@@ -47,7 +53,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('foreground-empty', foregroundEmpty);
         this.load.image('cyberpunk-street', cyberpunkStreet);
         this.load.audio('mainMusic', mainMusicSrc);
-        this.load.atlas('flashing-blue-light', flashingBlueLight, flashingBlueLightJSON);
+        this.load.audio('guideNPCDialogue1', guideNPCDialogue1);
     }
 
     create() {
