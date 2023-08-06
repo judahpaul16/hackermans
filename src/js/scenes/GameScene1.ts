@@ -13,6 +13,7 @@ export default class GameScene1 extends Phaser.Scene {
     private enemy?: Enemy;
     private chatBubble?: Phaser.GameObjects.Sprite;
     private dialogueText?: Phaser.GameObjects.Text;
+    private interactHint?: Phaser.GameObjects.Text;
     private platforms?: Phaser.Physics.Arcade.StaticGroup;
     private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
     private debugKey?: Phaser.Input.Keyboard.Key;
@@ -82,11 +83,38 @@ export default class GameScene1 extends Phaser.Scene {
         this.physics.add.collider(this.player, this.platforms);
         this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
 
+        // NPC setup
         this.guideNPC = new NPC(this, 1300, 650, 'guideNPC');
         this.guideNPC.body!.setSize(40, 60);
         this.guideNPC.setScale(2);
         this.guideNPC.body!.setOffset(0, 6);
         this.physics.add.collider(this.guideNPC, this.platforms);
+        this.interactHint = this.add.text(this.guideNPC!.x - 42, this.guideNPC!.y - 82, "Press 'F'", {
+            fontSize: 20,
+            color: '#ffffff',
+            align: 'center',
+            stroke: '#000000',
+            strokeThickness: 4,
+        });
+        // add tweens to make the interact hint float up and down
+        this.tweens.add({
+            targets: this.interactHint,
+            y: this.guideNPC!.y - 100, // Float up and down
+            duration: 1000,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
+        
+        this.tweens.add({
+            targets: this.interactHint,
+            fontSize: '24px', // Grow and shrink
+            duration: 500,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+        });
+        
 
         // Input setup
         this.cursors = this.input.keyboard!.createCursorKeys();
@@ -242,7 +270,8 @@ export default class GameScene1 extends Phaser.Scene {
     private handleInteract(scene: Phaser.Scene, player: Player, npc: NPC, interactKey: Phaser.Input.Keyboard.Key) {
 
         if (Phaser.Input.Keyboard.JustDown(this.interactKey!)) {
-        
+            this.interactHint?.setVisible(false);
+
             // Start playing guideNPC's audio corresponding to dialogue1
             this.sound.stopByKey('guideNPCDialogue1');
             this.sound.play('guideNPCDialogue1', { volume: 1 });
@@ -274,7 +303,7 @@ export default class GameScene1 extends Phaser.Scene {
             // Add this to set up the typewriter effect
             const dialogue = "Things haven't been the same since the 7/11 attacks.\nBut, if you follow my lead, we might just\nmake it out of here alive.";
             let textContent = "";
-            const textSpeed = 50; // Speed of typewriter effect in milliseconds
+            const textSpeed = 55; // Speed of typewriter effect in milliseconds
             console.log((newChatBubble.width * 0.1 / 2));
             this.dialogueText = this.add.text(
                 newChatBubble.x - (newChatBubble.width * 0.1 / 2) - 235,
@@ -301,6 +330,7 @@ export default class GameScene1 extends Phaser.Scene {
                 newChatBubble.anims.play('chat_bubble_reverse', true);
                 this.dialogueText?.destroy();
                 this.time.delayedCall(500, () => {
+                    this.interactHint?.setVisible(true);
                     newChatBubble.destroy();
                 });
             });
