@@ -452,9 +452,12 @@ export function createHUD(scene: Phaser.Scene, player: Player) {
     player!.healthBarFrame.setDepth(4);
     player!.healthBarFill.setDepth(3);
 
+    // Add the player's name above the avatar
+    const name = scene.add.text(player.avatar.x + 36, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' });
+
     // Check if the HUD elements are defined before creating the container
     if (player!.avatar && player!.healthBarFrame && player!.healthBarFill) {
-        player!.hudContainer = scene.add.container(0, 0, [player!.healthBarFill, player!.healthBarFrame, player!.avatar]);
+        player!.hudContainer = scene.add.container(0, 0, [player!.healthBarFill, player!.healthBarFrame, name, player!.avatar]);
         player!.hudContainer.setDepth(2);
     }
 }

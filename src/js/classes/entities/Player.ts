@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
+    public name: string = 'Anonymouse';
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
