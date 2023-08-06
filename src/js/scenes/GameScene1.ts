@@ -85,7 +85,7 @@ export default class GameScene1 extends Phaser.Scene {
         this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
 
         // NPC setup
-        this.guideNPC = new NPC(this, 1300, 650, 'guideNPC');
+        this.guideNPC = new NPC(this, 1325, 650, 'guideNPC');
         this.guideNPC.body!.setSize(40, 60);
         this.guideNPC.setScale(2);
         this.guideNPC.body!.setOffset(0, 6);
