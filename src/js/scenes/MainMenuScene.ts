@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 
 export default class MainMenuScene extends Phaser.Scene {
+    private coin!: Phaser.GameObjects.Sprite;
     private mainMenuBG!: Phaser.GameObjects.Video;
     private clickCounter: number = 0;
     private insertCoin!: Phaser.GameObjects.Text;
@@ -12,20 +13,30 @@ export default class MainMenuScene extends Phaser.Scene {
     }
 
     create() {
+        // Setup Animations
+        this.setupAnimations();
+
         // Load the Insert Coin Menu
         this.insertCoinMenu();
-
-        // Setup Logo animation
-        this.anims.create({ key: 'logoAnimation', frames: this.anims.generateFrameNames(
-            'logo', { prefix: 'logo_', start: 1, end: 31, zeroPad: 4 }), frameRate: 15, repeat: -1 });
 
         // Handle input
         this.input.on('pointerdown', this.handleInput, this);
         this.input.keyboard!.on('keydown', this.handleInput, this);
     }
 
+    private setupAnimations() {
+        // Setup Coin animation
+        this.anims.create({ key: 'coinAnimation', frames: this.anims.generateFrameNames(
+            'coin', { prefix: 'coin', start: 1, end: 8, zeroPad: 2 }), frameRate: 15, repeat: -1 });
+
+        // Setup Logo animation
+        this.anims.create({ key: 'logoAnimation', frames: this.anims.generateFrameNames(
+            'logo', { prefix: 'logo_', start: 1, end: 31, zeroPad: 4 }), frameRate: 15, repeat: -1 });
+    }
+
     private handleInput() {
         this.clickCounter++;
+        this.coin.destroy();
         this.insertCoin.destroy();
         if (this.timerEvent) this.timerEvent.destroy(); // Stop the ellipses animation
         if (this.clickCounter === 1) {
@@ -80,6 +91,14 @@ export default class MainMenuScene extends Phaser.Scene {
             },
             loop: true
         });
+
+        // Add coin sprite just below the text
+        this.coin = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY + 20, 'coin');
+        this.coin.setScale(0.3);
+        this.coin.play('coinAnimation');
+        console.log(this.anims.get('coinAnimation'));
+        console.log(this.coin.anims);
+
     }
 
     private createBackground() {

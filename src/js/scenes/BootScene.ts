@@ -3,6 +3,9 @@ import Phaser from 'phaser';
 import logoImg from '../../assets/sprites/ui/logo.png';
 import logoJSON from '../../assets/sprites/ui/logo.json';
 
+import coinImg from '../../assets/sprites/ui/coin.png';
+import coinJSON from '../../assets/sprites/ui/coin.json';
+
 import mainMenuBG from '../../assets/videos/mainMenuBG.mp4';
 import platformImg from '../../assets/sprites/platforms/rock.png';
 import streetImg from '../../assets/sprites/platforms/street.png';
@@ -43,6 +46,7 @@ export default class BootScene extends Phaser.Scene {
     preload() {
         // Load assets using the imported asset paths
         this.load.atlas('logo', logoImg, logoJSON);
+        this.load.atlas('coin', coinImg, coinJSON);
         this.load.video('mainMenuBG', mainMenuBG);
         this.load.image('platform', platformImg);
         this.load.image('street', streetImg);
