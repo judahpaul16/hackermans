@@ -12,7 +12,14 @@ export default class MainMenuScene extends Phaser.Scene {
     }
 
     create() {
+        // Load the Insert Coin Menu
         this.insertCoinMenu();
+
+        // Setup Logo animation
+        this.anims.create({ key: 'logoAnimation', frames: this.anims.generateFrameNames(
+            'logo', { prefix: 'logo_', start: 1, end: 31, zeroPad: 4 }), frameRate: 15, repeat: -1 });
+
+        // Handle input
         this.input.on('pointerdown', this.handleInput, this);
         this.input.keyboard!.on('keydown', this.handleInput, this);
     }
@@ -25,7 +32,12 @@ export default class MainMenuScene extends Phaser.Scene {
             // Set the Main Menu Background
             this.createBackground();
             this.sound.play('mainMusic', { loop: true, volume: 0.1 });
-            this.mainMenuText = this.add.text(255, 560, 'Press any key to enter\nthe city...', {
+            // Set Logo
+            const logo = this.add.sprite(255, window.innerHeight / 2 + 50, 'logo');
+            logo.setScale(0.75);
+            logo.play('logoAnimation');
+            // Set the Main Menu Text
+            this.mainMenuText = this.add.text(logo.x, logo.y + 60, 'Press any key to enter\nthe city...', {
                 fontSize: '20px',
                 color: '#000',
                 fontStyle: 'bold',
