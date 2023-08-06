@@ -26,6 +26,14 @@ module.exports = {
         }
       },
       {
+        // Audio files handling, specifically for MP3
+        test: /\.mp3$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'assets/[hash][ext][query]'
+        }
+      },
+      {
         // JSON files handling
         test: /\.json$/,
         use: 'json-loader',

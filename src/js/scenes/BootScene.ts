@@ -17,6 +17,7 @@ import foreground from '../../assets/sprites/backgrounds/foreground.png';
 import foreground2 from '../../assets/sprites/backgrounds/foreground-2.png';
 import foregroundEmpty from '../../assets/sprites/backgrounds/foreground-empty.png';
 import cyberpunkStreet from '../../assets/sprites/backgrounds/cyberpunk-street.png';
+import mainMusicSrc from '../../assets/audio/music/mainMusic.mp3';
 
 export default class BootScene extends Phaser.Scene {
     constructor() {
@@ -39,6 +40,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('foreground-2', foreground2);
         this.load.image('foreground-empty', foregroundEmpty);
         this.load.image('cyberpunk-street', cyberpunkStreet);
+        this.load.audio('mainMusic', mainMusicSrc);
     }
 
     create() {
