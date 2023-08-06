@@ -12,7 +12,7 @@ export default class MainMenuScene extends Phaser.Scene {
     }
 
     create() {
-        this.createPreBackground();
+        this.insertCoinMenu();
         this.input.on('pointerdown', this.handleInput, this);
         this.input.keyboard!.on('keydown', this.handleInput, this);
     }
@@ -22,7 +22,7 @@ export default class MainMenuScene extends Phaser.Scene {
         this.insertCoin.destroy();
         if (this.timerEvent) this.timerEvent.destroy(); // Stop the ellipses animation
         if (this.clickCounter === 1) {
-            // Set the background and show text
+            // Set the Main Menu Background
             this.createBackground();
             this.sound.play('mainMusic', { loop: true, volume: 0.1 });
             this.mainMenuText = this.add.text(255, 560, 'Press any key to enter\nthe city...', {
@@ -49,7 +49,7 @@ export default class MainMenuScene extends Phaser.Scene {
         }
     }
 
-    private createPreBackground() {
+    private insertCoinMenu() {
         // Center
         this.insertCoin = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY - 50, 'Insert Coin', {
             fontSize: '20px',
@@ -89,5 +89,13 @@ export default class MainMenuScene extends Phaser.Scene {
     
         // Play the video
         this.mainMenuBG.play();
+
+        // Fade in the video
+        this.tweens.add({
+            targets: this.mainMenuBG,
+            alpha: { from: 0, to: 1 },
+            duration: 2000,
+            ease: 'Linear'
+        });
     }
 }
