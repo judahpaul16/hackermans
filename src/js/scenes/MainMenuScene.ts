@@ -51,7 +51,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
     private createPreBackground() {
         // Center
-        this.insertCoin = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY + 50, 'Insert Coin', {
+        this.insertCoin = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY - 50, 'Insert Coin', {
             fontSize: '20px',
             color: '#fff',
             align: 'center'
