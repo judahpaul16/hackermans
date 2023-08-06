@@ -4,6 +4,7 @@ import NPC from '../classes/entities/NPC';
 import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
 import { createHUD } from './GameScene1';
+import { updateHUD } from './GameScene1';
 
 export default class GameScene2 extends Phaser.Scene {
     private dg?: dat.GUI;
@@ -80,6 +81,7 @@ export default class GameScene2 extends Phaser.Scene {
         
         // HUD setup
         createHUD(this, this.player!);
+        this.player!.hudContainer.setScrollFactor(0);
         
         // Debugging
         this.initializeDebugGUI();
@@ -128,6 +130,9 @@ export default class GameScene2 extends Phaser.Scene {
 
         // Move the player, check for collisions, etc.
         this.updatePlayer();
+        
+        // Update Health bar
+        updateHUD(this.player);
 
         // Reset player position if 'R' key is pressed
         if (Phaser.Input.Keyboard.JustDown(this.resetKey!)) {

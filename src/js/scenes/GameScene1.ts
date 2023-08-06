@@ -147,8 +147,9 @@ export default class GameScene1 extends Phaser.Scene {
 
         // Move the player, check for collisions, etc.
         this.updatePlayer();
-        // Health bar
-        updateHealthBar(this.player);
+
+        // Update Health bar
+        updateHUD(this.player);
 
         // Reset player position if 'R' key is pressed
         if (Phaser.Input.Keyboard.JustDown(this.resetKey!)) {
@@ -172,6 +173,7 @@ export default class GameScene1 extends Phaser.Scene {
         
         // if player moves beyond the right edge of the world, start the next scene
         if (this.player!.x > this.width) {
+            destroyHUD(this.player!);
             this.scene.start('GameScene2');
             this.game.registry.set('previousScene', this.scene.key);
         }
@@ -437,12 +439,12 @@ export function createHUD(scene: Phaser.Scene, player: Player) {
     player!.healthBarFill = scene.add.graphics({ fillStyle: { color: 0x00ff00 } });
 
     // Determine the width based on the current health percentage
-    const fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
+    let fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
 
     // Draw a rectangle representing the fill
     player!.healthBarFill.fillRect(player!.healthBarFrame.x + 20, player!.healthBarFrame.y + 20, fillWidth, 30);
 
-    player!.healthBarFill = updateHealthBar(player);
+    player!.healthBarFill = updateHUD(player);
             
     // Set the depth of the avatar to ensure it's rendered in front of the frame
     player.avatar.setDepth(5);
@@ -457,10 +459,17 @@ export function createHUD(scene: Phaser.Scene, player: Player) {
     }
 }
 
-function updateHealthBar(player?: Player) {
+export function updateHUD(player?: Player) {
     // Update the width of the health bar fill
-    const fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
+    let fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
     player!.healthBarFill.clear();
     player!.healthBarFill.fillRect(player!.healthBarFrame.x + 20, player!.healthBarFrame.y + 20, fillWidth, 30);
     return player!.healthBarFill;
+}
+
+export function destroyHUD(player: Player) {
+    player.avatar.destroy();
+    player.healthBarFrame.destroy();
+    player.healthBarFill.destroy();
+    player.hudContainer.destroy();
 }
