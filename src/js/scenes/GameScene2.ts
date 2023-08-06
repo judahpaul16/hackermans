@@ -3,6 +3,7 @@ import Player from '../classes/entities/Player';
 import NPC from '../classes/entities/NPC';
 import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
+import { createHUD } from './GameScene1';
 
 export default class GameScene2 extends Phaser.Scene {
     private dg?: dat.GUI;
@@ -76,6 +77,9 @@ export default class GameScene2 extends Phaser.Scene {
         this.moveLeftKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.moveRightKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.jumpKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        
+        // HUD setup
+        createHUD(this, this.player!);
         
         // Debugging
         this.initializeDebugGUI();

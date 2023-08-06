@@ -4,6 +4,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
+    public isDead: boolean = false;
+    public healthBarFill!: Phaser.GameObjects.Graphics;
+    public healthBarFrame!: Phaser.GameObjects.Image;
+    public avatar!: Phaser.GameObjects.Image;
+    public amask!: Phaser.GameObjects.Graphics;
+    public hudContainer!: Phaser.GameObjects.Container;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);

@@ -9,11 +9,6 @@ export default class GameScene1 extends Phaser.Scene {
     private backgroundImages?: {[key: string]: Phaser.GameObjects.TileSprite} = {};
     private clouds: Phaser.GameObjects.Sprite[] = [];
     private player?: Player;
-    private hudContainer?: Phaser.GameObjects.Container;
-    private avatar?: Phaser.GameObjects.Image;
-    private mask?: Phaser.GameObjects.Graphics;
-    private healthBarFill?: Phaser.GameObjects.Graphics;
-    private healthBarFrame?: Phaser.GameObjects.Image;
     private guideNPC?: NPC;
     private enemy?: Enemy;
     private chatBubble?: Phaser.GameObjects.Sprite;
@@ -102,54 +97,7 @@ export default class GameScene1 extends Phaser.Scene {
         this.jumpKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         
         // HUD setup
-        // Adding the avatar image at the top left corner
-        this.avatar = this.add.image(100, 100, 'avatar'); // center aligned
-
-        // Creating a circular mask using a Graphics object
-        this.mask = this.make.graphics({});
-        this.mask.fillCircle(100, 100, 30); // X, Y, radius
-
-        // Applying the mask to the avatar
-        this.avatar.setMask(this.mask.createGeometryMask());
-        this.mask.setScrollFactor(0);
-
-        // Scale the avatar
-        const avatarScale = 0.6;
-        this.avatar.setScale(avatarScale);
-
-        // Get the scaled height of the avatar
-        const avatarHeight = this.avatar.height * avatarScale;
-
-        // Background of the health bar (position it relative to avatar)
-        this.healthBarFrame = this.add.image(this.avatar.x - 36, this.avatar.y - 35, 'health-bar-frame').setOrigin(0);
-
-        // Scale the healthBarFrame to match the avatar's height
-        const healthBarFrameScale = avatarHeight / this.healthBarFrame.height;
-        this.healthBarFrame.setScale(healthBarFrameScale);
-
-        // Foreground/fill of the health bar (same position as background)
-        // Create a Graphics object
-        this.healthBarFill = this.add.graphics({ fillStyle: { color: 0x00ff00 } });
-
-        // Determine the width based on the current health percentage
-        const fillWidth = (this.player!.currentHealth / this.player!.maxHealth) * 265;
-
-        // Draw a rectangle representing the fill
-        this.healthBarFill.fillRect(this.healthBarFrame.x + 20, this.healthBarFrame.y + 20, fillWidth, 30);
-
-        this.updateHealthBar();
-                
-        // Set the depth of the avatar to ensure it's rendered in front of the frame
-        this.avatar.setDepth(5);
-        // Set the depth of the health bar to ensure it's rendered in behind the frame
-        this.healthBarFrame.setDepth(4);
-        this.healthBarFill.setDepth(3);
-
-        // Check if the HUD elements are defined before creating the container
-        if (this.avatar && this.healthBarFrame && this.healthBarFill) {
-            this.hudContainer = this.add.container(0, 0, [this.healthBarFill, this.healthBarFrame, this.avatar]);
-            this.hudContainer.setDepth(2);
-        }
+        createHUD(this, this.player);
 
         // Debugging
         this.initializeDebugGUI();
@@ -200,7 +148,7 @@ export default class GameScene1 extends Phaser.Scene {
         // Move the player, check for collisions, etc.
         this.updatePlayer();
         // Health bar
-        this.updateHealthBar();
+        updateHealthBar(this.player);
 
         // Reset player position if 'R' key is pressed
         if (Phaser.Input.Keyboard.JustDown(this.resetKey!)) {
@@ -216,8 +164,8 @@ export default class GameScene1 extends Phaser.Scene {
         }
 
         // Update the HUD container's position to match the camera's scroll
-        if (this.hudContainer && this.cameras.main) {
-            this.hudContainer.setPosition(this.cameras.main.scrollX, this.cameras.main.scrollY);
+        if (this.player!.hudContainer && this.cameras.main) {
+            this.player!.hudContainer.setPosition(this.cameras.main.scrollX, this.cameras.main.scrollY);
         }
 
         this.handleInteract(this, this.player!, this.guideNPC!, this.interactKey!);
@@ -267,15 +215,6 @@ export default class GameScene1 extends Phaser.Scene {
             previousPositions.push({ x: randomX, y: randomY });
           }
         }
-    }
-
-    private updateHealthBar() {
-        if (!this.healthBarFill || !this.player) return; // Check if healthBarFill and player are defined
-    
-        const maxHealth = this.player.maxHealth;
-        const currentHealth = this.player.currentHealth;
-    
-        // Update the width of the health bar fill
     }
     
     private updateWorldBounds() {
@@ -459,9 +398,69 @@ export default class GameScene1 extends Phaser.Scene {
             'guideNPC', { prefix: 'standing', start: 1, end: 22, zeroPad: 4 }), frameRate: 3, repeat: -1 });
     }
 
-    private addPlatform(x: number, y: number, width: number) {
+    public addPlatform(x: number, y: number, width: number) {
         for (let i = 0; i < width; i++) {
             this.platforms!.create(x + i * 64, y, 'street');
         }
     }
+}
+
+export function createHUD(scene: Phaser.Scene, player: Player) {
+
+    // Adding the avatar image at the top left corner
+    player.avatar = scene.add.image(100, 100, 'avatar'); // center aligned
+
+    // Creating a circular mask using a Graphics object
+    player.amask = scene.make.graphics({});
+    player.amask.fillCircle(100, 100, 30); // X, Y, radius
+
+    // Applying the mask to the avatar
+    player.avatar.setMask(player.amask.createGeometryMask());
+    player.amask.setScrollFactor(0);
+
+    // Scale the avatar
+    const avatarScale = 0.6;
+    player.avatar.setScale(avatarScale);
+
+    // Get the scaled height of the avatar
+    const avatarHeight = player.avatar.height * avatarScale;
+
+    // Background of the health bar (position it relative to avatar)
+    player!.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, 'health-bar-frame').setOrigin(0);
+
+    // Scale the healthBarFrame to match the avatar's height
+    const healthBarFrameScale = avatarHeight / player!.healthBarFrame.height;
+    player!.healthBarFrame.setScale(healthBarFrameScale);
+
+    // Foreground/fill of the health bar (same position as background)
+    // Create a Graphics object
+    player!.healthBarFill = scene.add.graphics({ fillStyle: { color: 0x00ff00 } });
+
+    // Determine the width based on the current health percentage
+    const fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
+
+    // Draw a rectangle representing the fill
+    player!.healthBarFill.fillRect(player!.healthBarFrame.x + 20, player!.healthBarFrame.y + 20, fillWidth, 30);
+
+    player!.healthBarFill = updateHealthBar(player);
+            
+    // Set the depth of the avatar to ensure it's rendered in front of the frame
+    player.avatar.setDepth(5);
+    // Set the depth of the health bar to ensure it's rendered in behind the frame
+    player!.healthBarFrame.setDepth(4);
+    player!.healthBarFill.setDepth(3);
+
+    // Check if the HUD elements are defined before creating the container
+    if (player!.avatar && player!.healthBarFrame && player!.healthBarFill) {
+        player!.hudContainer = scene.add.container(0, 0, [player!.healthBarFill, player!.healthBarFrame, player!.avatar]);
+        player!.hudContainer.setDepth(2);
+    }
+}
+
+function updateHealthBar(player?: Player) {
+    // Update the width of the health bar fill
+    const fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
+    player!.healthBarFill.clear();
+    player!.healthBarFill.fillRect(player!.healthBarFrame.x + 20, player!.healthBarFrame.y + 20, fillWidth, 30);
+    return player!.healthBarFill;
 }
