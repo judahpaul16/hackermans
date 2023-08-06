@@ -22,6 +22,11 @@ export default class GameScene extends Phaser.Scene {
     private jumpKey?: Phaser.Input.Keyboard.Key;
     width: number = 6000;
     height: number = 650;
+    // scale factors
+    sfactor1: number = 1.25;
+    sfactor2: number = 1.1;
+    sfactor3: number = 0.9;
+    sfactor4: number = 0.9;
 
     constructor() {
         super({ key: 'GameScene' });
@@ -49,29 +54,44 @@ export default class GameScene extends Phaser.Scene {
 
         // Background images setup
         this.backgroundImages = {
-            farBuildings: this.createBackground('far-buildings', this.width, this.height*1.25),
-            backBuildings: this.createBackground('back-buildings', this.width, this.height*1.2),
-            middle: this.createBackground('middle', this.width, this.height*1.05),
-            foreground: this.createBackground('foreground-empty', this.width, this.height*0.9),
+            farBuildings: this.createBackground('far-buildings', this.width, this.height*this.sfactor1),
+            backBuildings: this.createBackground('back-buildings', this.width, this.height*this.sfactor2),
+            middle: this.createBackground('middle', this.width, this.height*this.sfactor3),
+            foreground: this.createBackground('foreground-empty', this.width, this.height*this.sfactor4),
         };        
 
         // Camera setup
         this.cameras.main.setBounds(0, 0, this.width, 800);
         
         // Cloud Setup
-        let prevX = 200; // starting position
-        for (let i = 0; i < 5; i++) {
-            // ensure x position is at least 250 units from the previous cloud
-            let randomX = prevX + 250 + Math.random() * 250;
-            prevX = randomX;
-
-            // restrict y position to be within [0, 200]
-            let randomY = Math.random() * 200;
-
+        type CloudPosition = { x: number; y: number };
+        let previousPositions: CloudPosition[] = [];
+        
+        for (let i = 0; i < 10; i++) {
+          let randomX: number;
+          let randomY: number;
+          let attempts = 0;
+        
+          // Repeat until we find coordinates not too close to previous ones
+          do {
+            randomX = Math.random() * this.width;
+            randomY = Math.random() * 200; // Restricting Y to 0 - 200
+            attempts++;
+          } while (
+            attempts < 1000 &&
+            previousPositions.some(
+              pos => Math.sqrt(Math.pow(pos.x - randomX, 2) + Math.pow(pos.y - randomY, 2)) < 200
+            )
+          );
+        
+          if (attempts < 1000) {
             let cloud = this.add.sprite(randomX, randomY, 'cloud');
             cloud.setScale(0.1);
             this.clouds!.push(cloud);
+            previousPositions.push({ x: randomX, y: randomY });
+          }
         }
+        
 
         // Platform setup
         this.platforms = this.physics.add.staticGroup();
@@ -114,10 +134,23 @@ export default class GameScene extends Phaser.Scene {
             }
 
             const worldFolder = this.dg.addFolder('World');
-            worldFolder.add(this, 'width', 0, 10000).onChange((value) => {
+            const scaleFolder = worldFolder.addFolder('Background Scale');
+            scaleFolder.add(this, 'width', 0, 10000).onChange((value) => {
                 this.updateWorldBounds();
             });
-            worldFolder.add(this, 'height', 0, 750).onChange((value) => {
+            scaleFolder.add(this, 'height', 0, 750).onChange((value) => {
+                this.updateWorldBounds();
+            });
+            scaleFolder.add(this, 'sfactor1', 0, 2).onChange((value) => {
+                this.updateWorldBounds();
+            });
+            scaleFolder.add(this, 'sfactor2', 0, 2).onChange((value) => {
+                this.updateWorldBounds();
+            });
+            scaleFolder.add(this, 'sfactor3', 0, 2).onChange((value) => {
+                this.updateWorldBounds();
+            });
+            scaleFolder.add(this, 'sfactor4', 0, 2).onChange((value) => {
                 this.updateWorldBounds();
             });
             const cloudFolder = worldFolder.addFolder('Clouds');
@@ -143,7 +176,7 @@ export default class GameScene extends Phaser.Scene {
                 cloud.x -= 1;
             }
             //if cloud goes off screen, reset to other side
-            if (cloud.x > this.cameras.main.width + 100) {
+            if (cloud.x > this.width + 100) {
                 cloud.x = -100;
             }
         }
@@ -173,10 +206,10 @@ export default class GameScene extends Phaser.Scene {
         this.backgroundImages!.backBuildings.destroy();
         this.backgroundImages!.middle.destroy();
         this.backgroundImages!.foreground.destroy();
-        this.backgroundImages!.farBuildings = this.createBackground('far-buildings', this.width, this.height*1.25);
-        this.backgroundImages!.backBuildings = this.createBackground('back-buildings', this.width, this.height*1.2);
-        this.backgroundImages!.middle = this.createBackground('middle', this.width, this.height*1.05);
-        this.backgroundImages!.foreground = this.createBackground('foreground-empty', this.width, this.height*0.9);
+        this.backgroundImages!.farBuildings = this.createBackground('far-buildings', this.width, this.height*this.sfactor1);
+        this.backgroundImages!.backBuildings = this.createBackground('back-buildings', this.width, this.height*this.sfactor2);
+        this.backgroundImages!.middle = this.createBackground('middle', this.width, this.height*this.sfactor3);
+        this.backgroundImages!.foreground = this.createBackground('foreground-empty', this.width, this.height*this.sfactor4);
         this.backgroundImages!.farBuildings.setDepth(-1);
         this.backgroundImages!.backBuildings.setDepth(-1);
         this.backgroundImages!.middle.setDepth(-1);

@@ -36,7 +36,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('back-buildings', backBuildings);
         this.load.image('middle', middle);
         this.load.image('foreground', foreground);
-        this.load.image('foreground2', foreground2);
+        this.load.image('foreground-2', foreground2);
         this.load.image('foreground-empty', foregroundEmpty);
         this.load.image('cyberpunk-street', cyberpunkStreet);
     }
