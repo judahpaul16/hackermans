@@ -16,6 +16,7 @@ import player2Img from '../../assets/sprites/players/player_2/player.png';
 import player2JSON from '../../assets/sprites/players/player_2/player.json';
 
 import avatarImg from '../../assets/sprites/ui/avatar.png';
+import guideNPCAvatarImg from '../../assets/sprites/ui/guide_npc_avatar.png';
 import healthBarFrameImg from '../../assets/sprites/ui/health_bar_bg.png';
 
 import cloudImg from '../../assets/sprites/entities/cloud/cloud.png';
@@ -53,6 +54,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.atlas('cloud', cloudImg, cloudJSON);
         this.load.atlas('player', playerImg, playerJSON);
         this.load.image('avatar', avatarImg);
+        this.load.image('guideNPCAvatar', guideNPCAvatarImg);
         this.load.image('health-bar-frame', healthBarFrameImg);
         this.load.atlas('guideNPC', player2Img, player2JSON);
         this.load.atlas('chat_bubble', chatBubbleImg, chatBubbleJSON);

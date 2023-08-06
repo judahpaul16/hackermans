@@ -126,7 +126,8 @@ export default class GameScene1 extends Phaser.Scene {
         this.jumpKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
 
         // HUD setup
-        createHUD(this, this.player);
+        createHealthBar(this, this.player);
+        createHealthBar(this, this.guideNPC);
 
         // Debugging
         this.initializeDebugGUI();
@@ -178,7 +179,8 @@ export default class GameScene1 extends Phaser.Scene {
         this.updatePlayer();
 
         // Update Health bar
-        updateHUD(this.player);
+        if (this.player) updateHealthBar(this, this.player);
+        if (this.guideNPC) updateHealthBar(this, this.guideNPC);
 
         // Reset player position if 'R' key is pressed
         if (Phaser.Input.Keyboard.JustDown(this.resetKey!)) {
@@ -191,11 +193,6 @@ export default class GameScene1 extends Phaser.Scene {
             if (dg) {
                 dg.domElement.style.display = dg.domElement.style.display === 'none' ? '' : 'none';
             }
-        }
-
-        // Update the HUD container's position to match the camera's scroll
-        if (this.player!.hudContainer && this.cameras.main) {
-            this.player!.hudContainer.setPosition(this.cameras.main.scrollX, this.cameras.main.scrollY);
         }
 
         this.handleInteract(this, this.player!, this.guideNPC!, this.interactKey!);
@@ -470,14 +467,20 @@ export default class GameScene1 extends Phaser.Scene {
     }
 }
 
-export function createHUD(scene: Phaser.Scene, player: Player) {
+export function createHealthBar(scene: Phaser.Scene, player: Player | NPC) {
+    // Determine if the character is an NPC
+    const isNPC = player instanceof NPC;
 
-    // Adding the avatar image at the top left corner
-    player.avatar = scene.add.image(100, 100, 'avatar'); // center aligned
+    // Adjust the x-position of the health bar for NPCs
+    const xOffset = isNPC ? 360 : 0;
+
+    // Adding the avatar image at the top left corner with xOffset
+    let someAvatar = isNPC ? 'guideNPCAvatar' : 'avatar';
+    player.avatar = scene.add.image(100 + xOffset, 100, someAvatar);
 
     // Creating a circular mask using a Graphics object
     player.amask = scene.make.graphics({});
-    player.amask.fillCircle(100, 100, 30); // X, Y, radius
+    player.amask.fillCircle(100 + xOffset, 100, 30); // X, Y, radius with xOffset
 
     // Applying the mask to the avatar
     player.avatar.setMask(player.amask.createGeometryMask());
@@ -490,8 +493,8 @@ export function createHUD(scene: Phaser.Scene, player: Player) {
     // Get the scaled height of the avatar
     const avatarHeight = player.avatar.height * avatarScale;
 
-    // Background of the health bar (position it relative to avatar)
-    player!.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, 'health-bar-frame').setOrigin(0);
+    // Background of the health bar (position it relative to avatar, with the possible offset for NPCs)
+    player.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, 'health-bar-frame').setOrigin(0);
 
     // Scale the healthBarFrame to match the avatar's height
     const healthBarFrameScale = avatarHeight / player!.healthBarFrame.height;
@@ -507,7 +510,7 @@ export function createHUD(scene: Phaser.Scene, player: Player) {
     // Draw a rectangle representing the fill
     player!.healthBarFill.fillRect(player!.healthBarFrame.x + 20, player!.healthBarFrame.y + 20, fillWidth, 30);
 
-    player!.healthBarFill = updateHUD(player);
+    player!.healthBarFill = updateHealthBar(scene, player);
             
     // Set the depth of the avatar to ensure it's rendered in front of the frame
     player.avatar.setDepth(5);
@@ -525,7 +528,12 @@ export function createHUD(scene: Phaser.Scene, player: Player) {
     }
 }
 
-export function updateHUD(player?: Player) {
+export function updateHealthBar(scene: Phaser.Scene, player: Player) {
+    // Update the HUD container's position to match the camera's scroll
+    if (player!.hudContainer && scene.cameras.main) {
+        player!.hudContainer.setPosition(scene.cameras.main.scrollX, scene.cameras.main.scrollY);
+    }
+
     // Update the width of the health bar fill
     let fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
     player!.healthBarFill.clear();

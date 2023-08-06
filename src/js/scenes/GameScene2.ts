@@ -3,8 +3,8 @@ import Player from '../classes/entities/Player';
 import NPC from '../classes/entities/NPC';
 import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
-import { createHUD } from './GameScene1';
-import { updateHUD } from './GameScene1';
+import { createHealthBar } from './GameScene1';
+import { updateHealthBar } from './GameScene1';
 
 export default class GameScene2 extends Phaser.Scene {
     private dg?: dat.GUI;
@@ -80,7 +80,7 @@ export default class GameScene2 extends Phaser.Scene {
         this.jumpKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         
         // HUD setup
-        createHUD(this, this.player!);
+        createHealthBar(this, this.player!);
         this.player!.hudContainer.setScrollFactor(0);
         
         // Debugging
@@ -132,7 +132,7 @@ export default class GameScene2 extends Phaser.Scene {
         this.updatePlayer();
         
         // Update Health bar
-        updateHUD(this.player);
+        if (this.player) updateHealthBar(this, this.player);
 
         // Reset player position if 'R' key is pressed
         if (Phaser.Input.Keyboard.JustDown(this.resetKey!)) {

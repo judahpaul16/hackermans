@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
+import Player from './Player';
 
-export default class NPC extends Phaser.Physics.Arcade.Sprite {
+export default class NPC extends Player {
     public name: string = 'Anonymuz';
     public currentAnimation?: string;
     public maxHealth: number = 100;
@@ -22,23 +23,5 @@ export default class NPC extends Phaser.Physics.Arcade.Sprite {
                 scene.physics.world.enable(this);
             }
         }
-
-        // Setup event listeners for animationstart and animationcomplete
-        this.on('animationstart', this.handleAnimationStart, this);
-        this.on('animationcomplete', this.handleAnimationComplete, this);
-    }
-    
-    private handleAnimationStart(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
-        this.currentAnimation = animation.key;
-    }
-
-    private handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
-        if (this.currentAnimation === animation.key) {
-            this.currentAnimation = undefined;
-        }
-    }
-
-    public getCurrentAnimation() {
-        return this.currentAnimation;
     }
 }
