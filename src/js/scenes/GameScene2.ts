@@ -119,27 +119,11 @@ export default class GameScene2 extends Phaser.Scene {
         this.backgroundImages!.middle.tilePositionX = camX * 0.3;
         this.backgroundImages!.foreground.tilePositionX = camX * 0.5;
 
-        
-        if (this.clouds) {
-            for (let cloud of this.clouds!) {
-                if (cloud.anims) {
-                    cloud.play('cloud', true);
-                    //if index is even, move right, else move left
-                    if (this.clouds!.indexOf(cloud) % 2 === 0) {
-                        cloud.x += 1;
-                    } else {
-                        cloud.x -= 1;
-                    }
-                    //if cloud goes off screen, reset to other side
-                    if (cloud.x > this.width + 100) {
-                        cloud.x = -100;
-                    }
-                }
-            }
-        }
+        // Update clouds
+        this.updateClouds();
 
         // Move the player, check for collisions, etc.
-        this.playerMovement();
+        this.updatePlayer();
 
         // Reset player position if 'R' key is pressed
         if (Phaser.Input.Keyboard.JustDown(this.resetKey!)) {
@@ -233,7 +217,27 @@ export default class GameScene2 extends Phaser.Scene {
         }
     }
 
-    private playerMovement() {
+    private updateClouds() {
+        if (this.clouds) {
+            for (let cloud of this.clouds!) {
+                if (cloud.anims) {
+                    cloud.play('cloud', true);
+                    //if index is even, move right, else move left
+                    if (this.clouds!.indexOf(cloud) % 2 === 0) {
+                        cloud.x += 1;
+                    } else {
+                        cloud.x -= 1;
+                    }
+                    //if cloud goes off screen, reset to other side
+                    if (cloud.x > this.width + 100) {
+                        cloud.x = -100;
+                    }
+                }
+            }
+        }
+    }
+
+    private updatePlayer() {
         if (!this.player || !this.cursors) return;
 
         // Don't process inputs if the player is attacking or jumping
