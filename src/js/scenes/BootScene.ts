@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import background from '../../assets/sprites/backgrounds/city.mp4';
+import mainMenuBG from '../../assets/videos/mainMenuBG.mp4';
 import platformImg from '../../assets/sprites/platforms/rock.png';
 import streetImg from '../../assets/sprites/platforms/street.png';
 import playerImg from '../../assets/sprites/players/player_1/player.png';
@@ -26,7 +26,7 @@ export default class BootScene extends Phaser.Scene {
 
     preload() {
         // Load assets using the imported asset paths
-        this.load.video('background1', background);
+        this.load.video('mainMenuBG', mainMenuBG);
         this.load.image('platform', platformImg);
         this.load.image('street', streetImg);
         this.load.atlas('cloud', cloudImg, cloudJSON);

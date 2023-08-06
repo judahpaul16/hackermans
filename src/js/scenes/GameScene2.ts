@@ -164,7 +164,7 @@ export default class GameScene2 extends Phaser.Scene {
         type CloudPosition = { x: number; y: number };
         let previousPositions: CloudPosition[] = [];
         
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 12; i++) {
           let randomX: number;
           let randomY: number;
           let attempts = 0;
@@ -172,7 +172,7 @@ export default class GameScene2 extends Phaser.Scene {
           // Repeat until we find coordinates not too close to previous ones
           do {
             randomX = Math.random() * this.width;
-            randomY = Math.random() * 200; // Restricting Y to 0 - 200
+            randomY = Math.random() * 200 + 15; // Restricting Y to 15 - 200
             attempts++;
           } while (
             attempts < 1000 &&
