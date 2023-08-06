@@ -33,6 +33,8 @@ import mainMusicSrc from '../../assets/audio/music/mainMusic.mp3';
 
 import guideNPCDialogue1 from '../../assets/audio/dialogue/guideNPC1.mp3';
 
+import meleeSound from '../../assets/audio/sfx/p1_melee.mp3';
+
 export default class BootScene extends Phaser.Scene {
     constructor() {
         super({ key: 'BootScene' });
@@ -59,6 +61,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('cyberpunk-street', cyberpunkStreet);
         this.load.audio('mainMusic', mainMusicSrc);
         this.load.audio('guideNPCDialogue1', guideNPCDialogue1);
+        this.load.audio('melee', meleeSound);
     }
 
     create() {
