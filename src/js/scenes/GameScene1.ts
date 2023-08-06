@@ -22,6 +22,7 @@ export default class GameScene1 extends Phaser.Scene {
     private moveLeftKey?: Phaser.Input.Keyboard.Key;
     private moveRightKey?: Phaser.Input.Keyboard.Key;
     private jumpKey?: Phaser.Input.Keyboard.Key;
+    private npcHealthBarCreated: boolean = false;
     width: number = 6500;
     height: number = 650;
     // scale factors
@@ -127,7 +128,21 @@ export default class GameScene1 extends Phaser.Scene {
 
         // HUD setup
         createHealthBar(this, this.player);
-        createHealthBar(this, this.guideNPC);
+
+        // Calculate distance between player and NPC
+        const distance = Phaser.Math.Distance.Between(
+            this.player!.x, this.player!.y,
+            this.guideNPC!.x, this.guideNPC!.y
+        );
+        if (distance <= 20 && !this.npcHealthBarCreated) {
+            // Create NPC health bar
+            createHealthBar(this, this.guideNPC!);
+            this.npcHealthBarCreated = true;
+        } else if (distance > 20 && this.npcHealthBarCreated) {
+            // Destroy NPC health bar
+            destroyHealthBar(this.guideNPC!);
+            this.npcHealthBarCreated = false;
+        }
 
         // Debugging
         this.initializeDebugGUI();
@@ -179,8 +194,25 @@ export default class GameScene1 extends Phaser.Scene {
         this.updatePlayer();
 
         // Update Health bar
+        // Calculate distance between player and NPC
+        const distance = Phaser.Math.Distance.Between(
+            this.player!.x, this.player!.y,
+            this.guideNPC!.x, this.guideNPC!.y
+        );
+
+        if (distance <= 250 && !this.npcHealthBarCreated) {
+            // Create NPC health bar
+            createHealthBar(this, this.guideNPC!);
+            this.npcHealthBarCreated = true;
+        } else if (distance > 250 && this.npcHealthBarCreated) {
+            // Destroy NPC health bar
+            destroyHealthBar(this.guideNPC!);
+            this.npcHealthBarCreated = false;
+        }
+
+        // Update health bars only if created
         if (this.player) updateHealthBar(this, this.player);
-        if (this.guideNPC) updateHealthBar(this, this.guideNPC);
+        if (this.npcHealthBarCreated && this.guideNPC) updateHealthBar(this, this.guideNPC);
 
         // Reset player position if 'R' key is pressed
         if (Phaser.Input.Keyboard.JustDown(this.resetKey!)) {
@@ -199,7 +231,7 @@ export default class GameScene1 extends Phaser.Scene {
         
         // if player moves beyond the right edge of the world, start the next scene
         if (this.player!.x > this.width) {
-            destroyHUD(this.player!);
+            destroyHealthBar(this.player!);
             this.scene.start('GameScene2');
             this.game.registry.set('previousScene', this.scene.key);
         }
@@ -541,8 +573,9 @@ export function updateHealthBar(scene: Phaser.Scene, player: Player) {
     return player!.healthBarFill;
 }
 
-export function destroyHUD(player: Player) {
+export function destroyHealthBar(player: Player | NPC | Enemy) {
     player.avatar.destroy();
+    player.amask.destroy();
     player.healthBarFrame.destroy();
     player.healthBarFill.destroy();
     player.hudContainer.destroy();

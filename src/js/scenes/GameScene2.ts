@@ -5,6 +5,7 @@ import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
 import { createHealthBar } from './GameScene1';
 import { updateHealthBar } from './GameScene1';
+import { destroyHealthBar } from './GameScene1';
 
 export default class GameScene2 extends Phaser.Scene {
     private dg?: dat.GUI;
