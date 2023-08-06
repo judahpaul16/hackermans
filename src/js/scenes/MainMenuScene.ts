@@ -39,7 +39,7 @@ export default class MainMenuScene extends Phaser.Scene {
             // Set the Main Menu Text
             this.mainMenuText = this.add.text(logo.x, logo.y + 60, 'Press any key to enter\nthe city...', {
                 fontSize: '20px',
-                color: '#000',
+                color: '#333333',
                 fontStyle: 'bold',
                 align: 'center'
             }).setOrigin(0.5);
