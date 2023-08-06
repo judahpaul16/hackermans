@@ -31,15 +31,6 @@ export default class GameScene2 extends Phaser.Scene {
         super({ key: 'GameScene2' });
     }
 
-    createBackground(key: string, width: number, height: number): Phaser.GameObjects.TileSprite {
-        const imageHeight = this.textures.get(key).getSourceImage().height;
-        const ratio = height / imageHeight;
-        const sprite = this.add.tileSprite(0, this.physics.world.bounds.height - height, width, height, key)
-            .setOrigin(0)
-            .setTileScale(1, ratio);
-        return sprite;
-    }
-
     private initializeDebugGUI() {
         const dg = new dat.GUI();
         dg.domElement.style.display = 'none';
@@ -63,33 +54,7 @@ export default class GameScene2 extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, this.width, 800);
         
         // Cloud Setup
-        type CloudPosition = { x: number; y: number };
-        let previousPositions: CloudPosition[] = [];
-        
-        for (let i = 0; i < 10; i++) {
-          let randomX: number;
-          let randomY: number;
-          let attempts = 0;
-        
-          // Repeat until we find coordinates not too close to previous ones
-          do {
-            randomX = Math.random() * this.width;
-            randomY = Math.random() * 200; // Restricting Y to 0 - 200
-            attempts++;
-          } while (
-            attempts < 1000 &&
-            previousPositions.some(
-              pos => Math.sqrt(Math.pow(pos.x - randomX, 2) + Math.pow(pos.y - randomY, 2)) < 200
-            )
-          );
-        
-          if (attempts < 1000) {
-            let cloud = this.add.sprite(randomX, randomY, 'cloud');
-            cloud.setScale(0.1);
-            this.clouds!.push(cloud);
-            previousPositions.push({ x: randomX, y: randomY });
-          }
-        }
+        this.createClouds(10);
         
         // Platform setup
         this.platforms = this.physics.add.staticGroup();
@@ -142,8 +107,6 @@ export default class GameScene2 extends Phaser.Scene {
             scaleFolder.add(this, 'sfactor4', 0, 2).onChange((value) => {
                 this.updateWorldBounds();
             });
-            const cloudFolder = worldFolder.addFolder('Clouds');
-            cloudFolder?.add(this.clouds, 'length', 0, 10);
         }
     }
 
@@ -201,6 +164,45 @@ export default class GameScene2 extends Phaser.Scene {
         if (this.player!.x > this.width) {
             this.scene.start('GameScene2');
             this.game.registry.set('previousScene', this.scene.key);
+        }
+    }
+
+    createBackground(key: string, width: number, height: number): Phaser.GameObjects.TileSprite {
+        const imageHeight = this.textures.get(key).getSourceImage().height;
+        const ratio = height / imageHeight;
+        const sprite = this.add.tileSprite(0, this.physics.world.bounds.height - height, width, height, key)
+            .setOrigin(0)
+            .setTileScale(1, ratio);
+        return sprite;
+    }
+    
+    private createClouds(numClouds: number) {
+        type CloudPosition = { x: number; y: number };
+        let previousPositions: CloudPosition[] = [];
+        
+        for (let i = 0; i < 10; i++) {
+          let randomX: number;
+          let randomY: number;
+          let attempts = 0;
+        
+          // Repeat until we find coordinates not too close to previous ones
+          do {
+            randomX = Math.random() * this.width;
+            randomY = Math.random() * 200; // Restricting Y to 0 - 200
+            attempts++;
+          } while (
+            attempts < 1000 &&
+            previousPositions.some(
+              pos => Math.sqrt(Math.pow(pos.x - randomX, 2) + Math.pow(pos.y - randomY, 2)) < 200
+            )
+          );
+        
+          if (attempts < 1000) {
+            let cloud = this.add.sprite(randomX, randomY, 'cloud');
+            cloud.setScale(0.1);
+            this.clouds!.push(cloud);
+            previousPositions.push({ x: randomX, y: randomY });
+          }
         }
     }
 
