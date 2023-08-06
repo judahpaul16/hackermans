@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-    private currentAnimation?: string;
+    public currentAnimation?: string;
+    public maxHealth: number = 100;
+    public currentHealth: number = 100;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
