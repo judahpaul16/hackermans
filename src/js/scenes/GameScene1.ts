@@ -301,7 +301,7 @@ export default class GameScene1 extends Phaser.Scene {
             newChatBubble.play('chat_bubble', true);
 
             // Add this to set up the typewriter effect
-            const dialogue = "Things haven't been the same since the 7/11 attacks.\nBut, if you follow my lead, we might just\nmake it out of here alive.";
+            const dialogue = "Things haven't been the same since the 7/11 attacks.\nBut, if you follow my lead, you might just\nmake it out of here alive.";
             let textContent = "";
             const textSpeed = 55; // Speed of typewriter effect in milliseconds
             this.dialogueText = this.add.text(
