@@ -3,7 +3,7 @@ import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
-import { addPlatform, createHealthBar, updateHealthBar, destroyHealthBar, follow, initializeDebugGUI } from '../classes/utils/common';
+import * as common from '../utils/common';
 
 export default class GameScene2 extends Phaser.Scene {
     private dg?: dat.GUI;
@@ -67,7 +67,7 @@ export default class GameScene2 extends Phaser.Scene {
         
         // Platform setup
         this.platforms = this.physics.add.staticGroup();
-        addPlatform(this, 150, 790, 1000, 'street');
+        common.addPlatform(this, 150, 790, 1000, 'street');
 
         // Player setup
         this.player = new Player(this, 100, 650, 'player');
@@ -123,7 +123,7 @@ export default class GameScene2 extends Phaser.Scene {
         this.jumpKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         
         // HUD setup
-        createHealthBar(this, this.player!);
+        common.createHealthBar(this, this.player!);
 
         // Calculate distance between player and Player2
         const distance = Phaser.Math.Distance.Between(
@@ -133,16 +133,16 @@ export default class GameScene2 extends Phaser.Scene {
         this.p2HealthBarCreated = false;
         if (distance <= 20 && !this.p2HealthBarCreated) {
             // Create Player2 health bar
-            createHealthBar(this, this.player2!);
+            common.createHealthBar(this, this.player2!);
             this.p2HealthBarCreated = true;
         } else if (distance > 20 && this.p2HealthBarCreated) {
             // Destroy Player2 health bar
-            destroyHealthBar(this.player2!);
+            common.destroyHealthBar(this.player2!);
             this.p2HealthBarCreated = false;
         }
         
         // Debugging
-        initializeDebugGUI(this);
+        common.initializeDebugGUI(this);
     }
 
     update() {
@@ -166,21 +166,21 @@ export default class GameScene2 extends Phaser.Scene {
             this.player2!.x, this.player2!.y
         );
 
-        follow(this, this.player2!, this.player!, this.interactHint!)
+        common.follow(this, this.player2!, this.player!, this.interactHint!)
 
         if (distance <= 300 && !this.p2HealthBarCreated) {
             // Create Player2 health bar
-            createHealthBar(this, this.player2!);
+            common.createHealthBar(this, this.player2!);
             this.p2HealthBarCreated = true;
         } else if (distance > 300 && this.p2HealthBarCreated) {
             // Destroy Player2 health bar
-            destroyHealthBar(this.player2!);
+            common.destroyHealthBar(this.player2!);
             this.p2HealthBarCreated = false;
         }
 
         // Update health bars only if created
-        if (this.player) updateHealthBar(this, this.player);
-        if (this.p2HealthBarCreated && this.player2) updateHealthBar(this, this.player2);
+        if (this.player) common.updateHealthBar(this, this.player);
+        if (this.p2HealthBarCreated && this.player2) common.updateHealthBar(this, this.player2);
 
         // Reset player position if 'R' key is pressed
         if (Phaser.Input.Keyboard.JustDown(this.resetKey!)) {

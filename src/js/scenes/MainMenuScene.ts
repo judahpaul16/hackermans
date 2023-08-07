@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { setupAnimations } from '../classes/utils/common';
+import { setupAnimations } from '../utils/common';
 
 export default class MainMenuScene extends Phaser.Scene {
     private coin!: Phaser.GameObjects.Sprite;

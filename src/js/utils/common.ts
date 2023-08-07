@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
-import Player from '../entities/Player';
-import Player2 from '../entities/Player2';
-import Enemy from '../entities/Enemy';
+import Player from '../classes/entities/Player';
+import Player2 from '../classes/entities/Player2';
+import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
 
 
