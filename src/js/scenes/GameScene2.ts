@@ -82,7 +82,6 @@ export default class GameScene2 extends Phaser.Scene {
         
         // HUD setup
         createHealthBar(this, this.player!);
-        this.player!.hudContainer.setScrollFactor(0);
         
         // Debugging
         this.initializeDebugGUI();
