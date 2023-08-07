@@ -4,17 +4,13 @@ import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
 import * as common from '../helpers/common';
-import * as dat from 'dat.gui';
 
 export default class GameScene1 extends BaseScene {
-    private dg?: dat.GUI;
     private backgroundImages?: {[key: string]: Phaser.GameObjects.TileSprite} = {};
     private clouds: Phaser.GameObjects.Sprite[] = [];
     public player?: Player;
     public player2?: Player2;
     public enemy?: Enemy;
-    private chatBubble?: Phaser.GameObjects.Sprite;
-    private dialogueText?: Phaser.GameObjects.Text;
     private interactHint?: Phaser.GameObjects.Text;
     private platforms?: Phaser.Physics.Arcade.StaticGroup;
     private p2HealthBarCreated: boolean = false;
@@ -189,12 +185,6 @@ export default class GameScene1 extends BaseScene {
         // Update health bars only if created
         if (this.player) common.updateHealthBar(this, this.player);
         if (this.p2HealthBarCreated && this.player2) common.updateHealthBar(this, this.player2);
-
-        // Make chat bubble follow Player2
-        if (this.player2) {
-            this.chatBubble?.setPosition(this.player2.x - 123, this.player2.y - 130);
-            this.dialogueText?.setPosition(this.chatBubble!.x - (this.chatBubble!.width * 0.1 / 2) - 165, this.chatBubble!.y - (this.chatBubble!.height * 0.1 / 2) - 15,);
-        }
 
         // if player moves beyond the right edge of the world, start the next scene
         if (this.player!.x > this.width) {

@@ -4,17 +4,14 @@ import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
 import * as common from '../helpers/common';
-import * as dat from 'dat.gui';
 
 export default class GameScene2 extends BaseScene {
-    private dg?: dat.GUI;
     private backgroundImages?: {[key: string]: Phaser.GameObjects.TileSprite} = {};
     private clouds: Phaser.GameObjects.Sprite[] = [];
     public player?: Player;
     public player2?: Player2;
     public enemy?: Enemy;
     private interactHint?: Phaser.GameObjects.Text;
-    private chatBubble?: Phaser.GameObjects.Sprite;
     private platforms?: Phaser.Physics.Arcade.StaticGroup;
     private p2HealthBarCreated: boolean = false;
     private level?: Phaser.GameObjects.Text;

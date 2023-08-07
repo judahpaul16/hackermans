@@ -261,7 +261,7 @@ function obstacleInWay(player2: Player2): boolean {
 
 export function handleInteract(scene: any, player: Player, player2: Player2, interactKey: Phaser.Input.Keyboard.Key) {
 
-    if (Phaser.Input.Keyboard.JustDown(scene.interactKey!)) {
+    if (Phaser.Input.Keyboard.JustDown(interactKey)) {
         scene.interactHint?.setVisible(false);
 
         // Start playing player2's audio corresponding to dialogue1
