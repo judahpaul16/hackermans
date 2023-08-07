@@ -512,7 +512,7 @@ export default class GameScene1 extends Phaser.Scene {
     private attack() {
         if (this.player) {            
             this.player.play('melee', true);
-            this.sound.play('melee', { volume: 0.25, loop: false });
+            this.sound.play('melee', { volume: 0.5, loop: false });
     
             // Listen for animationcomplete event
             this.player.on('animationcomplete', (animation: Phaser.Animations.Animation) => {
