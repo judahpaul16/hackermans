@@ -96,9 +96,6 @@ export default class MainMenuScene extends Phaser.Scene {
         this.coin = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY + 20, 'coin');
         this.coin.setScale(0.3);
         this.coin.play('coinAnimation');
-        console.log(this.anims.get('coinAnimation'));
-        console.log(this.coin.anims);
-
     }
 
     private createBackground() {

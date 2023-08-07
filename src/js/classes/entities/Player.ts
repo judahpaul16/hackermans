@@ -33,12 +33,30 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     private handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+        if (animation.key === 'dying') {
+            this.isDead = true;
+        }
+        // Tweak the hitbox for the dying animation
+        if (animation.key === 'dying' && frame.index === 4) {
+            const newWidth = 78;
+            const newHeight = 12;
+            this.body!.setSize(newWidth, newHeight);
+            this.body!.setOffset(0, 0);
+            this.y += 42;
+        }
         if (this.currentAnimation === animation.key) {
             this.currentAnimation = undefined;
         }
     }
-
+    
     public getCurrentAnimation() {
         return this.currentAnimation;
+    }
+
+    public takeDamage(amount: number) {
+        this.currentHealth -= amount;
+        if (this.currentHealth <= 0) {
+            this.currentHealth = 0; // Ensure health doesn't go negative
+        }
     }
 }

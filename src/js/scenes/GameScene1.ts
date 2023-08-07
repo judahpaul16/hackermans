@@ -39,7 +39,12 @@ export default class GameScene1 extends Phaser.Scene {
         const dg = new dat.GUI();
         dg.domElement.style.display = 'none';
         this.registry.set('debugGUI', dg);
-        this.dg = dg;        
+        this.dg = dg;
+
+        // Add toggle for physics arcade debug to display sprite bounds
+        const debugGraphic = this.physics.world.createDebugGraphic();
+        debugGraphic.setVisible(false);
+        this.dg.add(debugGraphic, 'visible').name('Show Bounds').listen();
     }
     
     create() {
@@ -90,6 +95,10 @@ export default class GameScene1 extends Phaser.Scene {
         this.guideNPC.setScale(2);
         this.guideNPC.body!.setOffset(0, 6);
         this.physics.add.collider(this.guideNPC, this.platforms);
+
+        this.guideNPC!.play('standingNPC', true);
+        this.guideNPC!.flipX = true;
+
         this.interactHint = this.add.text(this.guideNPC!.x - 42, this.guideNPC!.y - 82, "Press 'F'", {
             fontSize: 20,
             color: '#ffffff',
@@ -228,7 +237,7 @@ export default class GameScene1 extends Phaser.Scene {
         }
 
         this.handleInteract(this, this.player!, this.guideNPC!, this.interactKey!);
-        
+
         // if player moves beyond the right edge of the world, start the next scene
         if (this.player!.x > this.width) {
             destroyHealthBar(this.player!);
@@ -389,6 +398,14 @@ export default class GameScene1 extends Phaser.Scene {
 
     private updatePlayer() {
         if (!this.player || !this.cursors) return;
+        if (this.player.isDead) return;
+
+        // Check if the player is dead
+        if (this.player.currentHealth <= 0 && !this.player.isDead) {
+            this.physics.world.gravity.y = 0;
+            this.player.play('dying', true);
+            return; // Exit the update function if the player is dead
+        }
 
         // Don't process inputs if the player is attacking or jumping
         if (this.player?.getCurrentAnimation() === 'melee') return;
@@ -437,9 +454,6 @@ export default class GameScene1 extends Phaser.Scene {
                 this.attack();
             }
         }
-
-        this.guideNPC!.play('standingNPC', true);
-        this.guideNPC!.flipX = true;
     }
 
     private jump() {
@@ -463,12 +477,6 @@ export default class GameScene1 extends Phaser.Scene {
             }, this);
         }
     }
-    
-    private die() {
-        if (this.player) {
-            this.player.play('dying', true);
-        }
-    }
 
     private setupAnimations() {
         this.anims.create({ key: 'standingPlayer', frames: this.anims.generateFrameNames(
@@ -482,7 +490,7 @@ export default class GameScene1 extends Phaser.Scene {
         this.anims.create({ key: 'melee', frames: this.anims.generateFrameNames(
             'player', { prefix: 'melee', start: 1, end: 13, zeroPad: 4 }), frameRate: 10, repeat: 0 });
         this.anims.create({ key: 'dying', frames: this.anims.generateFrameNames(
-            'player', { prefix: 'death', start: 1, end: 4, zeroPad: 4 }), frameRate: 3, repeat: 0 });
+            'player', { prefix: 'death', start: 1, end: 4, zeroPad: 4 }), frameRate: 4, repeat: 0 });
         this.anims.create({ key: 'cloud', frames: this.anims.generateFrameNames(
             'cloud', { prefix: 'cloud', start: 1, end: 4, zeroPad: 4 }), frameRate: 7, repeat: -1 });
         let chatBubbleFrames = this.anims.generateFrameNames('chat_bubble', { prefix: 'chat', start: 1, end: 4, zeroPad: 2 })

@@ -319,12 +319,6 @@ export default class GameScene2 extends Phaser.Scene {
             }, this);
         }
     }
-    
-    private die() {
-        if (this.player) {
-            this.player.play('dying', true);
-        }
-    }
 
     private addPlatform(x: number, y: number, width: number) {
         for (let i = 0; i < width; i++) {
