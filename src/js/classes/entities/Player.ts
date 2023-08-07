@@ -44,6 +44,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.body!.setOffset(0, 0);
             this.y += 42;
         }
+
+        // If the animation is 'melee', reset gravity
+        if (animation.key === 'melee') {
+            this.setVelocityY(-100);
+        }
+
         if (this.currentAnimation === animation.key) {
             this.currentAnimation = undefined;
         }

@@ -4,6 +4,14 @@ import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
 
+export function createBackground(scene: any, key: string, width: number, height: number): Phaser.GameObjects.TileSprite {
+    const imageHeight = scene.textures.get(key).getSourceImage().height;
+    const ratio = height / imageHeight;
+    const sprite = scene.add.tileSprite(0, scene.physics.world.bounds.height - height, width, height, key)
+        .setOrigin(0)
+        .setTileScale(1, ratio);
+    return sprite;
+}
 
 export function addPlatform(scene: any, x: number, y: number, width: number, type: string) {
     for (let i = 0; i < width; i++) {
@@ -68,6 +76,131 @@ export function updateWorldBounds(scene: any, value: number) {
     scene.backgroundImages!.foreground.setDepth(-1);
     scene.physics.world.setBounds(0, 0, scene.width, 800);
     scene.cameras.main.setBounds(0, 0, scene.width, 800);
+}
+
+export function createClouds(scene: any, numClouds: number) {
+    type CloudPosition = { x: number; y: number };
+    let previousPositions: CloudPosition[] = [];
+    
+    for (let i = 0; i < 12; i++) {
+      let randomX: number;
+      let randomY: number;
+      let attempts = 0;
+    
+      // Repeat until we find coordinates not too close to previous ones
+      do {
+        randomX = Math.random() * scene.width;
+        randomY = Math.random() * 200 + 15; // Restricting Y to 15 - 200
+        attempts++;
+      } while (
+        attempts < 1000 &&
+        previousPositions.some(
+          pos => Math.sqrt(Math.pow(pos.x - randomX, 2) + Math.pow(pos.y - randomY, 2)) < 200
+        )
+      );
+    
+      if (attempts < 1000) {
+        let cloud = scene.add.sprite(randomX, randomY, 'cloud');
+        cloud.setScale(0.1);
+        scene.clouds!.push(cloud);
+        previousPositions.push({ x: randomX, y: randomY });
+      }
+    }
+}
+
+
+export function updateClouds(scene: any) {
+    if (scene.clouds) {
+        for (let cloud of scene.clouds!) {
+            if (cloud.anims) {
+                cloud.play('cloud', true);
+                //if index is even, move right, else move left
+                if (scene.clouds!.indexOf(cloud) % 2 === 0) {
+                    cloud.x += 1;
+                } else {
+                    cloud.x -= 1;
+                }
+                //if cloud goes off screen, reset to other side
+                if (cloud.x > scene.width + 100) {
+                    cloud.x = -100;
+                }
+            }
+        }
+    }
+}
+
+export function updatePlayer(scene: any, player: Player | Player2 | Enemy) {
+    if (!player || !scene.cursors) return;
+    if (player.isDead) return;
+
+    // Check if the player is dead
+    if (player.currentHealth <= 0 && !player.isDead) {
+        scene.physics.world.gravity.y = 0;
+        player.play('dying', true);
+        return; // Exit the update function if the player is dead
+    }
+
+    // Don't process inputs if the player is attacking or jumping
+    if (player?.getCurrentAnimation() === 'melee') return;
+    if (player?.getCurrentAnimation() === 'jumping') return;
+
+    let isMovingLeft = scene.cursors.left!.isDown || scene.moveLeftKey!.isDown;
+    let isMovingRight = scene.cursors.right!.isDown || scene.moveRightKey!.isDown;
+    let isRunning = scene.cursors.shift!.isDown;
+    let isJumping = scene.cursors.up!.isDown || scene.jumpKey!.isDown;
+    let isAttacking = scene.cursors.space!.isDown;
+
+    if (isMovingRight) {
+        if (isRunning) {
+            player.setVelocityX(300);
+            player.play('running', true);
+        } else if (isJumping) {
+            jump(player);        
+        } else {
+            player.setVelocityX(175);
+            player.play('walking', true);
+        }
+        player.flipX = false;
+        if (isAttacking) {
+            attack(scene, player);
+        }
+    } else if (isMovingLeft) {
+        if (isRunning) {
+            player.setVelocityX(-300);
+            player.play('running', true);
+        } else if (isJumping) {
+            jump(player);        
+        } else {
+            player.setVelocityX(-175);
+            player.play('walking', true);
+        }
+        player.flipX = true;
+        if (isAttacking) {
+            attack(scene, player);
+        }
+    } else if (isJumping) {
+        jump(player);        
+    } else {
+        player.setVelocityX(0);
+        player.play('standingPlayer', true);
+        if (isAttacking) {
+            attack(scene, player);
+        }
+    }
+}
+
+export function jump(player: Player | Player2 | Enemy) {
+    if (player && player.body!.touching.down) {
+        player.setVelocityY(-450);
+        player.play('jumping', true);
+    }
+}
+
+export function attack(scene: any, player: Player | Player2 | Enemy) {
+    if (player) {            
+        player.play('melee', true);
+        scene.sound.play('melee', { volume: 0.5, loop: false });
+    }
 }
 
 export function createHealthBar(scene: Phaser.Scene, player: Player | Player2) {

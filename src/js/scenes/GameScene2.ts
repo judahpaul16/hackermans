@@ -43,10 +43,10 @@ export default class GameScene2 extends Phaser.Scene {
 
         // Background images setup
         this.backgroundImages = {
-            farBuildings: this.createBackground('far-buildings', this.width, this.height*this.sfactor1),
-            backBuildings: this.createBackground('back-buildings', this.width, this.height*this.sfactor2),
-            middle: this.createBackground('middle', this.width, this.height*this.sfactor3),
-            foreground: this.createBackground('foreground', this.width, this.height*this.sfactor4),
+            farBuildings: common.createBackground(this, 'far-buildings', this.width, this.height*this.sfactor1),
+            backBuildings: common.createBackground(this, 'back-buildings', this.width, this.height*this.sfactor2),
+            middle: common.createBackground(this, 'middle', this.width, this.height*this.sfactor3),
+            foreground: common.createBackground(this, 'foreground', this.width, this.height*this.sfactor4),
         };        
 
         // Camera setup
@@ -63,7 +63,7 @@ export default class GameScene2 extends Phaser.Scene {
         this.level.setScrollFactor(0);
         
         // Cloud Setup
-        this.createClouds(10);
+        common.createClouds(this, 10);
         
         // Platform setup
         this.platforms = this.physics.add.staticGroup();
@@ -155,10 +155,10 @@ export default class GameScene2 extends Phaser.Scene {
         this.backgroundImages!.foreground.tilePositionX = camX * 0.5;
 
         // Update clouds
-        this.updateClouds();
+        common.updateClouds(this);
 
         // Move the player, check for collisions, etc.
-        this.updatePlayer();
+        common.updatePlayer(this, this.player!);
         // Update Player2 and Health Bars
         // Calculate distance between player and Player2
         const distance = Phaser.Math.Distance.Between(
@@ -216,137 +216,5 @@ export default class GameScene2 extends Phaser.Scene {
         //     this.scene.start('GameScene3');
         //     this.game.registry.set('previousScene', this.scene.key);
         // }
-    }
-
-    createBackground(key: string, width: number, height: number): Phaser.GameObjects.TileSprite {
-        const imageHeight = this.textures.get(key).getSourceImage().height;
-        const ratio = height / imageHeight;
-        const sprite = this.add.tileSprite(0, this.physics.world.bounds.height - height, width, height, key)
-            .setOrigin(0)
-            .setTileScale(1, ratio);
-        return sprite;
-    }
-    
-    private createClouds(numClouds: number) {
-        type CloudPosition = { x: number; y: number };
-        let previousPositions: CloudPosition[] = [];
-        
-        for (let i = 0; i < 12; i++) {
-          let randomX: number;
-          let randomY: number;
-          let attempts = 0;
-        
-          // Repeat until we find coordinates not too close to previous ones
-          do {
-            randomX = Math.random() * this.width;
-            randomY = Math.random() * 200 + 15; // Restricting Y to 15 - 200
-            attempts++;
-          } while (
-            attempts < 1000 &&
-            previousPositions.some(
-              pos => Math.sqrt(Math.pow(pos.x - randomX, 2) + Math.pow(pos.y - randomY, 2)) < 200
-            )
-          );
-        
-          if (attempts < 1000) {
-            let cloud = this.add.sprite(randomX, randomY, 'cloud');
-            cloud.setScale(0.1);
-            this.clouds!.push(cloud);
-            previousPositions.push({ x: randomX, y: randomY });
-          }
-        }
-    }
-
-    private updateClouds() {
-        if (this.clouds) {
-            for (let cloud of this.clouds!) {
-                if (cloud.anims) {
-                    cloud.play('cloud', true);
-                    //if index is even, move right, else move left
-                    if (this.clouds!.indexOf(cloud) % 2 === 0) {
-                        cloud.x += 1;
-                    } else {
-                        cloud.x -= 1;
-                    }
-                    //if cloud goes off screen, reset to other side
-                    if (cloud.x > this.width + 100) {
-                        cloud.x = -100;
-                    }
-                }
-            }
-        }
-    }
-
-    private updatePlayer() {
-        if (!this.player || !this.cursors) return;
-
-        // Don't process inputs if the player is attacking or jumping
-        if (this.player?.getCurrentAnimation() === 'melee') return;
-        if (this.player?.getCurrentAnimation() === 'jumping') return;
-
-        let isMovingLeft = this.cursors.left!.isDown || this.moveLeftKey!.isDown;
-        let isMovingRight = this.cursors.right!.isDown || this.moveRightKey!.isDown;
-        let isRunning = this.cursors.shift!.isDown;
-        let isJumping = this.cursors.up!.isDown || this.jumpKey!.isDown;
-        let isAttacking = this.cursors.space!.isDown;
-
-        if (isMovingRight) {
-            if (isRunning) {
-                this.player.setVelocityX(300);
-                this.player.play('running', true);
-            } else if (isJumping) {
-                this.jump();        
-            } else {
-                this.player.setVelocityX(175);
-                this.player.play('walking', true);
-            }
-            this.player.flipX = false;
-            if (isAttacking) {
-                this.attack();
-            }
-        } else if (isMovingLeft) {
-            if (isRunning) {
-                this.player.setVelocityX(-300);
-                this.player.play('running', true);
-            } else if (isJumping) {
-                this.jump();        
-            } else {
-                this.player.setVelocityX(-175);
-                this.player.play('walking', true);
-            }
-            this.player.flipX = true;
-            if (isAttacking) {
-                this.attack();
-            }
-        } else if (isJumping) {
-            this.jump();        
-        } else {
-            this.player.setVelocityX(0);
-            this.player.play('standingPlayer', true);
-            if (isAttacking) {
-                this.attack();
-            }
-        }
-    }
-
-    private jump() {
-        if (this.player && this.player.body!.touching.down) {
-            this.player.setVelocityY(-450);
-            this.player.play('jumping', true);
-        }
-    }
-
-    private attack() {
-        if (this.player) {            
-            this.player.play('melee', true);
-    
-            // Listen for animationcomplete event
-            this.player.on('animationcomplete', (animation: Phaser.Animations.Animation) => {
-                // If the animation is 'melee', reset gravity
-                if (animation.key === 'melee') {
-                    this.player!.setVelocityY(-100);
-                }
-            }, this);
-        }
     }
 }
