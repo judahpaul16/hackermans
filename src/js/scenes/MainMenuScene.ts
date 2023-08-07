@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { setupAnimations } from '../classes/utils/common';
 
 export default class MainMenuScene extends Phaser.Scene {
     private coin!: Phaser.GameObjects.Sprite;
@@ -14,7 +15,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
     create() {
         // Setup Animations
-        this.setupAnimations();
+        setupAnimations(this);
 
         // Load the Insert Coin Menu
         this.insertCoinMenu();
@@ -22,16 +23,6 @@ export default class MainMenuScene extends Phaser.Scene {
         // Handle input
         this.input.on('pointerdown', this.handleInput, this);
         this.input.keyboard!.on('keydown', this.handleInput, this);
-    }
-
-    private setupAnimations() {
-        // Setup Coin animation
-        this.anims.create({ key: 'coinAnimation', frames: this.anims.generateFrameNames(
-            'coin', { prefix: 'coin', start: 1, end: 8, zeroPad: 2 }), frameRate: 15, repeat: -1 });
-
-        // Setup Logo animation
-        this.anims.create({ key: 'logoAnimation', frames: this.anims.generateFrameNames(
-            'logo', { prefix: 'logo_', start: 1, end: 31, zeroPad: 4 }), frameRate: 15, repeat: -1 });
     }
 
     private handleInput() {

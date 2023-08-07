@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
+import { addPlatform, createHealthBar, updateHealthBar, destroyHealthBar, follow, initializeDebugGUI, handleInteract } from '../classes/utils/common';
 import * as dat from 'dat.gui';
 
 export default class GameScene1 extends Phaser.Scene {
@@ -24,6 +25,7 @@ export default class GameScene1 extends Phaser.Scene {
     private jumpKey?: Phaser.Input.Keyboard.Key;
     private p2HealthBarCreated: boolean = false;
     private level?: Phaser.GameObjects.Text;
+    private timerEvent: Phaser.Time.TimerEvent | null = null;
     width: number = 3000;
     height: number = 650;
     // scale factors
@@ -34,18 +36,6 @@ export default class GameScene1 extends Phaser.Scene {
 
     constructor() {
         super({ key: 'GameScene1' });
-    }
-
-    private initializeDebugGUI() {
-        const dg = new dat.GUI();
-        dg.domElement.style.display = 'none';
-        this.registry.set('debugGUI', dg);
-        this.dg = dg;
-
-        // Add toggle for physics arcade debug to display sprite bounds
-        const debugGraphic = this.physics.world.createDebugGraphic();
-        debugGraphic.setVisible(false);
-        this.dg.add(debugGraphic, 'visible').name('Show Bounds').listen();
     }
     
     create() {
@@ -76,12 +66,9 @@ export default class GameScene1 extends Phaser.Scene {
         // Cloud Setup
         this.createClouds(10);
 
-        // Platform setup
+        // Street setup
         this.platforms = this.physics.add.staticGroup();
-        this.addPlatform(150, 790, 1000);
-
-        // Anims setup
-        this.setupAnimations();
+        addPlatform(this, 150, 790, 1000, 'street');
 
         // Player setup
         // if previous scene is GameScene2, start player at the end of the scene
@@ -171,37 +158,7 @@ export default class GameScene1 extends Phaser.Scene {
         }
 
         // Debugging
-        this.initializeDebugGUI();
-        if (this.dg) {
-            const cameraFolder = this.dg?.addFolder('Camera');
-            if (cameraFolder) {
-                // cameraFolder?.add(this.cameras.main, 'scrollX', 0, 10000);
-                // cameraFolder?.add(this.cameras.main, 'scrollY', 0, 10000);
-                cameraFolder?.add(this.cameras.main, 'zoom', 0.5, 5);
-            }
-
-            const worldFolder = this.dg.addFolder('World');
-            worldFolder.add(this.physics.world.gravity, 'y', -1000, 1000, 1).name('Gravity').listen();
-            const scaleFolder = worldFolder.addFolder('Background Scale');
-            scaleFolder.add(this, 'width', 0, 10000).onChange((value) => {
-                this.updateWorldBounds();
-            });
-            scaleFolder.add(this, 'height', 0, 750).onChange((value) => {
-                this.updateWorldBounds();
-            });
-            scaleFolder.add(this, 'sfactor1', 0, 2).onChange((value) => {
-                this.updateWorldBounds();
-            });
-            scaleFolder.add(this, 'sfactor2', 0, 2).onChange((value) => {
-                this.updateWorldBounds();
-            });
-            scaleFolder.add(this, 'sfactor3', 0, 2).onChange((value) => {
-                this.updateWorldBounds();
-            });
-            scaleFolder.add(this, 'sfactor4', 0, 2).onChange((value) => {
-                this.updateWorldBounds();
-            });
-        }
+        initializeDebugGUI(this);
     }
 
     update() {
@@ -256,7 +213,7 @@ export default class GameScene1 extends Phaser.Scene {
             }
         }
 
-        this.handleInteract(this, this.player!, this.player2!, this.interactKey!);
+        handleInteract(this, this.player!, this.player2!, this.interactKey!);
 
         // Make chat bubble follow Player2
         if (this.player2) {
@@ -329,96 +286,6 @@ export default class GameScene1 extends Phaser.Scene {
             this.clouds!.push(cloud);
             previousPositions.push({ x: randomX, y: randomY });
           }
-        }
-    }
-    
-    private updateWorldBounds() {
-        this.backgroundImages!.farBuildings.destroy();
-        this.backgroundImages!.backBuildings.destroy();
-        this.backgroundImages!.middle.destroy();
-        this.backgroundImages!.foreground.destroy();
-        this.backgroundImages!.farBuildings = this.createBackground('far-buildings', this.width, this.height*this.sfactor1);
-        this.backgroundImages!.backBuildings = this.createBackground('back-buildings', this.width, this.height*this.sfactor2);
-        this.backgroundImages!.middle = this.createBackground('middle', this.width, this.height*this.sfactor3);
-        this.backgroundImages!.foreground = this.createBackground('foreground-empty', this.width, this.height*this.sfactor4);
-        this.backgroundImages!.farBuildings.setDepth(-1);
-        this.backgroundImages!.backBuildings.setDepth(-1);
-        this.backgroundImages!.middle.setDepth(-1);
-        this.backgroundImages!.foreground.setDepth(-1);
-        this.physics.world.setBounds(0, 0, this.width, 800);
-        this.cameras.main.setBounds(0, 0, this.width, 800);
-    }
-    
-    private timerEvent: Phaser.Time.TimerEvent | null = null;
-
-    private handleInteract(scene: Phaser.Scene, player: Player, player2: Player2, interactKey: Phaser.Input.Keyboard.Key) {
-
-        if (Phaser.Input.Keyboard.JustDown(this.interactKey!)) {
-            this.interactHint?.setVisible(false);
-
-            // Start playing player2's audio corresponding to dialogue1
-            this.sound.stopByKey('p2Dialogue1');
-            this.sound.play('p2Dialogue1', { volume: 1 });
-
-            // Cancel previous delayedCall and reset dialogue immediately if 'F' is pressed again
-            if (this.chatBubble && this.chatBubble.anims && this.chatBubble.anims.isPlaying) {
-
-                if (this.timerEvent) {
-                    this.timerEvent.remove(false);
-                    this.timerEvent = null;
-                }
-                this.chatBubble.anims.play('chat_bubble_reverse', true);
-                this.time.delayedCall(500, () => {
-                    this.dialogueText?.destroy();
-                    this.chatBubble?.destroy();
-                });
-                return;
-            }
-
-            if(this.chatBubble) {
-                this.dialogueText?.destroy();
-                this.chatBubble.destroy();
-            }
-
-            const newChatBubble = this.add.sprite(this.player2!.x - 123, this.player2!.y - 130, 'chat_bubble').setScale(0.34);
-            newChatBubble.flipX = true;
-            newChatBubble.play('chat_bubble', true);
-
-            // Add this to set up the typewriter effect
-            const dialogue = "Things haven't been the same since the 7/11 attacks.\nBut, if you follow my lead, you might just\nmake it out of here alive.";
-            let textContent = "";
-            const textSpeed = 55; // Speed of typewriter effect in milliseconds
-            this.dialogueText = this.add.text(
-                newChatBubble.x - (newChatBubble.width * 0.1 / 2) - 235,
-                newChatBubble.y - (newChatBubble.height * 0.1 / 2) - 15,
-                "",
-                { font: "16px", color: "#000", align: "center"}
-            );
-
-            let charIndex = 0;
-
-            this.time.addEvent({
-                delay: textSpeed,
-                callback: () => {
-                    textContent += dialogue[charIndex];
-                    this.dialogueText?.setText(textContent);
-                    charIndex++;
-                },
-                repeat: dialogue.length - 1
-            });
-
-            // Save the TimerEvent returned by delayedCall
-            this.timerEvent = this.time.delayedCall(9000, () => {
-                if (!newChatBubble.anims) return;
-                newChatBubble.anims.play('chat_bubble_reverse', true);
-                this.dialogueText?.destroy();
-                this.time.delayedCall(500, () => {
-                    this.interactHint?.setVisible(true);
-                    newChatBubble.destroy();
-                });
-            });
-
-            this.chatBubble = newChatBubble;
         }
     }
 
@@ -523,167 +390,4 @@ export default class GameScene1 extends Phaser.Scene {
             }, this);
         }
     }
-
-    private setupAnimations() {
-        this.anims.create({ key: 'standingPlayer', frames: this.anims.generateFrameNames(
-            'player', { prefix: 'standing', start: 1, end: 11, zeroPad: 4 }), frameRate: 3, repeat: -1 });
-        this.anims.create({ key: 'walking', frames: this.anims.generateFrameNames(
-            'player', { prefix: 'walk', start: 1, end: 7, zeroPad: 4 }), frameRate: 10, repeat: -1 });
-        this.anims.create({ key: 'running', frames: this.anims.generateFrameNames(
-            'player', { prefix: 'run', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 });
-        this.anims.create({ key: 'jumping', frames: this.anims.generateFrameNames(
-            'player', { prefix: 'jump', start: 1, end: 8, zeroPad: 4 }), frameRate: 7, repeat: 0 });
-        this.anims.create({ key: 'melee', frames: this.anims.generateFrameNames(
-            'player', { prefix: 'melee', start: 1, end: 13, zeroPad: 4 }), frameRate: 10, repeat: 0 });
-        this.anims.create({ key: 'dying', frames: this.anims.generateFrameNames(
-            'player', { prefix: 'death', start: 1, end: 4, zeroPad: 4 }), frameRate: 4, repeat: 0 });
-        this.anims.create({ key: 'cloud', frames: this.anims.generateFrameNames(
-            'cloud', { prefix: 'cloud', start: 1, end: 4, zeroPad: 4 }), frameRate: 7, repeat: -1 });
-        let chatBubbleFrames = this.anims.generateFrameNames('chat_bubble', { prefix: 'chat', start: 1, end: 4, zeroPad: 2 })
-        this.anims.create({ key: 'chat_bubble', frames: chatBubbleFrames, frameRate: 7, repeat: 0 });
-        this.anims.create({ key: 'chat_bubble_reverse', frames: chatBubbleFrames.reverse(), frameRate: 7, repeat: 0 });
-        this.anims.create({ key: 'standingP2', frames: this.anims.generateFrameNames(
-            'player2', { prefix: 'standing', start: 1, end: 22, zeroPad: 4 }), frameRate: 3, repeat: -1 });
-        this.anims.create({ key: 'walkingP2', frames: this.anims.generateFrameNames(
-            'player2', { prefix: 'walk', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 });
-        this.anims.create({ key: 'runningP2', frames: this.anims.generateFrameNames(
-            'player2', { prefix: 'run', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 });
-        this.anims.create({ key: 'jumpingP2', frames: this.anims.generateFrameNames(
-            'player2', { prefix: 'jump', start: 1, end: 8, zeroPad: 4 }), frameRate: 7, repeat: 0 });
-    }
-
-    public addPlatform(x: number, y: number, width: number) {
-        for (let i = 0; i < width; i++) {
-            this.platforms!.create(x + i * 64, y, 'street');
-        }
-    }
-}
-
-export function createHealthBar(scene: Phaser.Scene, player: Player | Player2) {
-    // Determine if the character is an Player2
-    const isP2 = player instanceof Player2;
-
-    // Adjust the x-position of the health bar for P2
-    const xOffset = isP2 ? 360 : 0;
-
-    // Adding the avatar image at the top left corner with xOffset
-    let someAvatar = isP2 ? 'p2Avatar' : 'avatar';
-    player.avatar = scene.add.image(100 + xOffset, 100, someAvatar);
-
-    // Creating a circular mask using a Graphics object
-    player.amask = scene.make.graphics({});
-    player.amask.fillCircle(100 + xOffset, 100, 30); // X, Y, radius with xOffset
-
-    // Applying the mask to the avatar
-    player.avatar.setMask(player.amask.createGeometryMask());
-    player.amask.setScrollFactor(0);
-
-    // Scale the avatar
-    const avatarScale = 0.6;
-    player.avatar.setScale(avatarScale);
-
-    // Get the scaled height of the avatar
-    const avatarHeight = player.avatar.height * avatarScale;
-
-    // Background of the health bar (position it relative to avatar, with the possible offset for P2)
-    player.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, 'health-bar-frame').setOrigin(0);
-
-    // Scale the healthBarFrame to match the avatar's height
-    const healthBarFrameScale = avatarHeight / player!.healthBarFrame.height;
-    player!.healthBarFrame.setScale(healthBarFrameScale);
-
-    // Foreground/fill of the health bar (same position as background)
-    // Create a Graphics object
-    player!.healthBarFill = scene.add.graphics({ fillStyle: { color: 0x00ff00 } });
-
-    // Determine the width based on the current health percentage
-    let fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
-
-    // Draw a rectangle representing the fill
-    player!.healthBarFill.fillRect(player!.healthBarFrame.x + 20, player!.healthBarFrame.y + 20, fillWidth, 30);
-
-    player!.healthBarFill = updateHealthBar(scene, player);
-            
-    // Set the depth of the avatar to ensure it's rendered in front of the frame
-    player.avatar.setDepth(5);
-    // Set the depth of the health bar to ensure it's rendered in behind the frame
-    player!.healthBarFrame.setDepth(4);
-    player!.healthBarFill.setDepth(3);
-
-    // Add the player's name above the avatar
-    const name = scene.add.text(player.avatar.x + 36, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' });
-
-    // Check if the HUD elements are defined before creating the container
-    if (player!.avatar && player!.healthBarFrame && player!.healthBarFill) {
-        player!.hudContainer = scene.add.container(0, 0, [player!.healthBarFill, player!.healthBarFrame, name, player!.avatar]);
-        player!.hudContainer.setDepth(2);
-    }
-}
-
-export function updateHealthBar(scene: Phaser.Scene, player: Player) {
-    // Update the HUD container's position to match the camera's scroll
-    if (player!.hudContainer && scene.cameras.main) {
-        player!.hudContainer.setPosition(scene.cameras.main.scrollX, scene.cameras.main.scrollY);
-    }
-
-    // Update the width of the health bar fill
-    let fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
-    if (player!.healthBarFill) {
-        player!.healthBarFill.clear();
-        player!.healthBarFill.fillRect(player!.healthBarFrame.x + 20, player!.healthBarFrame.y + 20, fillWidth, 30);
-    }
-    return player!.healthBarFill;
-}
-
-export function destroyHealthBar(player: Player | Player2 | Enemy) {
-    if (player.avatar && player.amask && player.healthBarFrame && player.healthBarFill && player.hudContainer) {
-        player.avatar.destroy();
-        player.amask.destroy();
-        player.healthBarFrame.destroy();
-        player.healthBarFill.destroy();
-        player.hudContainer.destroy();
-    }
-}
-export function follow(scene: Phaser.Scene, player2: Player2, player: Player, interactHint: Phaser.GameObjects.Text, followSpeed: number = 300, bufferZone: number = 150, walkSpeed: number = 175, jumpStrength: number = 200) {
-    if (player2.body!.touching.down) {
-        const distanceToPlayer = player2.x - player.x;
-        let startFollowing = false;
-
-        if (distanceToPlayer <= 300 || startFollowing) {
-            startFollowing = true;
-            interactHint.setVisible(false);
-            // If Player2 is close to the player, stop moving
-            if (Math.abs(distanceToPlayer) < bufferZone) {
-                player2.play('standingP2', true);
-                player2.setVelocityX(0);
-                interactHint.x = player2.x - 40;
-                interactHint.setVisible(true)
-            } else {
-                const isCloser = Math.abs(distanceToPlayer) < walkSpeed;
-                const animation = isCloser ? 'walkingP2' : 'runningP2';
-                const speed = isCloser ? walkSpeed : followSpeed;
-
-                player2.y -= 10;
-                player2.setOffset(0, -12);
-                player2.play(animation, true);
-                player2.setVelocityX(distanceToPlayer < 0 ? speed : -speed);
-                // player2.setVelocityY(-200); // Keep the Player2 from falling through the ground
-                player2.flipX = distanceToPlayer > 0;
-
-                // Check if there's an obstacle in the way
-                if (obstacleInWay(player2)) {
-                    player2.play('jumpingP2', true);
-                    player2.setVelocityY(-jumpStrength);
-                }
-            }
-        }
-    }
-}
-
-
-// You'll need to define what an obstacle is in your game environment
-function obstacleInWay(player2: Player2): boolean {
-    // Implement your logic to detect obstacles here.
-    // This could include raycasting, collision checks, or other techniques specific to your game.
-    return false; // Return true if an obstacle is detected
 }

@@ -3,10 +3,7 @@ import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
-import { createHealthBar } from './GameScene1';
-import { updateHealthBar } from './GameScene1';
-import { destroyHealthBar } from './GameScene1';
-import { follow } from './GameScene1';
+import { addPlatform, createHealthBar, updateHealthBar, destroyHealthBar, follow, initializeDebugGUI } from '../classes/utils/common';
 
 export default class GameScene2 extends Phaser.Scene {
     private dg?: dat.GUI;
@@ -27,6 +24,7 @@ export default class GameScene2 extends Phaser.Scene {
     private jumpKey?: Phaser.Input.Keyboard.Key;
     private p2HealthBarCreated: boolean = false;
     private level?: Phaser.GameObjects.Text;
+    private timerEvent: Phaser.Time.TimerEvent | null = null;
     width: number = 6500;
     height: number = 650;
     // scale factors
@@ -37,13 +35,6 @@ export default class GameScene2 extends Phaser.Scene {
 
     constructor() {
         super({ key: 'GameScene2' });
-    }
-
-    private initializeDebugGUI() {
-        const dg = new dat.GUI();
-        dg.domElement.style.display = 'none';
-        this.registry.set('debugGUI', dg);
-        this.dg = dg;        
     }
     
     create() {
@@ -76,7 +67,7 @@ export default class GameScene2 extends Phaser.Scene {
         
         // Platform setup
         this.platforms = this.physics.add.staticGroup();
-        this.addPlatform(150, 790, 1000);
+        addPlatform(this, 150, 790, 1000, 'street');
 
         // Player setup
         this.player = new Player(this, 100, 650, 'player');
@@ -151,36 +142,7 @@ export default class GameScene2 extends Phaser.Scene {
         }
         
         // Debugging
-        this.initializeDebugGUI();
-        if (this.dg) {
-            const cameraFolder = this.dg?.addFolder('Camera');
-            if (cameraFolder) {
-                // cameraFolder?.add(this.cameras.main, 'scrollX', 0, 10000);
-                // cameraFolder?.add(this.cameras.main, 'scrollY', 0, 10000);
-                cameraFolder?.add(this.cameras.main, 'zoom', 0.5, 5);
-            }
-
-            const worldFolder = this.dg.addFolder('World');
-            const scaleFolder = worldFolder.addFolder('Background Scale');
-            scaleFolder.add(this, 'width', 0, 10000).onChange((value) => {
-                this.updateWorldBounds();
-            });
-            scaleFolder.add(this, 'height', 0, 750).onChange((value) => {
-                this.updateWorldBounds();
-            });
-            scaleFolder.add(this, 'sfactor1', 0, 2).onChange((value) => {
-                this.updateWorldBounds();
-            });
-            scaleFolder.add(this, 'sfactor2', 0, 2).onChange((value) => {
-                this.updateWorldBounds();
-            });
-            scaleFolder.add(this, 'sfactor3', 0, 2).onChange((value) => {
-                this.updateWorldBounds();
-            });
-            scaleFolder.add(this, 'sfactor4', 0, 2).onChange((value) => {
-                this.updateWorldBounds();
-            });
-        }
+        initializeDebugGUI(this);
     }
 
     update() {
@@ -237,6 +199,11 @@ export default class GameScene2 extends Phaser.Scene {
                 dg.domElement.style.display = dg.domElement.style.display === 'none' ? '' : 'none';
             }
         }
+
+        // if this.level not in camera top right corner, move it there
+        if (this.level!.x != this.cameras.main.width - 90 || this.level!.y != 30) {
+            this.level!.setPosition(this.cameras.main.width - 90, 30);
+        }
         
         // if player moves beyond the left edge of the world, start the previous scene
         if (this.player!.x < 0) {
@@ -287,33 +254,6 @@ export default class GameScene2 extends Phaser.Scene {
             this.clouds!.push(cloud);
             previousPositions.push({ x: randomX, y: randomY });
           }
-        }
-    }
-
-    private updateWorldBounds() {
-        this.backgroundImages!.farBuildings.destroy();
-        this.backgroundImages!.backBuildings.destroy();
-        this.backgroundImages!.middle.destroy();
-        this.backgroundImages!.foreground.destroy();
-        this.backgroundImages!.farBuildings = this.createBackground('far-buildings', this.width, this.height*this.sfactor1);
-        this.backgroundImages!.backBuildings = this.createBackground('back-buildings', this.width, this.height*this.sfactor2);
-        this.backgroundImages!.middle = this.createBackground('middle', this.width, this.height*this.sfactor3);
-        this.backgroundImages!.foreground = this.createBackground('foreground', this.width, this.height*this.sfactor4);
-        this.backgroundImages!.farBuildings.setDepth(-1);
-        this.backgroundImages!.backBuildings.setDepth(-1);
-        this.backgroundImages!.middle.setDepth(-1);
-        this.backgroundImages!.foreground.setDepth(-1);
-        this.physics.world.setBounds(0, 0, this.width, 800);
-        this.cameras.main.setBounds(0, 0, this.width, 800);
-    }
-    
-    private timerEvent: Phaser.Time.TimerEvent | null = null;
-
-    private handleInteract(scene: Phaser.Scene, player: Player, player2: Player2, interactKey: Phaser.Input.Keyboard.Key) {
-
-        if (Phaser.Input.Keyboard.JustDown(this.interactKey!)) {
-            // if the player is close to the Player2 or interactable, do something
-
         }
     }
 
@@ -407,12 +347,6 @@ export default class GameScene2 extends Phaser.Scene {
                     this.player!.setVelocityY(-100);
                 }
             }, this);
-        }
-    }
-
-    private addPlatform(x: number, y: number, width: number) {
-        for (let i = 0; i < width; i++) {
-            this.platforms!.create(x + i * 64, y, 'street');
         }
     }
 }
