@@ -1,18 +1,18 @@
 import Phaser from 'phaser';
 import Player from '../classes/entities/Player';
-import NPC from '../classes/entities/NPC';
+import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
 import { createHealthBar } from './GameScene1';
 import { updateHealthBar } from './GameScene1';
 import { destroyHealthBar } from './GameScene1';
-import { npcFollow } from './GameScene1';
+import { follow } from './GameScene1';
 
 export default class GameScene2 extends Phaser.Scene {
     private dg?: dat.GUI;
     private backgroundImages?: {[key: string]: Phaser.GameObjects.TileSprite} = {};
     private clouds: Phaser.GameObjects.Sprite[] = [];
-    private guideNPC?: NPC;
+    private player2?: Player2;
     private player?: Player;
     private enemy?: Enemy;
     private interactHint?: Phaser.GameObjects.Text;
@@ -25,7 +25,7 @@ export default class GameScene2 extends Phaser.Scene {
     private moveLeftKey?: Phaser.Input.Keyboard.Key;
     private moveRightKey?: Phaser.Input.Keyboard.Key;
     private jumpKey?: Phaser.Input.Keyboard.Key;
-    private npcHealthBarCreated: boolean = false;
+    private p2HealthBarCreated: boolean = false;
     private level?: Phaser.GameObjects.Text;
     width: number = 6500;
     height: number = 650;
@@ -86,17 +86,17 @@ export default class GameScene2 extends Phaser.Scene {
         this.physics.add.collider(this.player, this.platforms);
         this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
 
-        // NPC setup
-        this.guideNPC = new NPC(this, this.player.x + 25, 650, 'guideNPC');
-        this.guideNPC.body!.setSize(40, 60);
-        this.guideNPC.setScale(2);
-        this.guideNPC.body!.setOffset(0, 6);
-        this.physics.add.collider(this.guideNPC, this.platforms);
+        // Player2 setup
+        this.player2 = new Player2(this, this.player.x + 25, 650, 'player2');
+        this.player2.body!.setSize(40, 60);
+        this.player2.setScale(2);
+        this.player2.body!.setOffset(0, 6);
+        this.physics.add.collider(this.player2, this.platforms);
 
-        this.guideNPC!.play('standingNPC', true);
-        this.guideNPC!.flipX = true;
+        this.player2!.play('standingP2', true);
+        this.player2!.flipX = true;
 
-        this.interactHint = this.add.text(this.guideNPC!.x - 42, this.guideNPC!.y - 82, "Press 'F'", {
+        this.interactHint = this.add.text(this.player2!.x - 42, this.player2!.y - 82, "Press 'F'", {
             fontSize: 20,
             color: '#ffffff',
             align: 'center',
@@ -106,7 +106,7 @@ export default class GameScene2 extends Phaser.Scene {
         // add tweens to make the interact hint float up and down
         this.tweens.add({
             targets: this.interactHint,
-            y: this.guideNPC!.y - 50, // Float up and down
+            y: this.player2!.y - 50, // Float up and down
             duration: 1000,
             yoyo: true,
             repeat: -1,
@@ -134,20 +134,20 @@ export default class GameScene2 extends Phaser.Scene {
         // HUD setup
         createHealthBar(this, this.player!);
 
-        // Calculate distance between player and NPC
+        // Calculate distance between player and Player2
         const distance = Phaser.Math.Distance.Between(
             this.player!.x, this.player!.y,
-            this.guideNPC!.x, this.guideNPC!.y
+            this.player2!.x, this.player2!.y
         );
-        this.npcHealthBarCreated = false;
-        if (distance <= 20 && !this.npcHealthBarCreated) {
-            // Create NPC health bar
-            createHealthBar(this, this.guideNPC!);
-            this.npcHealthBarCreated = true;
-        } else if (distance > 20 && this.npcHealthBarCreated) {
-            // Destroy NPC health bar
-            destroyHealthBar(this.guideNPC!);
-            this.npcHealthBarCreated = false;
+        this.p2HealthBarCreated = false;
+        if (distance <= 20 && !this.p2HealthBarCreated) {
+            // Create Player2 health bar
+            createHealthBar(this, this.player2!);
+            this.p2HealthBarCreated = true;
+        } else if (distance > 20 && this.p2HealthBarCreated) {
+            // Destroy Player2 health bar
+            destroyHealthBar(this.player2!);
+            this.p2HealthBarCreated = false;
         }
         
         // Debugging
@@ -197,28 +197,28 @@ export default class GameScene2 extends Phaser.Scene {
 
         // Move the player, check for collisions, etc.
         this.updatePlayer();
-        // Update NPC and Health Bars
-        // Calculate distance between player and NPC
+        // Update Player2 and Health Bars
+        // Calculate distance between player and Player2
         const distance = Phaser.Math.Distance.Between(
             this.player!.x, this.player!.y,
-            this.guideNPC!.x, this.guideNPC!.y
+            this.player2!.x, this.player2!.y
         );
 
-        npcFollow(this, this.guideNPC!, this.player!, this.interactHint!)
+        follow(this, this.player2!, this.player!, this.interactHint!)
 
-        if (distance <= 300 && !this.npcHealthBarCreated) {
-            // Create NPC health bar
-            createHealthBar(this, this.guideNPC!);
-            this.npcHealthBarCreated = true;
-        } else if (distance > 300 && this.npcHealthBarCreated) {
-            // Destroy NPC health bar
-            destroyHealthBar(this.guideNPC!);
-            this.npcHealthBarCreated = false;
+        if (distance <= 300 && !this.p2HealthBarCreated) {
+            // Create Player2 health bar
+            createHealthBar(this, this.player2!);
+            this.p2HealthBarCreated = true;
+        } else if (distance > 300 && this.p2HealthBarCreated) {
+            // Destroy Player2 health bar
+            destroyHealthBar(this.player2!);
+            this.p2HealthBarCreated = false;
         }
 
         // Update health bars only if created
         if (this.player) updateHealthBar(this, this.player);
-        if (this.npcHealthBarCreated && this.guideNPC) updateHealthBar(this, this.guideNPC);
+        if (this.p2HealthBarCreated && this.player2) updateHealthBar(this, this.player2);
 
         // Reset player position if 'R' key is pressed
         if (Phaser.Input.Keyboard.JustDown(this.resetKey!)) {
@@ -309,10 +309,10 @@ export default class GameScene2 extends Phaser.Scene {
     
     private timerEvent: Phaser.Time.TimerEvent | null = null;
 
-    private handleInteract(scene: Phaser.Scene, player: Player, npc: NPC, interactKey: Phaser.Input.Keyboard.Key) {
+    private handleInteract(scene: Phaser.Scene, player: Player, player2: Player2, interactKey: Phaser.Input.Keyboard.Key) {
 
         if (Phaser.Input.Keyboard.JustDown(this.interactKey!)) {
-            // if the player is close to the NPC or interactable, do something
+            // if the player is close to the Player2 or interactable, do something
 
         }
     }

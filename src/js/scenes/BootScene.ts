@@ -16,7 +16,7 @@ import player2Img from '../../assets/sprites/players/player_2/player.png';
 import player2JSON from '../../assets/sprites/players/player_2/player.json';
 
 import avatarImg from '../../assets/sprites/ui/avatar.png';
-import guideNPCAvatarImg from '../../assets/sprites/ui/guide_npc_avatar.png';
+import p2AvatarImg from '../../assets/sprites/ui/player_2_avatar.png';
 import healthBarFrameImg from '../../assets/sprites/ui/health_bar_bg.png';
 
 import cloudImg from '../../assets/sprites/entities/cloud/cloud.png';
@@ -35,7 +35,7 @@ import cyberpunkStreet from '../../assets/sprites/backgrounds/cyberpunk-street.p
 
 import mainMusicSrc from '../../assets/audio/music/mainMusic.mp3';
 
-import guideNPCDialogue1 from '../../assets/audio/dialogue/guideNPC1.mp3';
+import p2Dialogue1 from '../../assets/audio/dialogue/player2_1.mp3';
 
 import meleeSound from '../../assets/audio/sfx/p1_melee.mp3';
 
@@ -54,9 +54,9 @@ export default class BootScene extends Phaser.Scene {
         this.load.atlas('cloud', cloudImg, cloudJSON);
         this.load.atlas('player', playerImg, playerJSON);
         this.load.image('avatar', avatarImg);
-        this.load.image('guideNPCAvatar', guideNPCAvatarImg);
+        this.load.image('p2Avatar', p2AvatarImg);
         this.load.image('health-bar-frame', healthBarFrameImg);
-        this.load.atlas('guideNPC', player2Img, player2JSON);
+        this.load.atlas('player2', player2Img, player2JSON);
         this.load.atlas('chat_bubble', chatBubbleImg, chatBubbleJSON);
         this.load.image('far-buildings', farBuildings);
         this.load.image('back-buildings', backBuildings);
@@ -66,7 +66,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('foreground-empty', foregroundEmpty);
         this.load.image('cyberpunk-street', cyberpunkStreet);
         this.load.audio('mainMusic', mainMusicSrc);
-        this.load.audio('guideNPCDialogue1', guideNPCDialogue1);
+        this.load.audio('p2Dialogue1', p2Dialogue1);
         this.load.audio('melee', meleeSound);
     }
 

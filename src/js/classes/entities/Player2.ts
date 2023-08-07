@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 import Player from './Player';
 
-export default class NPC extends Player {
+export default class Player2 extends Player {
     public name: string = 'Anonymuz';
     public currentAnimation?: string;
     public maxHealth: number = 100;

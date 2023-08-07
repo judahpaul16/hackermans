@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import Player from '../classes/entities/Player';
-import NPC from '../classes/entities/NPC';
+import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
 
@@ -9,7 +9,7 @@ export default class GameScene1 extends Phaser.Scene {
     private backgroundImages?: {[key: string]: Phaser.GameObjects.TileSprite} = {};
     private clouds: Phaser.GameObjects.Sprite[] = [];
     private player?: Player;
-    private guideNPC?: NPC;
+    private player2?: Player2;
     private enemy?: Enemy;
     private chatBubble?: Phaser.GameObjects.Sprite;
     private dialogueText?: Phaser.GameObjects.Text;
@@ -22,7 +22,7 @@ export default class GameScene1 extends Phaser.Scene {
     private moveLeftKey?: Phaser.Input.Keyboard.Key;
     private moveRightKey?: Phaser.Input.Keyboard.Key;
     private jumpKey?: Phaser.Input.Keyboard.Key;
-    private npcHealthBarCreated: boolean = false;
+    private p2HealthBarCreated: boolean = false;
     private level?: Phaser.GameObjects.Text;
     width: number = 3000;
     height: number = 650;
@@ -100,23 +100,23 @@ export default class GameScene1 extends Phaser.Scene {
         this.physics.add.collider(this.player, this.platforms);
         this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
 
-        // NPC setup
-        // if previous scene is GameScene2, start guideNPC at the end of the scene
+        // Player2 setup
+        // if previous scene is GameScene2, start player2 at the end of the scene
         if (previousSceneName === 'GameScene2') {
-            this.guideNPC = new NPC(this, this.width - 50, 650, 'guideNPC');
+            this.player2 = new Player2(this, this.width - 50, 650, 'player2');
             this.player.flipX = true;
         } else {
-            this.guideNPC = new NPC(this, 1325, 650, 'guideNPC');
+            this.player2 = new Player2(this, 1325, 650, 'player2');
         }
-        this.guideNPC.body!.setSize(40, 60);
-        this.guideNPC.setScale(2);
-        this.guideNPC.body!.setOffset(0, 6);
-        this.physics.add.collider(this.guideNPC, this.platforms);
+        this.player2.body!.setSize(40, 60);
+        this.player2.setScale(2);
+        this.player2.body!.setOffset(0, 6);
+        this.physics.add.collider(this.player2, this.platforms);
 
-        this.guideNPC!.play('standingNPC', true);
-        this.guideNPC!.flipX = true;
+        this.player2!.play('standingP2', true);
+        this.player2!.flipX = true;
 
-        this.interactHint = this.add.text(this.guideNPC!.x - 42, this.guideNPC!.y - 82, "Press 'F'", {
+        this.interactHint = this.add.text(this.player2!.x - 42, this.player2!.y - 82, "Press 'F'", {
             fontSize: 20,
             color: '#ffffff',
             align: 'center',
@@ -126,7 +126,7 @@ export default class GameScene1 extends Phaser.Scene {
         // add tweens to make the interact hint float up and down
         this.tweens.add({
             targets: this.interactHint,
-            y: this.guideNPC!.y - 50, // Float up and down
+            y: this.player2!.y - 50, // Float up and down
             duration: 1000,
             yoyo: true,
             repeat: -1,
@@ -154,20 +154,20 @@ export default class GameScene1 extends Phaser.Scene {
         // HUD setup
         createHealthBar(this, this.player);
 
-        // Calculate distance between player and NPC
+        // Calculate distance between player and Player2
         const distance = Phaser.Math.Distance.Between(
             this.player!.x, this.player!.y,
-            this.guideNPC!.x, this.guideNPC!.y
+            this.player2!.x, this.player2!.y
         );
-        this.npcHealthBarCreated = false;
-        if (distance <= 20 && !this.npcHealthBarCreated) {
-            // Create NPC health bar
-            createHealthBar(this, this.guideNPC!);
-            this.npcHealthBarCreated = true;
-        } else if (distance > 20 && this.npcHealthBarCreated) {
-            // Destroy NPC health bar
-            destroyHealthBar(this.guideNPC!);
-            this.npcHealthBarCreated = false;
+        this.p2HealthBarCreated = false;
+        if (distance <= 20 && !this.p2HealthBarCreated) {
+            // Create Player2 health bar
+            createHealthBar(this, this.player2!);
+            this.p2HealthBarCreated = true;
+        } else if (distance > 20 && this.p2HealthBarCreated) {
+            // Destroy Player2 health bar
+            destroyHealthBar(this.player2!);
+            this.p2HealthBarCreated = false;
         }
 
         // Debugging
@@ -220,28 +220,28 @@ export default class GameScene1 extends Phaser.Scene {
         // Move the player, check for collisions, etc.
         this.updatePlayer();
 
-        // Update NPC and Health Bars
-        // Calculate distance between player and NPC
+        // Update Player2 and Health Bars
+        // Calculate distance between player and Player2
         const distance = Phaser.Math.Distance.Between(
             this.player!.x, this.player!.y,
-            this.guideNPC!.x, this.guideNPC!.y
+            this.player2!.x, this.player2!.y
         );
 
-        npcFollow(this, this.guideNPC!, this.player!, this.interactHint!)
+        follow(this, this.player2!, this.player!, this.interactHint!)
 
-        if (distance <= 300 && !this.npcHealthBarCreated) {
-            // Create NPC health bar
-            createHealthBar(this, this.guideNPC!);
-            this.npcHealthBarCreated = true;
-        } else if (distance > 300 && this.npcHealthBarCreated) {
-            // Destroy NPC health bar
-            destroyHealthBar(this.guideNPC!);
-            this.npcHealthBarCreated = false;
+        if (distance <= 300 && !this.p2HealthBarCreated) {
+            // Create Player2 health bar
+            createHealthBar(this, this.player2!);
+            this.p2HealthBarCreated = true;
+        } else if (distance > 300 && this.p2HealthBarCreated) {
+            // Destroy Player2 health bar
+            destroyHealthBar(this.player2!);
+            this.p2HealthBarCreated = false;
         }
 
         // Update health bars only if created
         if (this.player) updateHealthBar(this, this.player);
-        if (this.npcHealthBarCreated && this.guideNPC) updateHealthBar(this, this.guideNPC);
+        if (this.p2HealthBarCreated && this.player2) updateHealthBar(this, this.player2);
 
         // Reset player position if 'R' key is pressed
         if (Phaser.Input.Keyboard.JustDown(this.resetKey!)) {
@@ -256,11 +256,11 @@ export default class GameScene1 extends Phaser.Scene {
             }
         }
 
-        this.handleInteract(this, this.player!, this.guideNPC!, this.interactKey!);
+        this.handleInteract(this, this.player!, this.player2!, this.interactKey!);
 
-        // Make chat bubble follow NPC
-        if (this.guideNPC) {
-            this.chatBubble?.setPosition(this.guideNPC.x - 123, this.guideNPC.y - 130);
+        // Make chat bubble follow Player2
+        if (this.player2) {
+            this.chatBubble?.setPosition(this.player2.x - 123, this.player2.y - 130);
             this.dialogueText?.setPosition(this.chatBubble!.x - (this.chatBubble!.width * 0.1 / 2) - 165, this.chatBubble!.y - (this.chatBubble!.height * 0.1 / 2) - 15,);
         }
 
@@ -271,10 +271,10 @@ export default class GameScene1 extends Phaser.Scene {
         }
         
         // if animation key is 'running', set the offset to 12
-        if (this.guideNPC!.anims.currentAnim!.key == 'runningNPC' || this.guideNPC!.anims.currentAnim!.key == 'walkingNPC') {
-            this.guideNPC!.setOffset(0, -12);
+        if (this.player2!.anims.currentAnim!.key == 'runningP2' || this.player2!.anims.currentAnim!.key == 'walkingP2') {
+            this.player2!.setOffset(0, -12);
         } else {
-            this.guideNPC!.setOffset(0, -8);
+            this.player2!.setOffset(0, -8);
         }
         
         // if player falls off the world, reset their position
@@ -282,11 +282,15 @@ export default class GameScene1 extends Phaser.Scene {
             this.player!.y = 650;
         }
 
-        // if npc falls off the world, reset their position
-        if (this.guideNPC!.y > this.height + 70) {
-            this.guideNPC!.y = 650;
+        // if player2 falls off the world, reset their position
+        if (this.player2!.y > this.height + 70) {
+            this.player2!.y = 650;
         }
         
+        // if this.level not in camera top right corner, move it there
+        if (this.level!.x != this.cameras.main.width - 90 || this.level!.y != 30) {
+            this.level!.setPosition(this.cameras.main.width - 90, 30);
+        }
     }
 
     createBackground(key: string, width: number, height: number): Phaser.GameObjects.TileSprite {
@@ -347,14 +351,14 @@ export default class GameScene1 extends Phaser.Scene {
     
     private timerEvent: Phaser.Time.TimerEvent | null = null;
 
-    private handleInteract(scene: Phaser.Scene, player: Player, npc: NPC, interactKey: Phaser.Input.Keyboard.Key) {
+    private handleInteract(scene: Phaser.Scene, player: Player, player2: Player2, interactKey: Phaser.Input.Keyboard.Key) {
 
         if (Phaser.Input.Keyboard.JustDown(this.interactKey!)) {
             this.interactHint?.setVisible(false);
 
-            // Start playing guideNPC's audio corresponding to dialogue1
-            this.sound.stopByKey('guideNPCDialogue1');
-            this.sound.play('guideNPCDialogue1', { volume: 1 });
+            // Start playing player2's audio corresponding to dialogue1
+            this.sound.stopByKey('p2Dialogue1');
+            this.sound.play('p2Dialogue1', { volume: 1 });
 
             // Cancel previous delayedCall and reset dialogue immediately if 'F' is pressed again
             if (this.chatBubble && this.chatBubble.anims && this.chatBubble.anims.isPlaying) {
@@ -376,7 +380,7 @@ export default class GameScene1 extends Phaser.Scene {
                 this.chatBubble.destroy();
             }
 
-            const newChatBubble = this.add.sprite(this.guideNPC!.x - 123, this.guideNPC!.y - 130, 'chat_bubble').setScale(0.34);
+            const newChatBubble = this.add.sprite(this.player2!.x - 123, this.player2!.y - 130, 'chat_bubble').setScale(0.34);
             newChatBubble.flipX = true;
             newChatBubble.play('chat_bubble', true);
 
@@ -538,14 +542,14 @@ export default class GameScene1 extends Phaser.Scene {
         let chatBubbleFrames = this.anims.generateFrameNames('chat_bubble', { prefix: 'chat', start: 1, end: 4, zeroPad: 2 })
         this.anims.create({ key: 'chat_bubble', frames: chatBubbleFrames, frameRate: 7, repeat: 0 });
         this.anims.create({ key: 'chat_bubble_reverse', frames: chatBubbleFrames.reverse(), frameRate: 7, repeat: 0 });
-        this.anims.create({ key: 'standingNPC', frames: this.anims.generateFrameNames(
-            'guideNPC', { prefix: 'standing', start: 1, end: 22, zeroPad: 4 }), frameRate: 3, repeat: -1 });
-        this.anims.create({ key: 'walkingNPC', frames: this.anims.generateFrameNames(
-            'guideNPC', { prefix: 'walk', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 });
-        this.anims.create({ key: 'runningNPC', frames: this.anims.generateFrameNames(
-            'guideNPC', { prefix: 'run', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 });
-        this.anims.create({ key: 'jumpingNPC', frames: this.anims.generateFrameNames(
-            'guideNPC', { prefix: 'jump', start: 1, end: 8, zeroPad: 4 }), frameRate: 7, repeat: 0 });
+        this.anims.create({ key: 'standingP2', frames: this.anims.generateFrameNames(
+            'player2', { prefix: 'standing', start: 1, end: 22, zeroPad: 4 }), frameRate: 3, repeat: -1 });
+        this.anims.create({ key: 'walkingP2', frames: this.anims.generateFrameNames(
+            'player2', { prefix: 'walk', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 });
+        this.anims.create({ key: 'runningP2', frames: this.anims.generateFrameNames(
+            'player2', { prefix: 'run', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 });
+        this.anims.create({ key: 'jumpingP2', frames: this.anims.generateFrameNames(
+            'player2', { prefix: 'jump', start: 1, end: 8, zeroPad: 4 }), frameRate: 7, repeat: 0 });
     }
 
     public addPlatform(x: number, y: number, width: number) {
@@ -555,15 +559,15 @@ export default class GameScene1 extends Phaser.Scene {
     }
 }
 
-export function createHealthBar(scene: Phaser.Scene, player: Player | NPC) {
-    // Determine if the character is an NPC
-    const isNPC = player instanceof NPC;
+export function createHealthBar(scene: Phaser.Scene, player: Player | Player2) {
+    // Determine if the character is an Player2
+    const isP2 = player instanceof Player2;
 
-    // Adjust the x-position of the health bar for NPCs
-    const xOffset = isNPC ? 360 : 0;
+    // Adjust the x-position of the health bar for P2
+    const xOffset = isP2 ? 360 : 0;
 
     // Adding the avatar image at the top left corner with xOffset
-    let someAvatar = isNPC ? 'guideNPCAvatar' : 'avatar';
+    let someAvatar = isP2 ? 'p2Avatar' : 'avatar';
     player.avatar = scene.add.image(100 + xOffset, 100, someAvatar);
 
     // Creating a circular mask using a Graphics object
@@ -581,7 +585,7 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | NPC) {
     // Get the scaled height of the avatar
     const avatarHeight = player.avatar.height * avatarScale;
 
-    // Background of the health bar (position it relative to avatar, with the possible offset for NPCs)
+    // Background of the health bar (position it relative to avatar, with the possible offset for P2)
     player.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, 'health-bar-frame').setOrigin(0);
 
     // Scale the healthBarFrame to match the avatar's height
@@ -631,7 +635,7 @@ export function updateHealthBar(scene: Phaser.Scene, player: Player) {
     return player!.healthBarFill;
 }
 
-export function destroyHealthBar(player: Player | NPC | Enemy) {
+export function destroyHealthBar(player: Player | Player2 | Enemy) {
     if (player.avatar && player.amask && player.healthBarFrame && player.healthBarFill && player.hudContainer) {
         player.avatar.destroy();
         player.amask.destroy();
@@ -640,36 +644,36 @@ export function destroyHealthBar(player: Player | NPC | Enemy) {
         player.hudContainer.destroy();
     }
 }
-export function npcFollow(scene: Phaser.Scene, npc: NPC, player: Player, interactHint: Phaser.GameObjects.Text, followSpeed: number = 300, bufferZone: number = 150, walkSpeed: number = 175, jumpStrength: number = 200) {
-    if (npc.body!.touching.down) {
-        const distanceToPlayer = npc.x - player.x;
+export function follow(scene: Phaser.Scene, player2: Player2, player: Player, interactHint: Phaser.GameObjects.Text, followSpeed: number = 300, bufferZone: number = 150, walkSpeed: number = 175, jumpStrength: number = 200) {
+    if (player2.body!.touching.down) {
+        const distanceToPlayer = player2.x - player.x;
         let startFollowing = false;
 
         if (distanceToPlayer <= 300 || startFollowing) {
             startFollowing = true;
             interactHint.setVisible(false);
-            // If NPC is close to the player, stop moving
+            // If Player2 is close to the player, stop moving
             if (Math.abs(distanceToPlayer) < bufferZone) {
-                npc.play('standingNPC', true);
-                npc.setVelocityX(0);
-                interactHint.x = npc.x - 40;
+                player2.play('standingP2', true);
+                player2.setVelocityX(0);
+                interactHint.x = player2.x - 40;
                 interactHint.setVisible(true)
             } else {
                 const isCloser = Math.abs(distanceToPlayer) < walkSpeed;
-                const animation = isCloser ? 'walkingNPC' : 'runningNPC';
+                const animation = isCloser ? 'walkingP2' : 'runningP2';
                 const speed = isCloser ? walkSpeed : followSpeed;
 
-                npc.y -= 10;
-                npc.setOffset(0, -12);
-                npc.play(animation, true);
-                npc.setVelocityX(distanceToPlayer < 0 ? speed : -speed);
-                // npc.setVelocityY(-200); // Keep the NPC from falling through the ground
-                npc.flipX = distanceToPlayer > 0;
+                player2.y -= 10;
+                player2.setOffset(0, -12);
+                player2.play(animation, true);
+                player2.setVelocityX(distanceToPlayer < 0 ? speed : -speed);
+                // player2.setVelocityY(-200); // Keep the Player2 from falling through the ground
+                player2.flipX = distanceToPlayer > 0;
 
                 // Check if there's an obstacle in the way
-                if (obstacleInWay(npc)) {
-                    npc.play('jumpingNPC', true);
-                    npc.setVelocityY(-jumpStrength);
+                if (obstacleInWay(player2)) {
+                    player2.play('jumpingP2', true);
+                    player2.setVelocityY(-jumpStrength);
                 }
             }
         }
@@ -678,7 +682,7 @@ export function npcFollow(scene: Phaser.Scene, npc: NPC, player: Player, interac
 
 
 // You'll need to define what an obstacle is in your game environment
-function obstacleInWay(npc: NPC): boolean {
+function obstacleInWay(player2: Player2): boolean {
     // Implement your logic to detect obstacles here.
     // This could include raycasting, collision checks, or other techniques specific to your game.
     return false; // Return true if an obstacle is detected
