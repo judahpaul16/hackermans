@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
-import { setupAnimations } from '../utils/common';
+import * as common from '../helpers/common';
+import InputManager from '../classes/utils/InputManager';
 
 export default class MainMenuScene extends Phaser.Scene {
     private coin!: Phaser.GameObjects.Sprite;
@@ -15,7 +16,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
     create() {
         // Setup Animations
-        setupAnimations(this);
+        common.setupAnimations(this);
 
         // Load the Insert Coin Menu
         this.insertCoinMenu();

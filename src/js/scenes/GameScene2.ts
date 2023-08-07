@@ -1,30 +1,23 @@
 import Phaser from 'phaser';
+import BaseScene from './BaseScene';
 import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
+import * as common from '../helpers/common';
 import * as dat from 'dat.gui';
-import * as common from '../utils/common';
 
-export default class GameScene2 extends Phaser.Scene {
+export default class GameScene2 extends BaseScene {
     private dg?: dat.GUI;
     private backgroundImages?: {[key: string]: Phaser.GameObjects.TileSprite} = {};
     private clouds: Phaser.GameObjects.Sprite[] = [];
-    private player2?: Player2;
-    private player?: Player;
-    private enemy?: Enemy;
+    public player?: Player;
+    public player2?: Player2;
+    public enemy?: Enemy;
     private interactHint?: Phaser.GameObjects.Text;
     private chatBubble?: Phaser.GameObjects.Sprite;
     private platforms?: Phaser.Physics.Arcade.StaticGroup;
-    private cursors?: Phaser.Types.Input.Keyboard.CursorKeys;
-    private debugKey?: Phaser.Input.Keyboard.Key;
-    private resetKey?: Phaser.Input.Keyboard.Key;
-    private interactKey?: Phaser.Input.Keyboard.Key;
-    private moveLeftKey?: Phaser.Input.Keyboard.Key;
-    private moveRightKey?: Phaser.Input.Keyboard.Key;
-    private jumpKey?: Phaser.Input.Keyboard.Key;
     private p2HealthBarCreated: boolean = false;
     private level?: Phaser.GameObjects.Text;
-    private timerEvent: Phaser.Time.TimerEvent | null = null;
     width: number = 6500;
     height: number = 650;
     // scale factors
@@ -33,11 +26,19 @@ export default class GameScene2 extends Phaser.Scene {
     sfactor3: number = 0.9;
     sfactor4: number = 0.9;
 
+    protected resetPlayer() {
+        if (this.player) {
+          this.player.setPosition(200, 650);
+        }
+    }
+
     constructor() {
         super({ key: 'GameScene2' });
     }
     
     create() {
+        super.create();
+        
         // Scene Setup
         this.physics.world.setBounds(0, 0, this.width, 800);
 
@@ -113,15 +114,6 @@ export default class GameScene2 extends Phaser.Scene {
             ease: 'Sine.easeInOut'
         });
 
-        // Input setup
-        this.cursors = this.input.keyboard!.createCursorKeys();
-        this.debugKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
-        this.resetKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.R);
-        this.interactKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.F);
-        this.moveLeftKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.moveRightKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.D);
-        this.jumpKey = this.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        
         // HUD setup
         common.createHealthBar(this, this.player!);
 
@@ -147,6 +139,8 @@ export default class GameScene2 extends Phaser.Scene {
 
     update() {
         // Game loop logic
+        super.update();
+
         // Parallax scrolling
         let camX = this.cameras.main.scrollX;
         this.backgroundImages!.farBuildings.tilePositionX = camX * 0.1;
@@ -157,8 +151,6 @@ export default class GameScene2 extends Phaser.Scene {
         // Update clouds
         common.updateClouds(this);
 
-        // Move the player, check for collisions, etc.
-        common.updatePlayer(this, this.player!);
         // Update Player2 and Health Bars
         // Calculate distance between player and Player2
         const distance = Phaser.Math.Distance.Between(
@@ -181,24 +173,6 @@ export default class GameScene2 extends Phaser.Scene {
         // Update health bars only if created
         if (this.player) common.updateHealthBar(this, this.player);
         if (this.p2HealthBarCreated && this.player2) common.updateHealthBar(this, this.player2);
-
-        // Reset player position if 'R' key is pressed
-        if (Phaser.Input.Keyboard.JustDown(this.resetKey!)) {
-            this.player?.setPosition(200, 650);
-        }
-
-        // Reset player position if 'R' key is pressed
-        if (Phaser.Input.Keyboard.JustDown(this.resetKey!)) {
-            this.player?.setPosition(200, 650);
-        }
-
-        // Show Debug Menu if ESC key is pressed
-        if (Phaser.Input.Keyboard.JustDown(this.debugKey!)) {
-            const dg = this.registry.get('debugGUI');
-            if (dg) {
-                dg.domElement.style.display = dg.domElement.style.display === 'none' ? '' : 'none';
-            }
-        }
 
         // if this.level not in camera top right corner, move it there
         if (this.level!.x != this.cameras.main.width - 90 || this.level!.y != 30) {

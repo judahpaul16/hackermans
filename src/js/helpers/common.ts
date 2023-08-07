@@ -3,6 +3,7 @@ import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
+import InputManager from '../classes/utils/InputManager';
 
 export function createBackground(scene: any, key: string, width: number, height: number): Phaser.GameObjects.TileSprite {
     const imageHeight = scene.textures.get(key).getSourceImage().height;
@@ -126,80 +127,6 @@ export function updateClouds(scene: any) {
                 }
             }
         }
-    }
-}
-
-export function updatePlayer(scene: any, player: Player | Player2 | Enemy) {
-    if (!player || !scene.cursors) return;
-    if (player.isDead) return;
-
-    // Check if the player is dead
-    if (player.currentHealth <= 0 && !player.isDead) {
-        scene.physics.world.gravity.y = 0;
-        player.play('dying', true);
-        return; // Exit the update function if the player is dead
-    }
-
-    // Don't process inputs if the player is attacking or jumping
-    if (player?.getCurrentAnimation() === 'melee') return;
-    if (player?.getCurrentAnimation() === 'jumping') return;
-
-    let isMovingLeft = scene.cursors.left!.isDown || scene.moveLeftKey!.isDown;
-    let isMovingRight = scene.cursors.right!.isDown || scene.moveRightKey!.isDown;
-    let isRunning = scene.cursors.shift!.isDown;
-    let isJumping = scene.cursors.up!.isDown || scene.jumpKey!.isDown;
-    let isAttacking = scene.cursors.space!.isDown;
-
-    if (isMovingRight) {
-        if (isRunning) {
-            player.setVelocityX(300);
-            player.play('running', true);
-        } else if (isJumping) {
-            jump(player);        
-        } else {
-            player.setVelocityX(175);
-            player.play('walking', true);
-        }
-        player.flipX = false;
-        if (isAttacking) {
-            attack(scene, player);
-        }
-    } else if (isMovingLeft) {
-        if (isRunning) {
-            player.setVelocityX(-300);
-            player.play('running', true);
-        } else if (isJumping) {
-            jump(player);        
-        } else {
-            player.setVelocityX(-175);
-            player.play('walking', true);
-        }
-        player.flipX = true;
-        if (isAttacking) {
-            attack(scene, player);
-        }
-    } else if (isJumping) {
-        jump(player);        
-    } else {
-        player.setVelocityX(0);
-        player.play('standingPlayer', true);
-        if (isAttacking) {
-            attack(scene, player);
-        }
-    }
-}
-
-export function jump(player: Player | Player2 | Enemy) {
-    if (player && player.body!.touching.down) {
-        player.setVelocityY(-450);
-        player.play('jumping', true);
-    }
-}
-
-export function attack(scene: any, player: Player | Player2 | Enemy) {
-    if (player) {            
-        player.play('melee', true);
-        scene.sound.play('melee', { volume: 0.5, loop: false });
     }
 }
 
