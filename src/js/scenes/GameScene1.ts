@@ -24,7 +24,7 @@ export default class GameScene1 extends Phaser.Scene {
     private jumpKey?: Phaser.Input.Keyboard.Key;
     private npcHealthBarCreated: boolean = false;
     level: Phaser.GameObjects.Text | undefined;
-    width: number = 6500;
+    width: number = 3000;
     height: number = 650;
     // scale factors
     sfactor1: number = 1.25;
@@ -101,7 +101,13 @@ export default class GameScene1 extends Phaser.Scene {
         this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
 
         // NPC setup
-        this.guideNPC = new NPC(this, 1325, 650, 'guideNPC');
+        // if previous scene is GameScene2, start guideNPC at the end of the scene
+        if (previousSceneName === 'GameScene2') {
+            this.guideNPC = new NPC(this, this.width - 50, 650, 'guideNPC');
+            this.player.flipX = true;
+        } else {
+            this.guideNPC = new NPC(this, 1325, 650, 'guideNPC');
+        }
         this.guideNPC.body!.setSize(40, 60);
         this.guideNPC.setScale(2);
         this.guideNPC.body!.setOffset(0, 6);
@@ -214,14 +220,13 @@ export default class GameScene1 extends Phaser.Scene {
         // Move the player, check for collisions, etc.
         this.updatePlayer();
 
-        // Update Health bar
+        // Update NPC and Health Bars
         // Calculate distance between player and NPC
         const distance = Phaser.Math.Distance.Between(
             this.player!.x, this.player!.y,
             this.guideNPC!.x, this.guideNPC!.y
         );
 
-        // Update NPC
         npcFollow(this, this.guideNPC!, this.player!, this.interactHint!)
 
         if (distance <= 300 && !this.npcHealthBarCreated) {
@@ -261,13 +266,11 @@ export default class GameScene1 extends Phaser.Scene {
 
         // if player moves beyond the right edge of the world, start the next scene
         if (this.player!.x > this.width) {
-            destroyHealthBar(this.player!);
             this.scene.start('GameScene2');
             this.game.registry.set('previousScene', this.scene.key);
         }
         
         // if animation key is 'running', set the offset to 12
-        console.log(this.guideNPC!.anims.currentAnim!.key);
         if (this.guideNPC!.anims.currentAnim!.key == 'runningNPC' || this.guideNPC!.anims.currentAnim!.key == 'walkingNPC') {
             this.guideNPC!.setOffset(0, -12);
         } else {
@@ -621,17 +624,21 @@ export function updateHealthBar(scene: Phaser.Scene, player: Player) {
 
     // Update the width of the health bar fill
     let fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
-    player!.healthBarFill.clear();
-    player!.healthBarFill.fillRect(player!.healthBarFrame.x + 20, player!.healthBarFrame.y + 20, fillWidth, 30);
+    if (player!.healthBarFill) {
+        player!.healthBarFill.clear();
+        player!.healthBarFill.fillRect(player!.healthBarFrame.x + 20, player!.healthBarFrame.y + 20, fillWidth, 30);
+    }
     return player!.healthBarFill;
 }
 
 export function destroyHealthBar(player: Player | NPC | Enemy) {
-    player.avatar.destroy();
-    player.amask.destroy();
-    player.healthBarFrame.destroy();
-    player.healthBarFill.destroy();
-    player.hudContainer.destroy();
+    if (player.avatar && player.amask && player.healthBarFrame && player.healthBarFill && player.hudContainer) {
+        player.avatar.destroy();
+        player.amask.destroy();
+        player.healthBarFrame.destroy();
+        player.healthBarFill.destroy();
+        player.hudContainer.destroy();
+    }
 }
 export function npcFollow(scene: Phaser.Scene, npc: NPC, player: Player, interactHint: Phaser.GameObjects.Text, followSpeed: number = 300, bufferZone: number = 150, walkSpeed: number = 175, jumpStrength: number = 200) {
     if (npc.body!.touching.down) {
