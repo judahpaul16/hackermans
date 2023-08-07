@@ -142,6 +142,7 @@ export default class GameScene1 extends Phaser.Scene {
             this.player!.x, this.player!.y,
             this.guideNPC!.x, this.guideNPC!.y
         );
+        this.npcHealthBarCreated = false;
         if (distance <= 20 && !this.npcHealthBarCreated) {
             // Create NPC health bar
             createHealthBar(this, this.guideNPC!);
