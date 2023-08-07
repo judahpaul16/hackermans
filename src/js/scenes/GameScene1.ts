@@ -109,7 +109,7 @@ export default class GameScene1 extends Phaser.Scene {
         // add tweens to make the interact hint float up and down
         this.tweens.add({
             targets: this.interactHint,
-            y: this.guideNPC!.y - 100, // Float up and down
+            y: this.guideNPC!.y - 50, // Float up and down
             duration: 1000,
             yoyo: true,
             repeat: -1,
@@ -164,6 +164,7 @@ export default class GameScene1 extends Phaser.Scene {
             }
 
             const worldFolder = this.dg.addFolder('World');
+            worldFolder.add(this.physics.world.gravity, 'y', -1000, 1000, 1).name('Gravity').listen();
             const scaleFolder = worldFolder.addFolder('Background Scale');
             scaleFolder.add(this, 'width', 0, 10000).onChange((value) => {
                 this.updateWorldBounds();
@@ -210,7 +211,7 @@ export default class GameScene1 extends Phaser.Scene {
         );
 
         // Update NPC
-        npcFollow(this.guideNPC!, this.player!, this.interactHint!)
+        npcFollow(this, this.guideNPC!, this.player!, this.interactHint!)
 
         if (distance <= 300 && !this.npcHealthBarCreated) {
             // Create NPC health bar
@@ -253,7 +254,25 @@ export default class GameScene1 extends Phaser.Scene {
             this.scene.start('GameScene2');
             this.game.registry.set('previousScene', this.scene.key);
         }
+        
+        // if animation key is 'running', set the offset to 12
+        console.log(this.guideNPC!.anims.currentAnim!.key);
+        if (this.guideNPC!.anims.currentAnim!.key == 'runningNPC' || this.guideNPC!.anims.currentAnim!.key == 'walkingNPC') {
+            this.guideNPC!.setOffset(0, -12);
+        } else {
+            this.guideNPC!.setOffset(0, -8);
+        }
+        
+        // if player falls off the world, reset their position
+        if (this.player!.y > this.height + 70) {
+            this.player!.y = 650;
+        }
 
+        // if npc falls off the world, reset their position
+        if (this.guideNPC!.y > this.height + 70) {
+            this.guideNPC!.y = 650;
+        }
+        
     }
 
     createBackground(key: string, width: number, height: number): Phaser.GameObjects.TileSprite {
@@ -603,7 +622,7 @@ export function destroyHealthBar(player: Player | NPC | Enemy) {
     player.healthBarFill.destroy();
     player.hudContainer.destroy();
 }
-export function npcFollow(npc: NPC, player: Player, interactHint: Phaser.GameObjects.Text, followSpeed: number = 300, bufferZone: number = 150, walkSpeed: number = 175, jumpStrength: number = 200) {
+export function npcFollow(scene: Phaser.Scene, npc: NPC, player: Player, interactHint: Phaser.GameObjects.Text, followSpeed: number = 300, bufferZone: number = 150, walkSpeed: number = 175, jumpStrength: number = 200) {
     if (npc.body!.touching.down) {
         const distanceToPlayer = npc.x - player.x;
         let startFollowing = false;
@@ -615,17 +634,18 @@ export function npcFollow(npc: NPC, player: Player, interactHint: Phaser.GameObj
             if (Math.abs(distanceToPlayer) < bufferZone) {
                 npc.play('standingNPC', true);
                 npc.setVelocityX(0);
-                interactHint.x = npc.x - 42;
-                interactHint.setVisible(true);
-                npc.setVelocityY(-100); // Keep the NPC from falling through the ground
+                interactHint.x = npc.x - 40;
+                interactHint.setVisible(true)
             } else {
                 const isCloser = Math.abs(distanceToPlayer) < walkSpeed;
                 const animation = isCloser ? 'walkingNPC' : 'runningNPC';
                 const speed = isCloser ? walkSpeed : followSpeed;
 
+                npc.y -= 10;
+                npc.setOffset(0, -12);
                 npc.play(animation, true);
                 npc.setVelocityX(distanceToPlayer < 0 ? speed : -speed);
-                npc.setVelocityY(-200); // Keep the NPC from falling through the ground
+                // npc.setVelocityY(-200); // Keep the NPC from falling through the ground
                 npc.flipX = distanceToPlayer > 0;
 
                 // Check if there's an obstacle in the way
