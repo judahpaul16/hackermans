@@ -23,6 +23,7 @@ export default class GameScene1 extends Phaser.Scene {
     private moveRightKey?: Phaser.Input.Keyboard.Key;
     private jumpKey?: Phaser.Input.Keyboard.Key;
     private npcHealthBarCreated: boolean = false;
+    level: Phaser.GameObjects.Text | undefined;
     width: number = 6500;
     height: number = 650;
     // scale factors
@@ -57,11 +58,21 @@ export default class GameScene1 extends Phaser.Scene {
             backBuildings: this.createBackground('back-buildings', this.width, this.height*this.sfactor2),
             middle: this.createBackground('middle', this.width, this.height*this.sfactor3),
             foreground: this.createBackground('foreground-empty', this.width, this.height*this.sfactor4),
-        };        
+        };
 
         // Camera setup
         this.cameras.main.setBounds(0, 0, this.width, 800);
         
+        // Add Lv. 1 to the top right corner of the camera
+        this.level = this.add.text(this.cameras.main.width - 90, 30, 'Lv. 1', {
+            fontSize: 20,
+            color: '#ffffff',
+            align: 'center',
+            stroke: '#000000',
+            strokeThickness: 3
+        });
+        this.level.setScrollFactor(0);
+
         // Cloud Setup
         this.createClouds(10);
 
