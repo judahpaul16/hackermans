@@ -124,7 +124,6 @@ export default class GameScene1 extends Phaser.Scene {
             repeat: -1,
             ease: 'Sine.easeInOut'
         });
-        
 
         // Input setup
         this.cursors = this.input.keyboard!.createCursorKeys();
@@ -209,6 +208,9 @@ export default class GameScene1 extends Phaser.Scene {
             this.guideNPC!.x, this.guideNPC!.y
         );
 
+        // Update NPC
+        npcFollow(this.guideNPC!, this.player!, this.interactHint!)
+
         if (distance <= 300 && !this.npcHealthBarCreated) {
             // Create NPC health bar
             createHealthBar(this, this.guideNPC!);
@@ -237,6 +239,12 @@ export default class GameScene1 extends Phaser.Scene {
         }
 
         this.handleInteract(this, this.player!, this.guideNPC!, this.interactKey!);
+
+        // Make chat bubble follow NPC
+        if (this.guideNPC) {
+            this.chatBubble?.setPosition(this.guideNPC.x - 123, this.guideNPC.y - 130);
+            this.dialogueText?.setPosition(this.chatBubble!.x - (this.chatBubble!.width * 0.1 / 2) - 165, this.chatBubble!.y - (this.chatBubble!.height * 0.1 / 2) - 15,);
+        }
 
         // if player moves beyond the right edge of the world, start the next scene
         if (this.player!.x > this.width) {
@@ -498,6 +506,12 @@ export default class GameScene1 extends Phaser.Scene {
         this.anims.create({ key: 'chat_bubble_reverse', frames: chatBubbleFrames.reverse(), frameRate: 7, repeat: 0 });
         this.anims.create({ key: 'standingNPC', frames: this.anims.generateFrameNames(
             'guideNPC', { prefix: 'standing', start: 1, end: 22, zeroPad: 4 }), frameRate: 3, repeat: -1 });
+        this.anims.create({ key: 'walkingNPC', frames: this.anims.generateFrameNames(
+            'guideNPC', { prefix: 'walk', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 });
+        this.anims.create({ key: 'runningNPC', frames: this.anims.generateFrameNames(
+            'guideNPC', { prefix: 'run', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 });
+        this.anims.create({ key: 'jumpingNPC', frames: this.anims.generateFrameNames(
+            'guideNPC', { prefix: 'jump', start: 1, end: 8, zeroPad: 4 }), frameRate: 7, repeat: 0 });
     }
 
     public addPlatform(x: number, y: number, width: number) {
@@ -587,4 +601,46 @@ export function destroyHealthBar(player: Player | NPC | Enemy) {
     player.healthBarFrame.destroy();
     player.healthBarFill.destroy();
     player.hudContainer.destroy();
+}
+export function npcFollow(npc: NPC, player: Player, interactHint: Phaser.GameObjects.Text, followSpeed: number = 300, bufferZone: number = 150, walkSpeed: number = 175, jumpStrength: number = 200) {
+    if (npc.body!.touching.down) {
+        const distanceToPlayer = npc.x - player.x;
+        let startFollowing = false;
+
+        if (distanceToPlayer <= 300 || startFollowing) {
+            startFollowing = true;
+            interactHint.setVisible(false);
+            // If NPC is close to the player, stop moving
+            if (Math.abs(distanceToPlayer) < bufferZone) {
+                npc.play('standingNPC', true);
+                npc.setVelocityX(0);
+                interactHint.x = npc.x - 42;
+                interactHint.setVisible(true);
+                npc.setVelocityY(-100); // Keep the NPC from falling through the ground
+            } else {
+                const isCloser = Math.abs(distanceToPlayer) < walkSpeed;
+                const animation = isCloser ? 'walkingNPC' : 'runningNPC';
+                const speed = isCloser ? walkSpeed : followSpeed;
+
+                npc.play(animation, true);
+                npc.setVelocityX(distanceToPlayer < 0 ? speed : -speed);
+                npc.setVelocityY(-200); // Keep the NPC from falling through the ground
+                npc.flipX = distanceToPlayer > 0;
+
+                // Check if there's an obstacle in the way
+                if (obstacleInWay(npc)) {
+                    npc.play('jumpingNPC', true);
+                    npc.setVelocityY(-jumpStrength);
+                }
+            }
+        }
+    }
+}
+
+
+// You'll need to define what an obstacle is in your game environment
+function obstacleInWay(npc: NPC): boolean {
+    // Implement your logic to detect obstacles here.
+    // This could include raycasting, collision checks, or other techniques specific to your game.
+    return false; // Return true if an obstacle is detected
 }
