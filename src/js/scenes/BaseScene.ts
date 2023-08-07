@@ -6,7 +6,7 @@ import InputManager from '../classes/utils/InputManager';
 import * as common from '../helpers/common';
 
 export default class BaseScene extends Phaser.Scene {
-    protected inputManager!: InputManager;
+    public inputManager!: InputManager;
     public player?: Player;
     public player2?: Player2;
     public enemy?: Enemy;
@@ -27,6 +27,9 @@ export default class BaseScene extends Phaser.Scene {
                 dg.domElement.style.display = dg.domElement.style.display === 'none' ? '' : 'none';
             }
         });
+        // Update Input to apply to this scene
+        InputManager.getInstance().updateInput(this);
+        
         // any other common setup...
     }
 

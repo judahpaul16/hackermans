@@ -3,6 +3,7 @@ import BaseScene from './BaseScene';
 import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
+import InputManager from '../classes/utils/InputManager';
 import * as common from '../helpers/common';
 
 export default class GameScene2 extends BaseScene {
@@ -63,7 +64,7 @@ export default class GameScene2 extends BaseScene {
         // Cloud Setup
         common.createClouds(this, 10);
         
-        // Platform setup
+        // Street setup
         this.platforms = this.physics.add.staticGroup();
         common.addPlatform(this, 150, 790, 1000, 'street');
 

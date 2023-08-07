@@ -30,6 +30,17 @@ class InputManager {
   
       return InputManager.instance;
     }
+
+    public updateInput(scene: Phaser.Scene): void {
+      this.cursors = scene.input.keyboard!.createCursorKeys();
+      this.debugKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
+      this.resetKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+      this.interactKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+      this.moveLeftKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+      this.moveRightKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+      this.jumpKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+    }
+    
   }
   
   export default InputManager;
