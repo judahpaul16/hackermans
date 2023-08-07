@@ -23,7 +23,7 @@ export default class GameScene1 extends Phaser.Scene {
     private moveRightKey?: Phaser.Input.Keyboard.Key;
     private jumpKey?: Phaser.Input.Keyboard.Key;
     private npcHealthBarCreated: boolean = false;
-    level: Phaser.GameObjects.Text | undefined;
+    private level?: Phaser.GameObjects.Text;
     width: number = 3000;
     height: number = 650;
     // scale factors
