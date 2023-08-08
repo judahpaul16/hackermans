@@ -86,9 +86,6 @@ export default class GameScene2 extends BaseScene {
             this.p2HealthBarCreated = false;
         }
         
-        // Debugging
-        common.initializeDebugGUI(this);
-        
         // Super
         super.create();
     }
@@ -136,12 +133,14 @@ export default class GameScene2 extends BaseScene {
         
         // if player moves beyond the left edge of the world, start the previous scene
         if (this.player!.x < 0) {
+            this.dg!.destroy();
             this.scene.start('GameScene1');
             this.game.registry.set('previousScene', this.scene.key);
         }
 
         // // if player moves beyond the right edge of the world, start the next scene
         // if (this.player!.x > this.width) {
+        //      this.dg!.destroy();
         //     this.scene.start('GameScene3');
         //     this.game.registry.set('previousScene', this.scene.key);
         // }

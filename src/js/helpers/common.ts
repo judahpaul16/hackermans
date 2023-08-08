@@ -3,7 +3,6 @@ import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
-import InputManager from '../classes/utils/InputManager';
 
 export function createBackground(scene: any, key: string, width: number, height: number): Phaser.GameObjects.TileSprite {
     const imageHeight = scene.textures.get(key).getSourceImage().height;
@@ -108,7 +107,6 @@ export function createClouds(scene: any, numClouds: number) {
       }
     }
 }
-
 
 export function updateClouds(scene: any) {
     if (scene.clouds) {
@@ -329,7 +327,6 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
         scene.chatBubble = newChatBubble;
     }
 }
-
 
 export function setupAnimations(scene: any) {
     // Setup Coin animation

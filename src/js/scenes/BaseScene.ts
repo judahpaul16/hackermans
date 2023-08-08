@@ -26,6 +26,7 @@ export default class BaseScene extends Phaser.Scene {
     protected backgroundImages?: { [key: string]: Phaser.GameObjects.TileSprite } = {};
     protected clouds: Phaser.GameObjects.Sprite[] = [];
     protected platforms?: Phaser.Physics.Arcade.StaticGroup;
+    protected dg?: dat.GUI;
 
     create() {
         this.inputManager = InputManager.getInstance(this);
@@ -39,9 +40,9 @@ export default class BaseScene extends Phaser.Scene {
 
         this.inputManager.debugKey.on('down', () => {
             // Show Debug Menu if ESC key is pressed
-            const dg = this.registry.get('debugGUI');
-            if (dg) {
-                dg.domElement.style.display = dg.domElement.style.display === 'none' ? '' : 'none';
+            this.dg = this.registry.get('debugGUI');
+            if (this.dg) {
+                this.dg.domElement.style.display = this.dg.domElement.style.display === 'none' ? '' : 'none';
             }
         });
         
@@ -71,6 +72,9 @@ export default class BaseScene extends Phaser.Scene {
             repeat: -1,
             ease: 'Sine.easeInOut'
         });
+
+        // Debugging
+        common.initializeDebugGUI(this);
 
         // any other common setup...
     }
