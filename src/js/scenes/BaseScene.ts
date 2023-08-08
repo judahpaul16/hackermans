@@ -6,13 +6,25 @@ import InputManager from '../classes/utils/InputManager';
 import * as common from '../helpers/common';
 
 export default class BaseScene extends Phaser.Scene {
-    public inputManager!: InputManager;
-    public player?: Player;
-    public player2?: Player2;
-    public enemy?: Enemy;
-    public chatBubble?: Phaser.GameObjects.Sprite;
-    public dialogueText?: Phaser.GameObjects.Text;
-    public interactHint?: Phaser.GameObjects.Text;
+    protected inputManager!: InputManager;
+    protected player?: Player;
+    protected player2?: Player2;
+    protected enemy?: Enemy;
+    protected chatBubble?: Phaser.GameObjects.Sprite;
+    protected dialogueText?: Phaser.GameObjects.Text;
+    protected interactHint?: Phaser.GameObjects.Text;
+    protected p2HealthBarCreated: boolean = false;
+    protected level?: Phaser.GameObjects.Text;
+    protected width: number = 3000;
+    protected height: number = 650;
+    // scale factors
+    protected sfactor1: number = 1.25;
+    protected sfactor2: number = 1.1;
+    protected sfactor3: number = 0.9;
+    protected sfactor4: number = 0.9;
+    protected backgroundImages?: { [key: string]: Phaser.GameObjects.TileSprite } = {};
+    protected clouds: Phaser.GameObjects.Sprite[] = [];
+    protected platforms?: Phaser.Physics.Arcade.StaticGroup;
 
     create() {
         this.inputManager = InputManager.getInstance(this);

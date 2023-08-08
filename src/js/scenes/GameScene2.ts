@@ -3,26 +3,9 @@ import BaseScene from './BaseScene';
 import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
-import InputManager from '../classes/utils/InputManager';
 import * as common from '../helpers/common';
 
 export default class GameScene2 extends BaseScene {
-    private backgroundImages?: {[key: string]: Phaser.GameObjects.TileSprite} = {};
-    private clouds: Phaser.GameObjects.Sprite[] = [];
-    public player?: Player;
-    public player2?: Player2;
-    public enemy?: Enemy;
-    public interactHint?: Phaser.GameObjects.Text;
-    private platforms?: Phaser.Physics.Arcade.StaticGroup;
-    private p2HealthBarCreated: boolean = false;
-    private level?: Phaser.GameObjects.Text;
-    width: number = 6500;
-    height: number = 650;
-    // scale factors
-    sfactor1: number = 1.25;
-    sfactor2: number = 1.1;
-    sfactor3: number = 0.9;
-    sfactor4: number = 0.9;
 
     protected resetPlayer() {
         if (this.player) {
@@ -35,8 +18,6 @@ export default class GameScene2 extends BaseScene {
     }
     
     create() {
-        super.create();
-        
         // Scene Setup
         this.physics.world.setBounds(0, 0, this.width, 800);
 
@@ -107,11 +88,13 @@ export default class GameScene2 extends BaseScene {
         
         // Debugging
         common.initializeDebugGUI(this);
+        
+        // Super
+        super.create();
     }
 
     update() {
         // Game loop logic
-        super.update();
 
         // Parallax scrolling
         let camX = this.cameras.main.scrollX;
@@ -162,5 +145,8 @@ export default class GameScene2 extends BaseScene {
         //     this.scene.start('GameScene3');
         //     this.game.registry.set('previousScene', this.scene.key);
         // }
+
+        // Super
+        super.update();
     }
 }

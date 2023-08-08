@@ -6,23 +6,7 @@ import Enemy from '../classes/entities/Enemy';
 import * as common from '../helpers/common';
 
 export default class GameScene1 extends BaseScene {
-    private backgroundImages?: {[key: string]: Phaser.GameObjects.TileSprite} = {};
-    private clouds: Phaser.GameObjects.Sprite[] = [];
-    public player?: Player;
-    public player2?: Player2;
-    public enemy?: Enemy;
-    public interactHint?: Phaser.GameObjects.Text;
-    private platforms?: Phaser.Physics.Arcade.StaticGroup;
-    private p2HealthBarCreated: boolean = false;
-    private level?: Phaser.GameObjects.Text;
-    width: number = 3000;
-    height: number = 650;
-    // scale factors
-    sfactor1: number = 1.25;
-    sfactor2: number = 1.1;
-    sfactor3: number = 0.9;
-    sfactor4: number = 0.9;
-    
+
     protected resetPlayer() {
         if (this.player) {
           this.player.setPosition(200, 650);

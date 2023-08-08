@@ -229,6 +229,7 @@ export function follow(scene: any, player2: Player2, player: Player, interactHin
                 player2.setVelocityX(0);
                 interactHint.x = player2.x - 40;
                 if (scene.chatBubble) if (!scene.chatBubble.visible) interactHint.setVisible(true);
+                if (!scene.chatBubble) interactHint.setVisible(true);
             } else {
                 const isCloser = Math.abs(distanceToPlayer) < walkSpeed;
                 const animation = isCloser ? 'walkingP2' : 'runningP2';
