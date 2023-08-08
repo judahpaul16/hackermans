@@ -215,7 +215,7 @@ export function destroyHealthBar(player: Player | Player2 | Enemy) {
         player.hudContainer.destroy();
     }
 }
-export function follow(scene: Phaser.Scene, player2: Player2, player: Player, interactHint: Phaser.GameObjects.Text, followSpeed: number = 300, bufferZone: number = 150, walkSpeed: number = 175, jumpStrength: number = 200) {
+export function follow(scene: any, player2: Player2, player: Player, interactHint: Phaser.GameObjects.Text, followSpeed: number = 300, bufferZone: number = 150, walkSpeed: number = 175, jumpStrength: number = 200) {
     if (player2.body!.touching.down) {
         const distanceToPlayer = player2.x - player.x;
         let startFollowing = false;
@@ -228,7 +228,7 @@ export function follow(scene: Phaser.Scene, player2: Player2, player: Player, in
                 player2.play('standingP2', true);
                 player2.setVelocityX(0);
                 interactHint.x = player2.x - 40;
-                interactHint.setVisible(true)
+                if (!scene.chatBubble.visible) interactHint.setVisible(true);
             } else {
                 const isCloser = Math.abs(distanceToPlayer) < walkSpeed;
                 const animation = isCloser ? 'walkingP2' : 'runningP2';

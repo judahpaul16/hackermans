@@ -11,7 +11,7 @@ export default class GameScene1 extends BaseScene {
     public player?: Player;
     public player2?: Player2;
     public enemy?: Enemy;
-    private interactHint?: Phaser.GameObjects.Text;
+    public interactHint?: Phaser.GameObjects.Text;
     private platforms?: Phaser.Physics.Arcade.StaticGroup;
     private p2HealthBarCreated: boolean = false;
     private level?: Phaser.GameObjects.Text;
@@ -34,8 +34,6 @@ export default class GameScene1 extends BaseScene {
     }
     
     create() {
-        super.create();
-        
         // Scene Setup
         this.physics.world.setBounds(0, 0, this.width, 800);
 
@@ -100,32 +98,6 @@ export default class GameScene1 extends BaseScene {
         this.player2!.play('standingP2', true);
         this.player2!.flipX = true;
 
-        this.interactHint = this.add.text(this.player2!.x - 42, this.player2!.y - 82, "Press 'F'", {
-            fontSize: 20,
-            color: '#ffffff',
-            align: 'center',
-            stroke: '#000000',
-            strokeThickness: 4,
-        });
-        // add tweens to make the interact hint float up and down
-        this.tweens.add({
-            targets: this.interactHint,
-            y: this.player2!.y - 50, // Float up and down
-            duration: 1000,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Sine.easeInOut'
-        });
-        
-        this.tweens.add({
-            targets: this.interactHint,
-            fontSize: '24px', // Grow and shrink
-            duration: 500,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Sine.easeInOut'
-        });
-
         // HUD setup
         common.createHealthBar(this, this.player);
 
@@ -147,11 +119,13 @@ export default class GameScene1 extends BaseScene {
 
         // Debugging
         common.initializeDebugGUI(this);
+
+        // Super
+        super.create();
     }
 
     update() {
         // Game loop logic
-        super.update();
 
         // Parallax scrolling
         let camX = this.cameras.main.scrollX;
@@ -213,5 +187,7 @@ export default class GameScene1 extends BaseScene {
         if (this.level!.x != this.cameras.main.width - 90 || this.level!.y != 30) {
             this.level!.setPosition(this.cameras.main.width - 90, 30);
         }
+        // Super
+        super.update();
     }
 }
