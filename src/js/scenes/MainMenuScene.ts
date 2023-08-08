@@ -36,26 +36,43 @@ export default class MainMenuScene extends Phaser.Scene {
             this.createBackground();
             this.sound.play('mainMusic', { loop: true, volume: 0.1 });
             // Set Logo
-            const logo = this.add.sprite(255, window.innerHeight / 2 + 50, 'logo');
-            logo.setScale(0.75);
-            logo.play('logoAnimation');
+            const logo = this.add.sprite(280, window.innerHeight / 2 + 30, 'logo').setAlpha(0);
+            this.time.delayedCall(1000, () => {
+                this.tweens.add({
+                    targets: logo,
+                    alpha: { from: 0, to: 1 },
+                    duration: 1000,
+                    ease: 'Linear'
+                });
+                logo.setScale(0.75);
+                logo.play('logoAnimation');
+            });
             // Set the Main Menu Text
-            this.mainMenuText = this.add.text(logo.x, logo.y + 60, 'Press any key to enter\nthe city...', {
-                fontSize: '20px',
-                color: '#333333',
-                fontStyle: 'bold',
-                align: 'center'
-            }).setOrigin(0.5);
-            // Ellipses animation
-            let ellipses = '';
-            this.timerEvent = this.time.addEvent({
-                delay: 500,
-                callback: () => {
-                    ellipses += '.';
-                    if (ellipses.length > 3) ellipses = '';
-                    this.mainMenuText.setText('Press any key to enter\nthe city' + ellipses);
-                },
-                loop: true
+            this.time.delayedCall(4000, () => {
+                this.mainMenuText = this.add.text(logo.x, logo.y + 65, 'Press any key to enter\nthe city...', {
+                    fontSize: '20px',
+                    color: '#333333',
+                    fontStyle: 'bold',
+                    align: 'center',
+                }).setOrigin(0.5).setAlpha(0);
+                // Ellipses animation
+                let ellipses = '';
+                this.timerEvent = this.time.addEvent({
+                    delay: 500,
+                    callback: () => {
+                        ellipses += '.';
+                        if (ellipses.length > 3) ellipses = '';
+                        this.mainMenuText.setText('Press any key to enter\nthe city' + ellipses);
+                    },
+                    loop: true
+                });
+                // Fade in the text
+                this.tweens.add({
+                    targets: this.mainMenuText,
+                    alpha: { from: 0, to: 1 },
+                    duration: 1000,
+                    ease: 'Linear'
+                });
             });
         } else if (this.clickCounter === 2) {
             // Start the next scene
