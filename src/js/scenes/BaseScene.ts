@@ -30,7 +30,9 @@ export default class BaseScene extends Phaser.Scene {
     protected pauseMenu?: Phaser.GameObjects.Container;
     protected pauseBackground?: Phaser.GameObjects.Rectangle;
     protected pauseButton?: Phaser.GameObjects.Text;
-    protected volumeSlider?: Phaser.GameObjects.DOMElement;
+    protected volumeBar?: Phaser.GameObjects.Graphics;
+    protected volumeHandle?: Phaser.GameObjects.Graphics;
+    protected volumeValue: number = 0.5;
 
     create() {
         // Pause Menu setup
@@ -39,13 +41,12 @@ export default class BaseScene extends Phaser.Scene {
         this.pauseBackground = this.add.rectangle(0, 0, this.cameras.main.width, this.cameras.main.height, 0x000000, 0.5);
         this.pauseBackground.setScrollFactor(0);
         this.pauseBackground.setOrigin(0, 0);        
-        this.pauseButton = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'Pause', { color: '#ffffff', fontSize: '32px' }).setOrigin(0.5);
-        this.volumeSlider = this.add.dom(this.cameras.main.width / 2, (this.cameras.main.height / 2) + 40, 'input', 'type="range"; min="0" max="100" value="50"');
-        this.volumeSlider.setOrigin(0.5);
+        this.pauseButton = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'Continue', { color: '#ffffff', fontSize: '32px' }).setOrigin(0.5);
+        this.createVolumeSlider();
         this.pauseMenu.setDepth(1000);
 
         // Add to pause menu container
-        this.pauseMenu.add([this.pauseBackground, this.pauseButton, this.volumeSlider]);
+        this.pauseMenu.add([this.pauseBackground, this.pauseButton, this.volumeBar!, this.volumeHandle!]);
 
         // Initially hide the pause menu
         this.pauseMenu.setVisible(false);
@@ -53,12 +54,6 @@ export default class BaseScene extends Phaser.Scene {
         // Input for clicking the pause button
         this.pauseButton.setInteractive().on('pointerdown', () => {
             this.togglePauseMenu();
-        });
-
-        // Volume slider listener
-        this.volumeSlider.addListener('input').on('input', (e: any) => {
-            const volume = Number(e.target.value) / 100;
-            this.sound.volume = volume;
         });
 
         // Camera setup
@@ -119,25 +114,6 @@ export default class BaseScene extends Phaser.Scene {
         // any other common setup...
     }
 
-    protected resetPlayer() {
-        // This method can be implemented in the derived classes
-        throw new Error("resetPlayer method must be implemented in derived classes");
-    }
-
-    protected togglePauseMenu() {
-        const isPaused = this.pauseMenu!.visible;
-        this.pauseMenu!.setVisible(!isPaused);
-        this.physics.world.isPaused = !isPaused;
-    
-        if (isPaused) {
-            this.inputManager.enableInput();
-        } else {
-            this.inputManager.disableInput();
-        }
-    }
-    
-    // other common methods...
-
     update() {
         // Parallax scrolling
         let camX = this.cameras.main.scrollX;
@@ -185,6 +161,11 @@ export default class BaseScene extends Phaser.Scene {
         // if this.level not in camera top right corner, move it there
         if (this.level!.x != this.cameras.main.width - 90 || this.level!.y != 30) {
             this.level!.setPosition(this.cameras.main.width - 90, 30);
+        }
+
+        // if pauseMenu width not equal to camera width, set it to camera width
+        if (this.pauseBackground!.width != this.cameras.main.width) {
+            this.pauseBackground!.width = this.cameras.main.width;
         }
 
         // Update health bars only if created
@@ -290,4 +271,55 @@ export default class BaseScene extends Phaser.Scene {
             this.sound.play('melee', { volume: 0.5, loop: false });
         }
     }
+    
+    protected resetPlayer() {
+        // This method can be implemented in the derived classes
+        throw new Error("resetPlayer method must be implemented in derived classes");
+    }
+
+    protected togglePauseMenu() {
+        const isPaused = this.pauseMenu!.visible;
+        this.pauseMenu!.setVisible(!isPaused);
+        this.physics.world.isPaused = !isPaused;
+    
+        if (isPaused) {
+            this.inputManager.enableInput();
+        } else {
+            this.inputManager.disableInput();
+        }
+    }
+
+    protected createVolumeSlider() {
+        const volumeBarWidth = 300;
+        const volumeBarHeight = 10;
+        const volumeHandleSize = 20;
+        const x = this.cameras.main.width / 2;
+        const y = this.cameras.main.height / 2 + 150;
+    
+        // Add a label for the volume slider
+        const label = this.add.text(x - volumeBarWidth / 2, y - 40, 'Master Volume', { color: '#ffffff' });
+        this.pauseMenu!.add(label); // Add label to pause menu if applicable
+    
+        this.volumeBar = this.add.graphics({ lineStyle: { width: 2, color: 0xffffff }, fillStyle: { color: 0x444444 } });
+        this.volumeBar.fillRect(x - volumeBarWidth / 2, y - volumeBarHeight / 2, volumeBarWidth, volumeBarHeight);
+    
+        this.volumeHandle = this.add.graphics({ fillStyle: { color: 0xffffff } });
+        this.volumeHandle.fillRect(x - volumeBarWidth / 2 + this.volumeValue * (volumeBarWidth - volumeHandleSize), y - volumeHandleSize / 2, volumeHandleSize, volumeHandleSize);
+    
+        // Make the handle interactive
+        this.volumeHandle.setInteractive(new Phaser.Geom.Rectangle(x - volumeBarWidth / 2, y - volumeHandleSize / 2, volumeBarWidth, volumeHandleSize), Phaser.Geom.Rectangle.Contains);
+    
+        // Drag the handle to adjust the volume
+        this.input.setDraggable(this.volumeHandle);
+    
+        this.volumeHandle.on('drag', (pointer: Phaser.Input.Pointer) => {
+            let newX = Phaser.Math.Clamp(pointer.x, x - volumeBarWidth / 2, x + volumeBarWidth / 2 - volumeHandleSize);
+            this.volumeValue = (newX - (x - volumeBarWidth / 2)) / (volumeBarWidth - volumeHandleSize);
+            this.volumeHandle!.clear().fillRect(newX, y - volumeHandleSize / 2, volumeHandleSize, volumeHandleSize);
+            this.sound.volume = this.volumeValue;
+        });
+    }
+    
+    // other common methods...
+
 }
