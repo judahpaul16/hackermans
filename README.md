@@ -23,5 +23,9 @@ This is the repository for "Untitled," a Phaser-based game. Follow the instructi
 1. Start the development server by running the following command:
     ```bash
     npm start
-
+    
+### Screenshot:
 ![Screenshot](screenshot.png)
+
+## Special Thanks
+Game Assets (sprites, music, pixel art) - Asimuz (https://ansimuz.itch.io/)
