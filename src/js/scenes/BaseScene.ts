@@ -38,7 +38,7 @@ export default class BaseScene extends Phaser.Scene {
         // Pause Menu setup
         // Create Pause Menu Overlay
         this.pauseMenu = this.add.container(0, 0);
-        this.pauseBackground = this.add.rectangle(0, 0, this.cameras.main.width, this.cameras.main.height, 0x000000, 0.5);
+        this.pauseBackground = this.add.rectangle(0, 0, this.cameras.main.width, this.cameras.main.height, 0x000000, 0.55);
         this.pauseBackground.setScrollFactor(0);
         this.pauseBackground.setOrigin(0, 0);        
         this.pauseButton = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'Continue', { color: '#ffffff', fontSize: '32px' }).setOrigin(0.5);
