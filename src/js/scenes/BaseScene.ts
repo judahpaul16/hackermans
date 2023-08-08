@@ -27,8 +27,39 @@ export default class BaseScene extends Phaser.Scene {
     protected clouds: Phaser.GameObjects.Sprite[] = [];
     protected platforms?: Phaser.Physics.Arcade.StaticGroup;
     protected dg?: dat.GUI;
+    protected pauseMenu?: Phaser.GameObjects.Container;
+    protected pauseBackground?: Phaser.GameObjects.Rectangle;
+    protected pauseButton?: Phaser.GameObjects.Text;
+    protected volumeSlider?: Phaser.GameObjects.DOMElement;
 
     create() {
+        // Pause Menu setup
+        // Create Pause Menu Overlay
+        this.pauseMenu = this.add.container(0, 0);
+        this.pauseBackground = this.add.rectangle(0, 0, this.cameras.main.width, this.cameras.main.height, 0x000000, 0.5);
+        this.pauseBackground.setScrollFactor(0);
+        this.pauseBackground.setOrigin(0, 0);        
+        this.pauseButton = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'Pause', { color: '#ffffff', fontSize: '32px' }).setOrigin(0.5);
+        this.volumeSlider = this.add.dom(this.cameras.main.width / 2, (this.cameras.main.height / 2) + 40, 'input', 'type="range"; min="0" max="100" value="50"');
+        this.volumeSlider.setOrigin(0.5);
+        this.pauseMenu.setDepth(1000);
+
+        // Add to pause menu container
+        this.pauseMenu.add([this.pauseBackground, this.pauseButton, this.volumeSlider]);
+
+        // Initially hide the pause menu
+        this.pauseMenu.setVisible(false);
+
+        // Input for clicking the pause button
+        this.pauseButton.setInteractive().on('pointerdown', () => {
+            this.togglePauseMenu();
+        });
+
+        // Volume slider listener
+        this.volumeSlider.addListener('input').on('input', (e: any) => {
+            const volume = Number(e.target.value) / 100;
+            this.sound.volume = volume;
+        });
 
         // Camera setup
         this.cameras.main.setBounds(0, 0, this.width, 800);
@@ -48,6 +79,11 @@ export default class BaseScene extends Phaser.Scene {
             if (this.dg) {
                 this.dg.domElement.style.display = this.dg.domElement.style.display === 'none' ? '' : 'none';
             }
+        });
+
+        // Add pause key listener
+        this.inputManager.pauseKey.on('down', () => {
+            this.togglePauseMenu();
         });
         
         // Add interact hint
@@ -88,10 +124,21 @@ export default class BaseScene extends Phaser.Scene {
         throw new Error("resetPlayer method must be implemented in derived classes");
     }
 
+    protected togglePauseMenu() {
+        const isPaused = this.pauseMenu!.visible;
+        this.pauseMenu!.setVisible(!isPaused);
+        this.physics.world.isPaused = !isPaused;
+    
+        if (isPaused) {
+            this.inputManager.enableInput();
+        } else {
+            this.inputManager.disableInput();
+        }
+    }
+    
     // other common methods...
 
     update() {
-
         // Parallax scrolling
         let camX = this.cameras.main.scrollX;
         this.backgroundImages!.farBuildings.tilePositionX = camX * 0.1;
@@ -175,6 +222,7 @@ export default class BaseScene extends Phaser.Scene {
     updatePlayer() {
         if (!this.player) return;
         if (this.player.isDead) return;
+        if (this.inputManager.isInputDisabled()) return;
 
         let isMovingLeft = this.inputManager.cursors.left!.isDown || this.inputManager.moveLeftKey.isDown;
         let isMovingRight = this.inputManager.cursors.right!.isDown || this.inputManager.moveRightKey!.isDown;
