@@ -1,6 +1,5 @@
 import Phaser from 'phaser';
 import * as common from '../helpers/common';
-import InputManager from '../classes/utils/InputManager';
 
 export default class MainMenuScene extends Phaser.Scene {
     private coin!: Phaser.GameObjects.Sprite;
@@ -15,6 +14,9 @@ export default class MainMenuScene extends Phaser.Scene {
     }
 
     create() {
+
+        this.clickCounter = 0;
+
         // Setup Animations
         common.setupAnimations(this);
 
@@ -34,7 +36,8 @@ export default class MainMenuScene extends Phaser.Scene {
         if (this.clickCounter === 1) {
             // Set the Main Menu Background
             this.createBackground();
-            this.sound.play('mainMusic', { loop: true, volume: 0.1 });
+            // If not already playing, play the main music
+            if (!this.sound.get('mainMusic')) this.sound.play('mainMusic', { loop: true, volume: 0.1 });
             // Set Logo
             const logo = this.add.sprite(280, window.innerHeight / 2 + 30, 'logo').setAlpha(0);
             this.time.delayedCall(1000, () => {

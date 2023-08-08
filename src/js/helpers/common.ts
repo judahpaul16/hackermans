@@ -329,37 +329,29 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
 }
 
 export function setupAnimations(scene: any) {
-    // Setup Coin animation
-    scene.anims.create({ key: 'coinAnimation', frames: scene.anims.generateFrameNames(
-        'coin', { prefix: 'coin', start: 1, end: 8, zeroPad: 2 }), frameRate: 15, repeat: -1 });
+    // Define animations
+    const animations = [
+        { key: 'coinAnimation', frames: scene.anims.generateFrameNames('coin', { prefix: 'coin', start: 1, end: 8, zeroPad: 2 }), frameRate: 15, repeat: -1 },
+        { key: 'logoAnimation', frames: scene.anims.generateFrameNames('logo', { prefix: 'logo_', start: 1, end: 31, zeroPad: 4 }), frameRate: 15, repeat: -1 },
+        { key: 'standingPlayer', frames: scene.anims.generateFrameNames('player', { prefix: 'standing', start: 1, end: 11, zeroPad: 4 }), frameRate: 3, repeat: -1 },
+        { key: 'walking', frames: scene.anims.generateFrameNames('player', { prefix: 'walk', start: 1, end: 7, zeroPad: 4 }), frameRate: 10, repeat: -1 },
+        { key: 'running', frames: scene.anims.generateFrameNames('player', { prefix: 'run', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 },
+        { key: 'jumping', frames: scene.anims.generateFrameNames('player', { prefix: 'jump', start: 1, end: 8, zeroPad: 4 }), frameRate: 7, repeat: 0 },
+        { key: 'melee', frames: scene.anims.generateFrameNames('player', { prefix: 'melee', start: 1, end: 13, zeroPad: 4 }), frameRate: 10, repeat: 0 },
+        { key: 'dying', frames: scene.anims.generateFrameNames('player', { prefix: 'death', start: 1, end: 4, zeroPad: 4 }), frameRate: 4, repeat: 0 },
+        { key: 'cloud', frames: scene.anims.generateFrameNames('cloud', { prefix: 'cloud', start: 1, end: 4, zeroPad: 4 }), frameRate: 7, repeat: -1 },
+        { key: 'chat_bubble', frames: scene.anims.generateFrameNames('chat_bubble', { prefix: 'chat', start: 1, end: 4, zeroPad: 2 }), frameRate: 7, repeat: 0 },
+        { key: 'chat_bubble_reverse', frames: scene.anims.generateFrameNames('chat_bubble', { prefix: 'chat', start: 1, end: 4, zeroPad: 2 }).reverse(), frameRate: 7, repeat: 0 },
+        { key: 'standingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'standing', start: 1, end: 22, zeroPad: 4 }), frameRate: 3, repeat: -1 },
+        { key: 'walkingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'walk', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 },
+        { key: 'runningP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'run', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 },
+        { key: 'jumpingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'jump', start: 1, end: 8, zeroPad: 4 }), frameRate: 7, repeat: 0 },
+    ];
 
-    // Setup Logo animation
-    scene.anims.create({ key: 'logoAnimation', frames: scene.anims.generateFrameNames(
-        'logo', { prefix: 'logo_', start: 1, end: 31, zeroPad: 4 }), frameRate: 15, repeat: -1 });
-    // Setup Player animations
-    scene.anims.create({ key: 'standingPlayer', frames: scene.anims.generateFrameNames(
-        'player', { prefix: 'standing', start: 1, end: 11, zeroPad: 4 }), frameRate: 3, repeat: -1 });
-    scene.anims.create({ key: 'walking', frames: scene.anims.generateFrameNames(
-        'player', { prefix: 'walk', start: 1, end: 7, zeroPad: 4 }), frameRate: 10, repeat: -1 });
-    scene.anims.create({ key: 'running', frames: scene.anims.generateFrameNames(
-        'player', { prefix: 'run', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 });
-    scene.anims.create({ key: 'jumping', frames: scene.anims.generateFrameNames(
-        'player', { prefix: 'jump', start: 1, end: 8, zeroPad: 4 }), frameRate: 7, repeat: 0 });
-    scene.anims.create({ key: 'melee', frames: scene.anims.generateFrameNames(
-        'player', { prefix: 'melee', start: 1, end: 13, zeroPad: 4 }), frameRate: 10, repeat: 0 });
-    scene.anims.create({ key: 'dying', frames: scene.anims.generateFrameNames(
-        'player', { prefix: 'death', start: 1, end: 4, zeroPad: 4 }), frameRate: 4, repeat: 0 });
-    scene.anims.create({ key: 'cloud', frames: scene.anims.generateFrameNames(
-        'cloud', { prefix: 'cloud', start: 1, end: 4, zeroPad: 4 }), frameRate: 7, repeat: -1 });
-    let chatBubbleFrames = scene.anims.generateFrameNames('chat_bubble', { prefix: 'chat', start: 1, end: 4, zeroPad: 2 })
-    scene.anims.create({ key: 'chat_bubble', frames: chatBubbleFrames, frameRate: 7, repeat: 0 });
-    scene.anims.create({ key: 'chat_bubble_reverse', frames: chatBubbleFrames.reverse(), frameRate: 7, repeat: 0 });
-    scene.anims.create({ key: 'standingP2', frames: scene.anims.generateFrameNames(
-        'player2', { prefix: 'standing', start: 1, end: 22, zeroPad: 4 }), frameRate: 3, repeat: -1 });
-    scene.anims.create({ key: 'walkingP2', frames: scene.anims.generateFrameNames(
-        'player2', { prefix: 'walk', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 });
-    scene.anims.create({ key: 'runningP2', frames: scene.anims.generateFrameNames(
-        'player2', { prefix: 'run', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 });
-    scene.anims.create({ key: 'jumpingP2', frames: scene.anims.generateFrameNames(
-        'player2', { prefix: 'jump', start: 1, end: 8, zeroPad: 4 }), frameRate: 7, repeat: 0 });
+    // Create animations
+    animations.forEach(animation => {
+        if (!scene.anims.exists(animation.key)) {
+            scene.anims.create(animation);
+        }
+    });
 }

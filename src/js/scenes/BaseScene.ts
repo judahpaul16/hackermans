@@ -144,6 +144,30 @@ export default class BaseScene extends Phaser.Scene {
         if (this.player) common.updateHealthBar(this, this.player);
         if (this.p2HealthBarCreated && this.player2) common.updateHealthBar(this, this.player2);
 
+        // if you die, it's game over
+        if (this.player!.currentHealth <= 0) {
+            // wait for the animation to finish with a delay then fade to black and go to game over scene
+            let blackMask = this.add.rectangle(
+                this.cameras.main.width / 2, // center x
+                this.cameras.main.height / 2, // center y
+                this.cameras.main.width,
+                this.cameras.main.height,
+                0x000000, 1
+            ).setAlpha(0).setScrollFactor(0);
+            
+            this.time.delayedCall(3500, () => {
+                this.tweens.add({
+                    targets: blackMask,
+                    alpha: 1,
+                    duration: 2000,
+                    ease: 'Linear',
+                    onComplete: () => {
+                        this.scene.start('GameOverScene');
+                    }
+                });
+            }, [], this);            
+        }
+
         // any other common update logic...
 
     }
