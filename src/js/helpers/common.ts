@@ -184,8 +184,8 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2) {
 
     // Check if the HUD elements are defined before creating the container
     if (player!.avatar && player!.healthBarFrame && player!.healthBarFill) {
-        player!.hudContainer = scene.add.container(0, 0, [player!.healthBarFill, player!.healthBarFrame, name, player!.avatar]);
-        player!.hudContainer.setDepth(2);
+        player!.hudContainer = scene.add.container(0, 0, [player!.healthBarFill, player!.avatar, player!.healthBarFrame, name]);
+        player!.hudContainer.setDepth(2);        
     }
 }
 
