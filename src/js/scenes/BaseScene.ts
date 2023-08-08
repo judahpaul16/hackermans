@@ -294,7 +294,7 @@ export default class BaseScene extends Phaser.Scene {
         const volumeBarHeight = 10;
         const volumeHandleSize = 20;
         const x = this.cameras.main.width / 2;
-        const y = this.cameras.main.height / 2 + 150;
+        const y = this.cameras.main.height / 2 + 100;
     
         // Add a label for the volume slider
         const label = this.add.text(x - volumeBarWidth / 2, y - 40, 'Master Volume', { color: '#ffffff' });
