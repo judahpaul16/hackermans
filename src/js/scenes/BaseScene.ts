@@ -29,6 +29,10 @@ export default class BaseScene extends Phaser.Scene {
     protected dg?: dat.GUI;
 
     create() {
+
+        // Camera setup
+        this.cameras.main.setBounds(0, 0, this.width, 800);
+
         this.inputManager = InputManager.getInstance(this);
         // Update Input to apply to current scene
         InputManager.getInstance().updateInput(this);
@@ -87,6 +91,14 @@ export default class BaseScene extends Phaser.Scene {
     // other common methods...
 
     update() {
+
+        // Parallax scrolling
+        let camX = this.cameras.main.scrollX;
+        this.backgroundImages!.farBuildings.tilePositionX = camX * 0.1;
+        this.backgroundImages!.backBuildings.tilePositionX = camX * 0.2;
+        this.backgroundImages!.middle.tilePositionX = camX * 0.3;
+        this.backgroundImages!.foreground.tilePositionX = camX * 0.5;
+
         // Update Player1
         this.updatePlayer();
         
@@ -105,6 +117,32 @@ export default class BaseScene extends Phaser.Scene {
         if (this.player && this.player2) {
             common.handleInteract(this, this.player, this.player2, this.inputManager.interactKey!);
         }
+
+        // if animation key is 'running', set the offset to 12
+        if (this.player2!.anims.currentAnim!.key == 'runningP2' || this.player2!.anims.currentAnim!.key == 'walkingP2') {
+            this.player2!.setOffset(0, -12);
+        } else {
+            this.player2!.setOffset(0, -8);
+        }
+        
+        // if player falls off the world, reset their position
+        if (this.player!.y > this.height + 70) {
+            this.player!.y = 650;
+        }
+
+        // if player2 falls off the world, reset their position
+        if (this.player2!.y > this.height + 70) {
+            this.player2!.y = 650;
+        }
+        
+        // if this.level not in camera top right corner, move it there
+        if (this.level!.x != this.cameras.main.width - 90 || this.level!.y != 30) {
+            this.level!.setPosition(this.cameras.main.width - 90, 30);
+        }
+
+        // Update health bars only if created
+        if (this.player) common.updateHealthBar(this, this.player);
+        if (this.p2HealthBarCreated && this.player2) common.updateHealthBar(this, this.player2);
 
         // any other common update logic...
 

@@ -28,9 +28,6 @@ export default class GameScene1 extends BaseScene {
             middle: common.createBackground(this, 'middle', this.width, this.height*this.sfactor3),
             foreground: common.createBackground(this, 'foreground-empty', this.width, this.height*this.sfactor4),
         };
-
-        // Camera setup
-        this.cameras.main.setBounds(0, 0, this.width, 800);
         
         // Add Lv. 1 to the top right corner of the camera
         this.level = this.add.text(this.cameras.main.width - 90, 30, 'Lv. 1', {
@@ -108,13 +105,6 @@ export default class GameScene1 extends BaseScene {
     update() {
         // Game loop logic
 
-        // Parallax scrolling
-        let camX = this.cameras.main.scrollX;
-        this.backgroundImages!.farBuildings.tilePositionX = camX * 0.1;
-        this.backgroundImages!.backBuildings.tilePositionX = camX * 0.2;
-        this.backgroundImages!.middle.tilePositionX = camX * 0.3;
-        this.backgroundImages!.foreground.tilePositionX = camX * 0.5;
-
         // Update clouds
         common.updateClouds(this);
 
@@ -146,28 +136,6 @@ export default class GameScene1 extends BaseScene {
             this.dg!.destroy();
             this.scene.start('GameScene2');
             this.game.registry.set('previousScene', this.scene.key);
-        }
-        
-        // if animation key is 'running', set the offset to 12
-        if (this.player2!.anims.currentAnim!.key == 'runningP2' || this.player2!.anims.currentAnim!.key == 'walkingP2') {
-            this.player2!.setOffset(0, -12);
-        } else {
-            this.player2!.setOffset(0, -8);
-        }
-        
-        // if player falls off the world, reset their position
-        if (this.player!.y > this.height + 70) {
-            this.player!.y = 650;
-        }
-
-        // if player2 falls off the world, reset their position
-        if (this.player2!.y > this.height + 70) {
-            this.player2!.y = 650;
-        }
-        
-        // if this.level not in camera top right corner, move it there
-        if (this.level!.x != this.cameras.main.width - 90 || this.level!.y != 30) {
-            this.level!.setPosition(this.cameras.main.width - 90, 30);
         }
         // Super
         super.update();

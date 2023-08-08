@@ -27,10 +27,7 @@ export default class GameScene2 extends BaseScene {
             backBuildings: common.createBackground(this, 'back-buildings', this.width, this.height*this.sfactor2),
             middle: common.createBackground(this, 'middle', this.width, this.height*this.sfactor3),
             foreground: common.createBackground(this, 'foreground', this.width, this.height*this.sfactor4),
-        };        
-
-        // Camera setup
-        this.cameras.main.setBounds(0, 0, this.width, 800);
+        };
         
         // Add Lv. 2 to the top right corner of the camera
         this.level = this.add.text(this.cameras.main.width - 90, 30, 'Lv. 2', {
@@ -93,13 +90,6 @@ export default class GameScene2 extends BaseScene {
     update() {
         // Game loop logic
 
-        // Parallax scrolling
-        let camX = this.cameras.main.scrollX;
-        this.backgroundImages!.farBuildings.tilePositionX = camX * 0.1;
-        this.backgroundImages!.backBuildings.tilePositionX = camX * 0.2;
-        this.backgroundImages!.middle.tilePositionX = camX * 0.3;
-        this.backgroundImages!.foreground.tilePositionX = camX * 0.5;
-
         // Update clouds
         common.updateClouds(this);
 
@@ -122,15 +112,6 @@ export default class GameScene2 extends BaseScene {
             this.p2HealthBarCreated = false;
         }
 
-        // Update health bars only if created
-        if (this.player) common.updateHealthBar(this, this.player);
-        if (this.p2HealthBarCreated && this.player2) common.updateHealthBar(this, this.player2);
-
-        // if this.level not in camera top right corner, move it there
-        if (this.level!.x != this.cameras.main.width - 90 || this.level!.y != 30) {
-            this.level!.setPosition(this.cameras.main.width - 90, 30);
-        }
-        
         // if player moves beyond the left edge of the world, start the previous scene
         if (this.player!.x < 0) {
             this.dg!.destroy();
