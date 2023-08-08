@@ -346,7 +346,7 @@ export function setupAnimations(scene: any) {
         { key: 'walkingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'walk', start: 1, end: 6, zeroPad: 4 }), frameRate: 10, repeat: -1 },
         { key: 'runningP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'run', start: 1, end: 7, zeroPad: 4 }), frameRate: 10, repeat: -1 },
         { key: 'jumpingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'jump', start: 1, end: 6, zeroPad: 4 }), frameRate: 7, repeat: 0 },
-        { key: 'shootP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'shoot', start: 1, end: 8, zeroPad: 4 }), frameRate: 7, repeat: 0 },
+        { key: 'shootP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'shoot', start: 0, end: 7, zeroPad: 4 }), frameRate: 10, repeat: 0 },
     ];
 
     // Create animations

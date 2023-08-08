@@ -126,9 +126,6 @@ export default class GameScene1 extends BaseScene {
             common.destroyHealthBar(this.player2!);
             this.p2HealthBarCreated = false;
         }
-        if (distance <= 300) {
-            this.player2!.attack();
-        }
 
         // Update health bars only if created
         if (this.player) common.updateHealthBar(this, this.player);
