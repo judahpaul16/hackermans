@@ -18,8 +18,7 @@ export default class CreditsScene extends Phaser.Scene {
     this.creditsText.setText([
       'Developer - Judah Paul (https://github.com/judahpaul16)',
       'Game Assets - Asimuz (https://ansimuz.itch.io/)',
-      'Music - Dummy Artist',
-      'Special Thanks - John Doe, Jane Doe',
+      'Special Thanks - Mom, The Man Upstairs, and You!',
       // ... more thanks
     ]).setLineSpacing(20); // Add space between lines
 
