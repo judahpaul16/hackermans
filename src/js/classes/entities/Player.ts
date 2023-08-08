@@ -33,11 +33,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     private handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
-        if (animation.key === 'dying') {
+        if (animation.key === 'dyingP1') {
             this.isDead = true;
         }
         // Tweak the hitbox for the dying animation
-        if (animation.key === 'dying' && frame.index === 4) {
+        if (animation.key === 'dyingP1' && frame.index === 4) {
             const newWidth = 78;
             const newHeight = 12;
             this.body!.setSize(newWidth, newHeight);
@@ -45,8 +45,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.y += 42;
         }
 
-        // If the animation is 'melee', reset gravity
-        if (animation.key === 'melee') {
+        // If the animation is 'meleeP1', reset gravity
+        if (animation.key === 'meleeP1') {
             this.setVelocityY(-100);
         }
 
@@ -63,6 +63,20 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.currentHealth -= amount;
         if (this.currentHealth <= 0) {
             this.currentHealth = 0; // Ensure health doesn't go negative
+        }
+    }
+
+    public jump() {
+        if (this && this.body!.touching.down) {
+            this.setVelocityY(-450);
+            this.play('jumpingP1', true);
+        }
+    }
+
+    public attack() {
+        if (this) {
+            this.play('meleeP1', true);
+            this.scene.sound.play('meleeP1', { volume: 0.5, loop: false });
         }
     }
 }

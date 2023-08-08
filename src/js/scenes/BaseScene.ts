@@ -141,7 +141,7 @@ export default class BaseScene extends Phaser.Scene {
             common.handleInteract(this, this.player, this.player2, this.inputManager.interactKey!);
         }
 
-        // if animation key is 'running', set the offset to 12
+        // if animation key is 'runningP2', set the offset to 12
         if (this.player2!.anims.currentAnim!.key == 'runningP2' || this.player2!.anims.currentAnim!.key == 'walkingP2') {
             this.player2!.setOffset(0, -12);
         } else {
@@ -213,65 +213,51 @@ export default class BaseScene extends Phaser.Scene {
 
         if (this.player.currentHealth <= 0 && !this.player.isDead) {
             this.physics.world.gravity.y = 0;
-            this.player.play('dying', true);
+            this.player.play('dyingP1', true);
             return;
         }
 
-        if (this.player.getCurrentAnimation() === 'melee' || this.player.getCurrentAnimation() === 'jumping') return;
+        if (this.player.getCurrentAnimation() === 'meleeP1' || this.player.getCurrentAnimation() === 'jumpingP1') return;
 
         if (isMovingRight) {
             if (isRunning) {
                 this.player.setVelocityX(300);
-                this.player.play('running', true);
+                this.player.play('runningP1', true);
             } else if (isJumping) {
-                this.jump();
+                this.player.jump();
             } else {
                 this.player.setVelocityX(175);
-                this.player.play('walking', true);
+                this.player.play('walkingP1', true);
             }
             this.player.flipX = false;
             if (isAttacking) {
-                this.attack();
+                this.player.attack();
             }
         } else if (isMovingLeft) {
             if (isRunning) {
                 this.player.setVelocityX(-300);
-                this.player.play('running', true);
+                this.player.play('runningP1', true);
             } else if (isJumping) {
-                this.jump();
+                this.player.jump();
             } else {
                 this.player.setVelocityX(-175);
-                this.player.play('walking', true);
+                this.player.play('walkingP1', true);
             }
             this.player.flipX = true;
             if (isAttacking) {
-                this.attack();
+                this.player.attack();
             }
         } else if (isJumping) {
-            this.jump();
+            this.player.jump();
         } else {
             this.player.setVelocityX(0);
-            this.player.play('standingPlayer', true);
+            this.player.play('standingP1', true);
             if (isAttacking) {
-                this.attack();
+                this.player.attack();
             }
         }
     }
 
-    jump() {
-        if (this.player && this.player.body!.touching.down) {
-            this.player.setVelocityY(-450);
-            this.player.play('jumping', true);
-        }
-    }
-
-    attack() {
-        if (this.player) {
-            this.player.play('melee', true);
-            this.sound.play('melee', { volume: 0.5, loop: false });
-        }
-    }
-    
     protected resetPlayer() {
         // This method can be implemented in the derived classes
         throw new Error("resetPlayer method must be implemented in derived classes");
