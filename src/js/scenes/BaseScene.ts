@@ -13,6 +13,7 @@ export default class BaseScene extends Phaser.Scene {
     protected chatBubble?: Phaser.GameObjects.Sprite;
     protected dialogueText?: Phaser.GameObjects.Text;
     protected interactHint?: Phaser.GameObjects.Text;
+    protected isInteracting: boolean = false;
     protected p2HealthBarCreated: boolean = false;
     protected level?: Phaser.GameObjects.Text;
     protected width: number = 3000;

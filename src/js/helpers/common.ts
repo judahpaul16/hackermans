@@ -261,31 +261,30 @@ function obstacleInWay(player2: Player2): boolean {
 }
 
 export function handleInteract(scene: any, player: Player, player2: Player2, interactKey: Phaser.Input.Keyboard.Key) {
+    if (scene.isInteracting) return; // Exit if interaction is already in progress
 
     if (Phaser.Input.Keyboard.JustDown(interactKey)) {
+        scene.isInteracting = true; // Set the lock
         scene.interactHint?.setVisible(false);
-
-        // Start playing player2's audio corresponding to dialogue1
+        
         scene.sound.stopByKey('p2Dialogue1');
         scene.sound.play('p2Dialogue1', { volume: 1 });
 
-        // Cancel previous delayedCall and reset dialogue immediately if 'F' is pressed again
         if (scene.chatBubble && scene.chatBubble.anims && scene.chatBubble.anims.isPlaying) {
-
             if (scene.timerEvent) {
                 scene.timerEvent.remove(false);
                 scene.timerEvent = null;
             }
             scene.chatBubble.anims.play('chat_bubble_reverse', true);
             scene.time.delayedCall(500, () => {
-                scene.dialogueText?.destroy();
-                scene.chatBubble?.destroy();
+                scene.dialogueText.destroy();
+                scene.chatBubble.destroy();
             });
             return;
         }
 
-        if(scene.chatBubble) {
-            scene.dialogueText?.destroy();
+        if (scene.chatBubble) {
+            scene.dialogueText.destroy();
             scene.chatBubble.destroy();
         }
 
@@ -293,15 +292,15 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
         newChatBubble.flipX = true;
         newChatBubble.play('chat_bubble', true);
 
-        // Add scene to set up the typewriter effect
         const dialogue = "Things haven't been the same since the 7/11 attacks.\nBut, if you follow my lead, you might just\nmake it out of here alive.";
         let textContent = "";
-        const textSpeed = 55; // Speed of typewriter effect in milliseconds
+        const textSpeed = 55;
+
         scene.dialogueText = scene.add.text(
             newChatBubble.x - (newChatBubble.width * 0.1 / 2) - 235,
             newChatBubble.y - (newChatBubble.height * 0.1 / 2) - 15,
             "",
-            { font: "16px", color: "#000", align: "center"}
+            { font: "16px", color: "#000", align: "center" }
         );
 
         let charIndex = 0;
@@ -310,13 +309,12 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
             delay: textSpeed,
             callback: () => {
                 textContent += dialogue[charIndex];
-                scene.dialogueText?.setText(textContent);
+                scene.dialogueText.setText(textContent);
                 charIndex++;
             },
             repeat: dialogue.length - 1
         });
 
-        // Save the TimerEvent returned by delayedCall
         scene.timerEvent = scene.time.delayedCall(9000, () => {
             if (!newChatBubble.anims) return;
             newChatBubble.anims.play('chat_bubble_reverse', true);
@@ -324,12 +322,14 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
             scene.time.delayedCall(500, () => {
                 scene.interactHint?.setVisible(true);
                 newChatBubble.destroy();
+                scene.isInteracting = false; // Release the lock
             });
         });
 
         scene.chatBubble = newChatBubble;
     }
 }
+
 
 export function setupAnimations(scene: any) {
     // Setup Coin animation
