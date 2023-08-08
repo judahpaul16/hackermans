@@ -28,6 +28,9 @@ export default class BaseScene extends Phaser.Scene {
 
     create() {
         this.inputManager = InputManager.getInstance(this);
+        // Update Input to apply to current scene
+        InputManager.getInstance().updateInput(this);
+
         this.inputManager.resetKey.on('down', () => {
             // Reset player position if 'R' key is pressed
             this.resetPlayer();
@@ -40,8 +43,6 @@ export default class BaseScene extends Phaser.Scene {
                 dg.domElement.style.display = dg.domElement.style.display === 'none' ? '' : 'none';
             }
         });
-        // Update Input to apply to this scene
-        InputManager.getInstance().updateInput(this);
         
         // Add interact hint
         this.interactHint = this.add.text(this.player2!.x - 42, this.player2!.y - 82, "Press 'F'", {
@@ -83,6 +84,10 @@ export default class BaseScene extends Phaser.Scene {
     update() {
         // Update Player1
         this.updatePlayer();
+        
+        if (this.inputManager.resetKey.isDown) {
+            this.resetPlayer();
+        }
 
         // Make chat bubble follow Player2
         if (this.player2) {
