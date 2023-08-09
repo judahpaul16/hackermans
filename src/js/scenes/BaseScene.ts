@@ -40,10 +40,9 @@ export default class BaseScene extends Phaser.Scene {
         // Scene Setup
         // Pause Menu setup
         this.pauseMenu = this.add.container(0, 0).setScrollFactor(0);
-        let settingsY = 125;
         this.pauseMenuSettings = this.add.container(
             this.cameras.main.width / 2, // x
-            this.cameras.main.height / 3 - settingsY // y
+            this.cameras.main.height / 2 - 250 // y
         ).setScrollFactor(0);
         this.pauseMenuControls = this.add.image(
             this.cameras.main.width / 2, // x
@@ -56,14 +55,6 @@ export default class BaseScene extends Phaser.Scene {
             this.cameras.main.height, // height
             0x000000, 0.55 // color, alpha
         ).setScrollFactor(0).setOrigin(0, 0);
-
-        // Create border around the settings container
-        const border = this.add.graphics({ lineStyle: { width: 2, color: 0xffffff } });
-        border.strokeRect(
-            this.cameras.main.width / 2 - (this.cameras.main.width * 0.33) / 2, // x
-            this.cameras.main.height / 3 - (this.cameras.main.height * 0.33) / 3 - settingsY, // y
-            this.cameras.main.width * 0.33, this.cameras.main.height * 0.5 // width, height
-        );
 
         this.pauseButton = this.add.text(0, 0, 'Continue', { color: '#ffffff', fontSize: '32px' }).setOrigin(0.5);
 
@@ -88,6 +79,14 @@ export default class BaseScene extends Phaser.Scene {
         // Create volume slider
         this.createVolumeSlider();
         this.pauseMenu.setDepth(1000);
+
+        // Create border around the settings container
+        const border = this.add.graphics({ lineStyle: { width: 2, color: 0xffffff } });
+        border.strokeRect(
+            this.cameras.main.width / 2 - (this.cameras.main.width * 0.33) / 2, // x
+            this.cameras.main.height / 2 - (this.cameras.main.height * 0.33) / 2 - 200, // y
+            this.cameras.main.width * 0.33, this.cameras.main.height * 0.5 // width, height
+        );
 
         // Add to pause menu containers
         this.pauseMenuSettings!.add([this.pauseButton]);
@@ -319,6 +318,10 @@ export default class BaseScene extends Phaser.Scene {
         } else {
             this.inputManager.disableInput();
         }
+    }
+    
+    protected toggleControls() {
+        this.pauseMenuControls!.setVisible(!this.pauseMenuControls!.visible);
     }
 
     protected createVolumeSlider() {
