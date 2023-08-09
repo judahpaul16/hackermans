@@ -51,7 +51,15 @@ export default class GameScene2 extends BaseScene {
         common.addPlatform(this, 150, 790, 1000, 'street');
 
         // Player setup
-        this.player = new Player(this, 100, 650, 'player');
+        // if previous scene is GameScene3, start player at the end of the scene
+        const previousSceneName = this.game.registry.get('previousScene');
+
+        if (previousSceneName === 'GameScene3') {
+            this.player = new Player(this, this.width - 50, 650, 'player');
+            this.player.flipX = true;
+        } else {
+            this.player = new Player(this, 100, 650, 'player');
+        }
         this.player.body!.setSize(40, 60);
         this.player.setScale(2);
         this.player.body!.setOffset(0, 6);
@@ -59,7 +67,13 @@ export default class GameScene2 extends BaseScene {
         this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
 
         // Player2 setup
-        this.player2 = new Player2(this, this.player.x + 25, 650, 'player2');
+        // if previous scene is GameScene3, start player2 at the end of the scene
+        if (previousSceneName === 'GameScene3') {
+            this.player2 = new Player2(this, this.width - 50, 650, 'player2');
+            this.player.flipX = true;
+        } else {
+            this.player2 = new Player2(this, this.player.x + 25, 650, 'player2');
+        }
         this.player2.body!.setSize(40, 60);
         this.player2.setScale(2);
         this.player2.body!.setOffset(0, 6);

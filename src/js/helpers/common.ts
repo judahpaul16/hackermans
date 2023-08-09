@@ -9,7 +9,7 @@ export function createBackground(scene: any, key: string, width: number, height:
     const ratio = height / imageHeight;
     const sprite = scene.add.tileSprite(0, scene.physics.world.bounds.height - height, width, height, key)
         .setOrigin(0)
-        .setTileScale(1, ratio);
+        .setTileScale(ratio, ratio);
     return sprite;
 }
 
