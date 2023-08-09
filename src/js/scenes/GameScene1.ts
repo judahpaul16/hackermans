@@ -6,6 +6,10 @@ import Enemy from '../classes/entities/Enemy';
 import * as common from '../helpers/common';
 
 export default class GameScene1 extends BaseScene {
+    public backgroundKey1: string = 'foreground-empty';
+    public backgroundKey2: string = 'middle';
+    public backgroundKey3: string = 'back-buildings';
+    public backgroundKey4: string = 'far-buildings';
 
     protected resetPlayer() {
         if (this.player) {
@@ -23,10 +27,10 @@ export default class GameScene1 extends BaseScene {
 
         // Background images setup
         this.backgroundImages = {
-            farBuildings: common.createBackground(this, 'far-buildings', this.width, this.height*this.sfactor1),
-            backBuildings: common.createBackground(this, 'back-buildings', this.width, this.height*this.sfactor2),
-            middle: common.createBackground(this, 'middle', this.width, this.height*this.sfactor3),
-            foreground: common.createBackground(this, 'foreground-empty', this.width, this.height*this.sfactor4),
+            farBuildings: common.createBackground(this, this.backgroundKey4, this.width, this.height*this.sfactor1),
+            backBuildings: common.createBackground(this, this.backgroundKey3, this.width, this.height*this.sfactor2),
+            middle: common.createBackground(this, this.backgroundKey2, this.width, this.height*this.sfactor3),
+            foreground: common.createBackground(this, this.backgroundKey1, this.width, this.height*this.sfactor4),
         };
         
         // Add Lv. 1 to the top right corner of the camera

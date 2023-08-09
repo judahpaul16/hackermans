@@ -66,10 +66,10 @@ export function updateWorldBounds(scene: any, value: number) {
     scene.backgroundImages!.backBuildings.destroy();
     scene.backgroundImages!.middle.destroy();
     scene.backgroundImages!.foreground.destroy();
-    scene.backgroundImages!.farBuildings = scene.createBackground('far-buildings', scene.width, scene.height*scene.sfactor1);
-    scene.backgroundImages!.backBuildings = scene.createBackground('back-buildings', scene.width, scene.height*scene.sfactor2);
-    scene.backgroundImages!.middle = scene.createBackground('middle', scene.width, scene.height*scene.sfactor3);
-    scene.backgroundImages!.foreground = scene.createBackground('foreground-empty', scene.width, scene.height*scene.sfactor4);
+    scene.backgroundImages!.farBuildings = createBackground(scene, scene.backgroundKey4, scene.width, scene.height*scene.sfactor1);
+    scene.backgroundImages!.backBuildings = createBackground(scene, scene.backgroundKey3, scene.width, scene.height*scene.sfactor2);
+    scene.backgroundImages!.middle = createBackground(scene, scene.backgroundKey2, scene.width, scene.height*scene.sfactor3);
+    scene.backgroundImages!.foreground = createBackground(scene, scene.backgroundKey1, scene.width, scene.height*scene.sfactor4);
     scene.backgroundImages!.farBuildings.setDepth(-1);
     scene.backgroundImages!.backBuildings.setDepth(-1);
     scene.backgroundImages!.middle.setDepth(-1);

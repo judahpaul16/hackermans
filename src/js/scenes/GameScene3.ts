@@ -5,11 +5,11 @@ import Player2 from '../classes/entities/Player2';
 import Enemy from '../classes/entities/Enemy';
 import * as common from '../helpers/common';
 
-export default class GameScene2 extends BaseScene {
-    public backgroundKey1: string = 'foreground';
-    public backgroundKey2: string = 'middle';
-    public backgroundKey3: string = 'back-buildings';
-    public backgroundKey4: string = 'far-buildings';
+export default class GameScene3 extends BaseScene {
+    public backgroundKey1: string = 'industrial-foreground';
+    public backgroundKey2: string = 'industrial-buildings';
+    public backgroundKey3: string = 'industrial-far-buildings';
+    public backgroundKey4: string = 'industrial-bg';
 
     protected resetPlayer() {
         if (this.player) {
@@ -18,7 +18,7 @@ export default class GameScene2 extends BaseScene {
     }
 
     constructor() {
-        super({ key: 'GameScene2' });
+        super({ key: 'GameScene3' });
     }
     
     create() {
@@ -119,16 +119,16 @@ export default class GameScene2 extends BaseScene {
         // if player moves beyond the left edge of the world, start the previous scene
         if (this.player!.x < 0) {
             this.dg!.destroy();
-            this.scene.start('GameScene1');
+            this.scene.start('GameScene2');
             this.game.registry.set('previousScene', this.scene.key);
         }
 
-        // if player moves beyond the right edge of the world, start the next scene
-        if (this.player!.x > this.width) {
-            this.dg!.destroy();
-            this.scene.start('GameScene3');
-            this.game.registry.set('previousScene', this.scene.key);
-        }
+        // // if player moves beyond the right edge of the world, start the next scene
+        // if (this.player!.x > this.width) {
+        //      this.dg!.destroy();
+        //     this.scene.start('GameScene3');
+        //     this.game.registry.set('previousScene', this.scene.key);
+        // }
 
         // Super
         super.update();

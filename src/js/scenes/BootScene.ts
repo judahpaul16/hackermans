@@ -36,7 +36,11 @@ import middle from '../../assets/sprites/backgrounds/middle.png';
 import foreground from '../../assets/sprites/backgrounds/foreground.png';
 import foreground2 from '../../assets/sprites/backgrounds/foreground-2.png';
 import foregroundEmpty from '../../assets/sprites/backgrounds/foreground-empty.png';
-import cyberpunkStreet from '../../assets/sprites/backgrounds/cyberpunk-street.png';
+
+import industrialBG from '../../assets/sprites/backgrounds/industrial-bg.png';
+import industrialBuildings from '../../assets/sprites/backgrounds/industrial-buildings.png';
+import industrialForeground from '../../assets/sprites/backgrounds/industrial-foreground.png';
+import industrialFarBuildings from '../../assets/sprites/backgrounds/industrial-far-buildings.png';
 
 import mainMusicSrc from '../../assets/audio/music/main.mp3';
 
@@ -73,7 +77,10 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('foreground', foreground);
         this.load.image('foreground-2', foreground2);
         this.load.image('foreground-empty', foregroundEmpty);
-        this.load.image('cyberpunk-street', cyberpunkStreet);
+        this.load.image('industrial-bg', industrialBG);
+        this.load.image('industrial-buildings', industrialBuildings);
+        this.load.image('industrial-foreground', industrialForeground);
+        this.load.image('industrial-far-buildings', industrialFarBuildings);
         this.load.audio('mainMusic', mainMusicSrc);
         this.load.audio('p2Dialogue1', p2Dialogue1);
         this.load.audio('meleeP1', meleeSoundP1);
