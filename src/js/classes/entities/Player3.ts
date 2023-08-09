@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
 import Player from './Player';
 
-export default class Player2 extends Player {
-    public name: string = 'Anonymuz';
+export default class Player3 extends Player {
+    public name: string = 'Anonymuse';
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
@@ -31,17 +31,17 @@ export default class Player2 extends Player {
     public jump() {
         if (this && this.body!.touching.down) {
             this.setVelocityY(-450);
-            this.play('jumpingP2', true);
+            this.play('jumpingP3', true);
         }
     }
 
     public attack() {
         if (this) {
             // if shoot p2 sound not playing
-            if (this.currentAnimation !== 'shootP2') this.play('shootP2', true);
+            if (this.currentAnimation !== 'shootP3') this.play('shootP3', true);
     
             if (!this.shootP2Sound) {
-                this.shootP2Sound = this.scene.sound.add('shootP2');
+                this.shootP2Sound = this.scene.sound.add('shootP3');
                 this.shootP2Sound.on('complete', () => {
                     this.shootP2Sound = null;
                 });

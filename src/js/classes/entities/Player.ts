@@ -11,6 +11,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public avatar!: Phaser.GameObjects.Image;
     public amask!: Phaser.GameObjects.Graphics;
     public hudContainer!: Phaser.GameObjects.Container;
+    public isActive: boolean = true;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
