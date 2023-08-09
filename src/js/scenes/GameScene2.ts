@@ -10,6 +10,7 @@ export default class GameScene2 extends BaseScene {
     public backgroundKey2: string = 'middle';
     public backgroundKey3: string = 'back-buildings';
     public backgroundKey4: string = 'far-buildings';
+    public levelNumber: number = 2;
 
     protected resetPlayer() {
         if (this.player) {
@@ -32,16 +33,6 @@ export default class GameScene2 extends BaseScene {
             middle: common.createBackground(this, this.backgroundKey2, this.width, this.height*this.sfactor3),
             foreground: common.createBackground(this, this.backgroundKey1, this.width, this.height*this.sfactor4),
         };
-        
-        // Add Lv. 2 to the top right corner of the camera
-        this.level = this.add.text(this.cameras.main.width - 90, 30, 'Lv. 2', {
-            fontSize: 20,
-            color: '#ffffff',
-            align: 'center',
-            stroke: '#000000',
-            strokeThickness: 3
-        });
-        this.level.setScrollFactor(0);
         
         // Cloud Setup
         common.createClouds(this, 10);

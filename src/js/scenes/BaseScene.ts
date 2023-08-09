@@ -15,7 +15,6 @@ export default class BaseScene extends Phaser.Scene {
     protected interactHint?: Phaser.GameObjects.Text;
     protected isInteracting: boolean = false;
     protected p2HealthBarCreated: boolean = false;
-    protected level?: Phaser.GameObjects.Text;
     protected width: number = 3000;
     protected height: number = 650;
     // scale factors
@@ -35,6 +34,8 @@ export default class BaseScene extends Phaser.Scene {
     protected volumeBar?: Phaser.GameObjects.Graphics;
     protected volumeHandle?: Phaser.GameObjects.Rectangle;
     protected volumeValue: number = 0.5;
+    protected level?: Phaser.GameObjects.Text;
+    public levelNumber: number = 1;
 
     create() {
         // Scene Setup
@@ -107,6 +108,16 @@ export default class BaseScene extends Phaser.Scene {
 
         // Camera setup
         this.cameras.main.setBounds(0, 0, this.width, 800);
+        
+        // Add Lv. # to the top right corner of the camera
+        this.level = this.add.text(this.cameras.main.width - 90, 30, `Lv. ${this.levelNumber}`, {
+            fontSize: 20,
+            color: '#ffffff',
+            align: 'center',
+            stroke: '#000000',
+            strokeThickness: 3
+        });
+        this.level.setScrollFactor(0);
 
         this.inputManager = InputManager.getInstance(this);
         // Update Input to apply to current scene
