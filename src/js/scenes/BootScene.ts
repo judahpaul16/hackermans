@@ -7,8 +7,10 @@ import coinImg from '../../assets/sprites/ui/coin.png';
 import coinJSON from '../../assets/sprites/ui/coin.json';
 
 import mainMenuBG from '../../assets/videos/mainMenuBG.mp4';
+
 import platformImg from '../../assets/sprites/platforms/rock.png';
 import streetImg from '../../assets/sprites/platforms/street.png';
+import street2Img from '../../assets/sprites/platforms/street-2.png';
 
 import playerImg from '../../assets/sprites/players/player_1/player.png';
 import playerJSON from '../../assets/sprites/players/player_1/player.json';
@@ -37,6 +39,11 @@ import foreground from '../../assets/sprites/backgrounds/foreground.png';
 import foreground2 from '../../assets/sprites/backgrounds/foreground-2.png';
 import foregroundEmpty from '../../assets/sprites/backgrounds/foreground-empty.png';
 
+import buildingsBG from '../../assets/sprites/backgrounds/buildings-bg.png';
+import nearBuildings from '../../assets/sprites/backgrounds/near-buildings-bg.png';
+import skyLineA from '../../assets/sprites/backgrounds/skyline-a.png';
+import skyLineB from '../../assets/sprites/backgrounds/skyline-b.png';
+
 import industrialBG from '../../assets/sprites/backgrounds/industrial-bg.png';
 import industrialBuildings from '../../assets/sprites/backgrounds/industrial-buildings.png';
 import industrialForeground from '../../assets/sprites/backgrounds/industrial-foreground.png';
@@ -61,6 +68,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.video('mainMenuBG', mainMenuBG);
         this.load.image('platform', platformImg);
         this.load.image('street', streetImg);
+        this.load.image('street-2', street2Img);
         this.load.atlas('cloud', cloudImg, cloudJSON);
         this.load.atlas('player', playerImg, playerJSON);
         this.load.image('controls', controlsImg);
@@ -71,6 +79,10 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('health-bar-frame-enemy', healthBarFrameEnemyImg);
         this.load.atlas('player2', player2Img, player2JSON);
         this.load.atlas('chat_bubble', chatBubbleImg, chatBubbleJSON);
+        this.load.audio('mainMusic', mainMusicSrc);
+        this.load.audio('p2Dialogue1', p2Dialogue1);
+        this.load.audio('meleeP1', meleeSoundP1);
+        this.load.audio('shootP2', shootSoundP2);
         this.load.image('far-buildings', farBuildings);
         this.load.image('back-buildings', backBuildings);
         this.load.image('middle', middle);
@@ -81,10 +93,10 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('industrial-buildings', industrialBuildings);
         this.load.image('industrial-foreground', industrialForeground);
         this.load.image('industrial-far-buildings', industrialFarBuildings);
-        this.load.audio('mainMusic', mainMusicSrc);
-        this.load.audio('p2Dialogue1', p2Dialogue1);
-        this.load.audio('meleeP1', meleeSoundP1);
-        this.load.audio('shootP2', shootSoundP2);
+        this.load.image('buildings-bg', buildingsBG);
+        this.load.image('near-buildings', nearBuildings);
+        this.load.image('skyline-a', skyLineA);
+        this.load.image('skyline-b', skyLineB);
     }
 
     create() {

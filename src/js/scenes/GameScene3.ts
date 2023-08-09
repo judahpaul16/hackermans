@@ -6,11 +6,12 @@ import Enemy from '../classes/entities/Enemy';
 import * as common from '../helpers/common';
 
 export default class GameScene3 extends BaseScene {
-    public backgroundKey1: string = 'industrial-foreground';
-    public backgroundKey2: string = 'industrial-buildings';
-    public backgroundKey3: string = 'industrial-far-buildings';
-    public backgroundKey4: string = 'industrial-bg';
+    public backgroundKey1: string = 'foreground-2';
+    public backgroundKey2: string = 'middle';
+    public backgroundKey3: string = 'back-buildings';
+    public backgroundKey4: string = 'skyline-a';
     public levelNumber: number = 3;
+    public width: number = 1600;
 
     protected resetPlayer() {
         if (this.player) {
@@ -35,11 +36,11 @@ export default class GameScene3 extends BaseScene {
         };
         
         // Cloud Setup
-        common.createClouds(this, 10);
+        common.createClouds(this, 3);
         
         // Street setup
         this.platforms = this.physics.add.staticGroup();
-        common.addPlatform(this, 150, 790, 1000, 'street');
+        common.addPlatform(this, 150, 790, 1000, 'street-2');
 
         // Player setup
         this.player = new Player(this, 100, 650, 'player');
