@@ -84,13 +84,18 @@ export default class BaseScene extends Phaser.Scene {
         const border = this.add.graphics({ lineStyle: { width: 2, color: 0xffffff } });
         border.strokeRect(
             this.cameras.main.width / 2 - (this.cameras.main.width * 0.33) / 2, // x
-            this.cameras.main.height / 2 - (this.cameras.main.height * 0.33) / 2 - 200, // y
-            this.cameras.main.width * 0.33, this.cameras.main.height * 0.5 // width, height
+            this.cameras.main.height / 2 - (this.cameras.main.height * 0.33) / 2 - 175, // y
+            this.cameras.main.width * 0.33, this.cameras.main.height * 0.33 // width, height
         );
 
         // Add to pause menu containers
         this.pauseMenuSettings!.add([this.pauseButton]);
-        this.pauseMenu.add([this.pauseBackground, this.pauseMenuSettings!, this.pauseMenuControls!, border]);
+        this.pauseMenu.add([
+            this.pauseBackground,
+            this.pauseMenuSettings!,
+            this.pauseMenuControls!,
+            border
+        ]);
 
         // Initially hide the pause menu
         this.pauseMenu.setVisible(false);
