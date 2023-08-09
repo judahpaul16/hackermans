@@ -8,6 +8,7 @@ export default class MainMenuScene extends Phaser.Scene {
     private insertCoin!: Phaser.GameObjects.Text;
     private mainMenuText!: Phaser.GameObjects.Text;
     private timerEvent: Phaser.Time.TimerEvent | null = null;
+    private ready: boolean = false;
 
     constructor() {
         super({ key: 'MainMenuScene' });
@@ -76,8 +77,12 @@ export default class MainMenuScene extends Phaser.Scene {
                     duration: 1000,
                     ease: 'Linear'
                 });
+                this.ready = true;
             });
-        } else if (this.clickCounter === 2) {
+        }
+        if (!this.ready) return;
+        // If the user clicks twice, start the game
+        if (this.clickCounter >= 2) {
             // Start the next scene
             this.scene.start('GameScene1');
             this.game.registry.set('previousScene', this.scene.key);
