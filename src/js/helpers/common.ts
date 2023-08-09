@@ -82,7 +82,7 @@ export function createClouds(scene: any, numClouds: number) {
     type CloudPosition = { x: number; y: number };
     let previousPositions: CloudPosition[] = [];
     
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < numClouds; i++) {
       let randomX: number;
       let randomY: number;
       let attempts = 0;
