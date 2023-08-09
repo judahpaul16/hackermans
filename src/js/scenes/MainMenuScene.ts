@@ -35,10 +35,12 @@ export default class MainMenuScene extends Phaser.Scene {
         this.insertCoin.destroy();
         if (this.timerEvent) this.timerEvent.destroy(); // Stop the ellipses animation
         if (this.clickCounter === 1) {
+            // Play the coin sound
+            this.sound.play('coinSound', { volume: 0.5 });
             // Set the Main Menu Background
             this.createBackground();
             // If not already playing, play the main music
-            if (!this.sound.get('mainMusic')) this.sound.play('mainMusic', { loop: true, volume: 0.1 });
+            if (!this.sound.get('mainMusic')) this.sound.play('mainMusic', { loop: true, volume: 0.2 });
             // Set Logo
             const logo = this.add.sprite(280, window.innerHeight / 2 + 30, 'logo').setAlpha(0);
             this.time.delayedCall(1000, () => {
