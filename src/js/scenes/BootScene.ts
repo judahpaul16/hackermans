@@ -15,6 +15,8 @@ import playerJSON from '../../assets/sprites/players/player_1/player.json';
 import player2Img from '../../assets/sprites/players/player_2/player.png';
 import player2JSON from '../../assets/sprites/players/player_2/player.json';
 
+import controlsImg from '../../assets/sprites/ui/controls.png';
+
 import avatarImg from '../../assets/sprites/ui/avatar.png';
 import p2AvatarImg from '../../assets/sprites/ui/player_2_avatar.png';
 import healthBarFrameImg from '../../assets/sprites/ui/health_bar_bg.png';
@@ -54,6 +56,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('street', streetImg);
         this.load.atlas('cloud', cloudImg, cloudJSON);
         this.load.atlas('player', playerImg, playerJSON);
+        this.load.image('controls', controlsImg);
         this.load.image('avatar', avatarImg);
         this.load.image('p2Avatar', p2AvatarImg);
         this.load.image('health-bar-frame', healthBarFrameImg);

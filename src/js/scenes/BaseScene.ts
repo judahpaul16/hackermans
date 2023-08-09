@@ -28,25 +28,70 @@ export default class BaseScene extends Phaser.Scene {
     protected platforms?: Phaser.Physics.Arcade.StaticGroup;
     protected dg?: dat.GUI;
     protected pauseMenu?: Phaser.GameObjects.Container;
+    protected pauseMenuSettings?: Phaser.GameObjects.Container;
+    protected pauseMenuControls?: Phaser.GameObjects.Image;
     protected pauseBackground?: Phaser.GameObjects.Rectangle;
     protected pauseButton?: Phaser.GameObjects.Text;
     protected volumeBar?: Phaser.GameObjects.Graphics;
-    protected volumeHandle?: Phaser.GameObjects.Graphics;
+    protected volumeHandle?: Phaser.GameObjects.Rectangle;
     protected volumeValue: number = 0.5;
 
     create() {
+        // Scene Setup
         // Pause Menu setup
-        // Create Pause Menu Overlay
         this.pauseMenu = this.add.container(0, 0).setScrollFactor(0);
-        this.pauseBackground = this.add.rectangle(0, 0, this.cameras.main.width, this.cameras.main.height, 0x000000, 0.55);
-        this.pauseBackground.setScrollFactor(0);
-        this.pauseBackground.setOrigin(0, 0);        
-        this.pauseButton = this.add.text(this.cameras.main.width / 2, this.cameras.main.height / 2, 'Continue', { color: '#ffffff', fontSize: '32px'}).setOrigin(0.5);
+        let settingsY = 125;
+        this.pauseMenuSettings = this.add.container(
+            this.cameras.main.width / 2, // x
+            this.cameras.main.height / 3 - settingsY // y
+        ).setScrollFactor(0);
+        this.pauseMenuControls = this.add.image(
+            this.cameras.main.width / 2, // x
+            this.cameras.main.height * 2 / 3 + 100, // y
+            'controls' // texture
+        ).setScrollFactor(0).setOrigin(0.5);
+        this.pauseBackground = this.add.rectangle(
+            0, 0, // x, y
+            this.cameras.main.width, // width
+            this.cameras.main.height, // height
+            0x000000, 0.55 // color, alpha
+        ).setScrollFactor(0).setOrigin(0, 0);
+
+        // Create border around the settings container
+        const border = this.add.graphics({ lineStyle: { width: 2, color: 0xffffff } });
+        border.strokeRect(
+            this.cameras.main.width / 2 - (this.cameras.main.width * 0.33) / 2, // x
+            this.cameras.main.height / 3 - (this.cameras.main.height * 0.33) / 3 - settingsY, // y
+            this.cameras.main.width * 0.33, this.cameras.main.height * 0.5 // width, height
+        );
+
+        this.pauseButton = this.add.text(0, 0, 'Continue', { color: '#ffffff', fontSize: '32px' }).setOrigin(0.5);
+
+        // Setup tweens for pause button
+        this.tweens.add({
+            targets: this.pauseButton,
+            scale: 1.1,
+            ease: 'Linear',
+            duration: 500,
+            yoyo: true,
+            repeat: -1
+        });
+        this.tweens.add({
+            targets: this.pauseButton,
+            alpha: 0.5,
+            ease: 'Linear',
+            duration: 500,
+            yoyo: true,
+            repeat: -1
+        });
+
+        // Create volume slider
         this.createVolumeSlider();
         this.pauseMenu.setDepth(1000);
 
-        // Add to pause menu container
-        this.pauseMenu.add([this.pauseBackground, this.pauseButton, this.volumeBar!, this.volumeHandle!]);
+        // Add to pause menu containers
+        this.pauseMenuSettings!.add([this.pauseButton]);
+        this.pauseMenu.add([this.pauseBackground, this.pauseMenuSettings!, this.pauseMenuControls!, border]);
 
         // Initially hide the pause menu
         this.pauseMenu.setVisible(false);
@@ -133,7 +178,8 @@ export default class BaseScene extends Phaser.Scene {
         if (this.player2) {
             if (this.chatBubble && this.dialogueText) {
                 this.chatBubble.setPosition(this.player2.x - 123, this.player2.y - 130);
-                this.dialogueText.setPosition(this.chatBubble!.x - (this.chatBubble!.width * 0.1 / 2) - 165, this.chatBubble!.y - (this.chatBubble!.height * 0.1 / 2) - 15);
+                this.dialogueText.setPosition(this.chatBubble!.x - (this.chatBubble!.width * 0.1 / 2) - 165,
+                    this.chatBubble!.y - (this.chatBubble!.height * 0.1 / 2) - 15);
             }
         }
 
@@ -279,32 +325,53 @@ export default class BaseScene extends Phaser.Scene {
         const volumeBarWidth = 300;
         const volumeBarHeight = 10;
         const volumeHandleSize = 20;
-        const x = this.cameras.main.width / 2;
-        const y = this.cameras.main.height / 2 + 100;
+        const x = 0; // Relative to the container
+        const y = 100; // Relative to the container
         this.volumeValue = this.sound.volume;
     
         // Add a label for the volume slider
         const label = this.add.text(x - volumeBarWidth / 2, y - 40, 'Master Volume', { color: '#ffffff' });
-        this.pauseMenu!.add(label); // Add label to pause menu if applicable
     
         this.volumeBar = this.add.graphics({ lineStyle: { width: 2, color: 0xffffff }, fillStyle: { color: 0x444444 } });
         this.volumeBar.fillRect(x - volumeBarWidth / 2, y - volumeBarHeight / 2, volumeBarWidth, volumeBarHeight);
     
-        this.volumeHandle = this.add.graphics({ fillStyle: { color: 0xffffff } });
-        this.volumeHandle.fillRect(x - volumeBarWidth / 2 + this.volumeValue * (volumeBarWidth - volumeHandleSize), y - volumeHandleSize / 2, volumeHandleSize, volumeHandleSize);
+        // Create volume handle as a rectangle
+        this.volumeHandle = this.add.rectangle(
+            x + this.volumeValue * (volumeBarWidth - volumeHandleSize) - volumeBarWidth / 2, // x
+            y, // y
+            volumeHandleSize, // width
+            volumeHandleSize // height
+        ).setInteractive().setOrigin(0.5);
     
-        // Make the handle interactive
-        this.volumeHandle.setInteractive(new Phaser.Geom.Rectangle(x - volumeBarWidth / 2, y - volumeHandleSize / 2, volumeBarWidth, volumeHandleSize), Phaser.Geom.Rectangle.Contains);
-    
-        // Drag the handle to adjust the volume
         this.input.setDraggable(this.volumeHandle);
+        this.volumeHandle.setFillStyle(0xffffff);
     
-        this.volumeHandle.on('drag', (pointer: Phaser.Input.Pointer) => {
-            let newX = Phaser.Math.Clamp(pointer.x, x - volumeBarWidth / 2, x + volumeBarWidth / 2 - volumeHandleSize);
-            this.volumeValue = (newX - (x - volumeBarWidth / 2)) / (volumeBarWidth - volumeHandleSize);
-            this.volumeHandle!.clear().fillRect(newX, y - volumeHandleSize / 2, volumeHandleSize, volumeHandleSize);
-            this.sound.volume = this.volumeValue;
+        this.input.on('dragstart', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) => {
+            if (gameObject === this.volumeHandle) {
+                this.volumeHandle.setFillStyle(0xff0000); // change color to red
+            }
         });
+    
+        this.input.on('drag', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject, dragX: number, dragY: number) => {
+            if (gameObject === this.volumeHandle) {
+                let newX = Phaser.Math.Clamp(dragX, x - volumeBarWidth / 2, x + volumeBarWidth / 2 - volumeHandleSize);
+                this.volumeValue = (newX - (x - volumeBarWidth / 2)) / (volumeBarWidth - volumeHandleSize);
+                (this.volumeHandle as Phaser.GameObjects.Rectangle).setPosition(newX, y); // Cast to Rectangle and set position
+                this.sound.volume = this.volumeValue;
+            }
+        });
+        
+    
+        this.input.on('dragend', (pointer: Phaser.Input.Pointer, gameObject: Phaser.GameObjects.GameObject) => {
+            if (gameObject === this.volumeHandle) {
+                this.volumeHandle.setFillStyle(0xffffff); // change color back to white
+            }
+        });
+    
+        this.volumeHandle.setDepth(1001);
+    
+        // Add the volume slider elements to the settings container
+        this.pauseMenuSettings!.add([label, this.volumeBar, this.volumeHandle]);
     }
     
     // other common methods...
