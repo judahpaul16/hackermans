@@ -155,8 +155,14 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2) {
     const avatarHeight = player.avatar.height * avatarScale;
 
     // Background of the health bar (position it relative to avatar, with the possible offset for P2)
-    player.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, 'health-bar-frame').setOrigin(0);
-
+    let frameKey = 'health-bar-frame';
+    if (player instanceof Player2) {
+        frameKey = 'health-bar-frame-alt';
+    } else if (player instanceof Enemy) {
+        frameKey = 'health-bar-frame-enemy';
+    }
+    player.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, frameKey).setOrigin(0);
+    
     // Scale the healthBarFrame to match the avatar's height
     const healthBarFrameScale = avatarHeight / player!.healthBarFrame.height;
     player!.healthBarFrame.setScale(healthBarFrameScale);

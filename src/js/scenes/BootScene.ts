@@ -20,6 +20,9 @@ import controlsImg from '../../assets/sprites/ui/controls.png';
 import avatarImg from '../../assets/sprites/ui/avatar.png';
 import p2AvatarImg from '../../assets/sprites/ui/player_2_avatar.png';
 import healthBarFrameImg from '../../assets/sprites/ui/health_bar_bg.png';
+import healthBarFrameAltImg from '../../assets/sprites/ui/health_bar_bg_alt.png';
+import healthBarFrameEnemyImg from '../../assets/sprites/ui/health_bar_bg_enemy.png';
+
 
 import cloudImg from '../../assets/sprites/entities/cloud/cloud.png';
 import cloudJSON from '../../assets/sprites/entities/cloud/cloud.json';
@@ -60,6 +63,8 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('avatar', avatarImg);
         this.load.image('p2Avatar', p2AvatarImg);
         this.load.image('health-bar-frame', healthBarFrameImg);
+        this.load.image('health-bar-frame-alt', healthBarFrameAltImg);
+        this.load.image('health-bar-frame-enemy', healthBarFrameEnemyImg);
         this.load.atlas('player2', player2Img, player2JSON);
         this.load.atlas('chat_bubble', chatBubbleImg, chatBubbleJSON);
         this.load.image('far-buildings', farBuildings);
