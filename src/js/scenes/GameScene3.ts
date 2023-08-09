@@ -12,6 +12,10 @@ export default class GameScene3 extends BaseScene {
     public backgroundKey4: string = 'skyline-a';
     public levelNumber: number = 3;
     public width: number = 1600;
+    public sfactor1: number = 1.3;
+    public sfactor2: number = 0;
+    public sfactor3: number = 0.4;
+    public sfactor4: number = 0.9;
 
     protected resetPlayer() {
         if (this.player) {
