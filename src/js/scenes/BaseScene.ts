@@ -199,6 +199,8 @@ export default class BaseScene extends Phaser.Scene {
             ease: 'Sine.easeInOut'
         });
 
+        this.interactHint.setVisible(false);
+
         // Debugging
         functions.initializeDebugGUI(this);
 
