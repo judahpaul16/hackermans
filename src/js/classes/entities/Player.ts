@@ -20,6 +20,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public attackKey: string = 'meleeP1';
     public dyingKey: string = 'dyingP1';
     public hurtKey: string = 'hurtP1';
+    public crouchKey: string = 'crouchingP1';
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);

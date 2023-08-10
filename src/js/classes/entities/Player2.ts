@@ -22,6 +22,7 @@ export default class Player2 extends Player {
     public hurtKey: string = 'hurtP2';
     public attackKey: string = 'shootP2';
     public dyingKey: string = 'hurtP2';
+    public crouchKey: string = 'crouchingP2';
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);

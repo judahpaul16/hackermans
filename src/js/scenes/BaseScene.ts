@@ -408,6 +408,7 @@ export default class BaseScene extends Phaser.Scene {
         let isRunning = this.inputManager.cursors.shift!.isDown;
         let isJumping = this.inputManager.cursors.up!.isDown || this.inputManager.jumpKey!.isDown;
         let isAttacking = this.inputManager.cursors.space!.isDown;
+        let isCrouching = this.inputManager.cursors.down!.isDown || this.inputManager.crouchKey!.isDown;
 
         if (player.currentHealth <= 0 && !player.isDead) {
             this.physics.world.gravity.y = 0;
@@ -447,6 +448,8 @@ export default class BaseScene extends Phaser.Scene {
             }
         } else if (isJumping) {
             player.jump();
+        } else if (isCrouching) {
+            player.play(player.crouchKey, true); 
         } else {
             player.setVelocityX(0);
             player.play(player.standKey, true);
