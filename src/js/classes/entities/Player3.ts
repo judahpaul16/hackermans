@@ -32,6 +32,7 @@ export default class Player3 extends Player {
                 scene.physics.world.enable(this);
             }
         }
+        this.setDepth(3);
     }
 
     protected handleAnimationStart(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {

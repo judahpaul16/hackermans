@@ -34,6 +34,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 scene.physics.world.enable(this);
             }
         }
+        this.setDepth(4);
         // // Keep the player's inside the scene
         // this.setCollideWorldBounds(true)
 

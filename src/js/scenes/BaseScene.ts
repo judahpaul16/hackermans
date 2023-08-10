@@ -128,8 +128,20 @@ export default class BaseScene extends Phaser.Scene {
             align: 'center',
             stroke: '#000000',
             strokeThickness: 3
+        }).setScrollFactor(0);
+
+        // Add pauuse button to the top left corner of the camera
+        this.pauseButton = this.add.text(20, 20, '[P] Pause / View Controls', {
+            fontSize: 14,
+            color: '#ffffff',
+            align: 'center',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setScrollFactor(0);
+
+        this.pauseButton.setInteractive().on('pointerdown', () => {
+            this.togglePauseMenu();
         });
-        this.level.setScrollFactor(0);
 
         // Player setup
         this.setupPlayers();
