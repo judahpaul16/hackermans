@@ -16,8 +16,8 @@ export default class CreditsScene extends Phaser.Scene {
     );
     this.creditsText.setOrigin(0.5); // Center the text horizontally
     this.creditsText.setText([
-      'Developer, Voice Actor - Judah Paul (https://github.com/judahpaul16)',
-      'Game Assets - Asimuz (https://ansimuz.itch.io/)',
+      'Developer & Voice Actor - Judah Paul (https://github.com/judahpaul16)',
+      'Artwork & Music - Luis Zuno @asimuz (https://ansimuz.itch.io/)',
       'Special Thanks - Mom, The Man Upstairs, and You!',
     ]).setLineSpacing(20); // Add space between lines
 

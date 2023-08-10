@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
+import Player3 from '../classes/entities/Player3';
 import Enemy from '../classes/entities/Enemy';
 import * as dat from 'dat.gui';
 
@@ -128,20 +129,27 @@ export function updateClouds(scene: any) {
     }
 }
 
-export function createHealthBar(scene: Phaser.Scene, player: Player | Player2) {
+export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | Enemy) {
     // Determine if the character is an Player2
     const isP2 = player instanceof Player2;
+    const isP3 = player instanceof Player3;
+    const isEnemy = player instanceof Enemy;
 
-    // Adjust the x-position of the health bar for P2
-    const xOffset = isP2 ? 360 : 0;
+    // Adjust the x-position of the health bar for P2 & Enemy
+    let xOffset = isP2 ? 340 : 0;
+    if (isEnemy) xOffset = 600;
+
+    // Adjust the y-position of the health bar for P3
+    let yOffset = isP3 ? 100 : 0;
 
     // Adding the avatar image at the top left corner with xOffset
     let someAvatar = isP2 ? 'p2Avatar' : 'avatar';
-    player.avatar = scene.add.image(100 + xOffset, 100, someAvatar);
+    if (isP3) someAvatar = 'p3Avatar';
+    player.avatar = scene.add.image(100 + xOffset, 100 + yOffset, someAvatar);
 
     // Creating a circular mask using a Graphics object
     player.amask = scene.make.graphics({});
-    player.amask.fillCircle(100 + xOffset, 100, 30); // X, Y, radius with xOffset
+    player.amask.fillCircle(100 + xOffset, 100 + yOffset, 30); // X, Y, radius with xOffset
 
     // Applying the mask to the avatar
     player.avatar.setMask(player.amask.createGeometryMask());
@@ -158,6 +166,8 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2) {
     let frameKey = 'health-bar-frame';
     if (player instanceof Player2) {
         frameKey = 'health-bar-frame-alt';
+    } else if (player instanceof Player3) {
+        frameKey = 'health-bar-frame-alt-2';
     } else if (player instanceof Enemy) {
         frameKey = 'health-bar-frame-enemy';
     }
@@ -219,24 +229,37 @@ export function destroyHealthBar(player: Player | Player2 | Enemy) {
         player.hudContainer.destroy();
     }
 }
-export function follow(scene: any, player2: Player2, player: Player, interactHint: Phaser.GameObjects.Text, followSpeed: number = 300, bufferZone: number = 150, walkSpeed: number = 175, jumpStrength: number = 200) {
+export function follow(
+    scene: any,
+    player2: Player2 | Player3,
+    player: Player,
+    interactHint: Phaser.GameObjects.Text,
+    followSpeed: number = 300,
+    bufferZone: number = (player2 instanceof Player2 ? 300 : 150),
+    walkSpeed: number = 175,
+    jumpStrength: number = 200 ) {
+
     if (player2.body!.touching.down) {
         const distanceToPlayer = player2.x - player.x;
         let startFollowing = false;
+        let standingKey: string = player2 instanceof Player2  ? 'standingP2' : 'standingP3';
+        let walkingKey: string = player2 instanceof Player2  ? 'walkingP2' : 'walkingP3';
+        let runningKey: string = player2 instanceof Player2  ? 'runningP2' : 'runningP3';
+        let jumpingKey: string = player2 instanceof Player2  ? 'jumpingP2' : 'jumpingP3';
 
-        if (distanceToPlayer <= 300 || startFollowing) {
+        if (distanceToPlayer <= 400 || startFollowing) {
             startFollowing = true;
             interactHint.setVisible(false);
             // If Player2 is close to the player, stop moving
             if (Math.abs(distanceToPlayer) < bufferZone) {
-                player2.play('standingP2', true);
+                player2.play(standingKey, true);
                 player2.setVelocityX(0);
                 interactHint.x = player2.x - 40;
                 if (scene.chatBubble) if (!scene.chatBubble.visible) interactHint.setVisible(true);
                 if (!scene.chatBubble) interactHint.setVisible(true);
             } else {
                 const isCloser = Math.abs(distanceToPlayer) < walkSpeed;
-                const animation = isCloser ? 'walkingP2' : 'runningP2';
+                const animation = isCloser ? walkingKey : runningKey;
                 const speed = isCloser ? walkSpeed : followSpeed;
 
                 player2.y -= 10;
@@ -248,7 +271,7 @@ export function follow(scene: any, player2: Player2, player: Player, interactHin
 
                 // Check if there's an obstacle in the way
                 if (obstacleInWay(player2)) {
-                    player2.play('jumpingP2', true);
+                    player2.play(jumpingKey, true);
                     player2.setVelocityY(-jumpStrength);
                 }
             }
@@ -258,7 +281,7 @@ export function follow(scene: any, player2: Player2, player: Player, interactHin
 
 
 // You'll need to define what an obstacle is in your game environment
-function obstacleInWay(player2: Player2): boolean {
+function obstacleInWay(player2: Player2 | Player3): boolean {
     // Implement your logic to detect obstacles here.
     // This could include raycasting, collision checks, or other techniques specific to your game.
     return false; // Return true if an obstacle is detected
@@ -353,6 +376,16 @@ export function setupAnimations(scene: any) {
         { key: 'runningP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'run', start: 1, end: 7, zeroPad: 4 }), frameRate: 10, repeat: -1 },
         { key: 'jumpingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'jump', start: 1, end: 6, zeroPad: 4 }), frameRate: 7, repeat: 0 },
         { key: 'shootP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'shoot', start: 0, end: 7, zeroPad: 4 }), frameRate: 10, repeat: 0 },
+        { key: 'walkingP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'walk-', start: 1, end: 16 }), frameRate: 10, repeat: -1 },
+        { key: 'runningP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'run-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },
+        { key: 'jumpingP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'jump-', start: 1, end: 4 }), frameRate: 7, repeat: 0 },
+        { key: 'shootP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'shoot-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
+        { key: 'standingP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'idle-', start: 1, end: 4 }), frameRate: 6, repeat: -1 },
+        { key: 'runShootP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'run-shoot-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },
+        { key: 'backJumpP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'back-jump-', start: 1, end: 7 }), frameRate: 7, repeat: 0 },
+        { key: 'climbP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'climb-', start: 1, end: 6 }), frameRate: 7, repeat: -1 },
+        { key: 'hurtP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'hurt-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
+        { key: 'crouchP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'crouch-', start: 1, end: 1 }), frameRate: 1, repeat: -1 },
     ];
 
     // Create animations

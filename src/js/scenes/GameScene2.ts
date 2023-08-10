@@ -57,7 +57,7 @@ export default class GameScene2 extends BaseScene {
         this.physics.add.collider(this.player, this.platforms);
         this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
 
-        // Player2 setup
+        // Player 2 setup
         // if previous scene is GameScene3, start player2 at the end of the scene
         if (previousSceneName === 'GameScene3') {
             this.player2 = new Player2(this, this.width - 50, 650, 'player2');
@@ -97,7 +97,7 @@ export default class GameScene2 extends BaseScene {
     }
 
     update() {
-        // Game loop logic
+        // Scene loop logic
 
         // Update clouds
         common.updateClouds(this);

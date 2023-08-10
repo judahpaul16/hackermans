@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import Player from './Player';
 
 export default class Player2 extends Player {
-    public name: string = 'Anonymuz';
+    public name: string = 'Anonymoose';
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
@@ -24,6 +24,7 @@ export default class Player2 extends Player {
             scene.add.existing(this);
             if (scene.physics && scene.physics.world) {
                 scene.physics.world.enable(this);
+                this.setDepth(5);
             }
         }
     }

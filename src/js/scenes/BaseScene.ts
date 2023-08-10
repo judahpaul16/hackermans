@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
+import Player3 from '../classes/entities/Player3';
 import Enemy from '../classes/entities/Enemy';
 import InputManager from '../classes/utils/InputManager';
 import * as common from '../helpers/common';
@@ -9,12 +10,14 @@ export default class BaseScene extends Phaser.Scene {
     protected inputManager!: InputManager;
     protected player?: Player;
     protected player2?: Player2;
+    protected player3?: Player3;
     protected enemy?: Enemy;
     protected chatBubble?: Phaser.GameObjects.Sprite;
     protected dialogueText?: Phaser.GameObjects.Text;
     protected interactHint?: Phaser.GameObjects.Text;
     protected isInteracting: boolean = false;
     protected p2HealthBarCreated: boolean = false;
+    protected p3HealthBarCreated: boolean = false;
     protected width: number = 3000;
     protected height: number = 650;
     // scale factors

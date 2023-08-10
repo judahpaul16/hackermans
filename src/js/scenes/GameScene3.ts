@@ -88,7 +88,7 @@ export default class GameScene3 extends BaseScene {
     }
 
     update() {
-        // Game loop logic
+        // Scene loop logic
 
         // Update clouds
         common.updateClouds(this);

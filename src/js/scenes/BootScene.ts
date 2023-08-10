@@ -12,19 +12,22 @@ import platformImg from '../../assets/sprites/platforms/rock.png';
 import streetImg from '../../assets/sprites/platforms/street.png';
 import street2Img from '../../assets/sprites/platforms/street-2.png';
 
-import playerImg from '../../assets/sprites/players/player_1/player.png';
-import playerJSON from '../../assets/sprites/players/player_1/player.json';
-import player2Img from '../../assets/sprites/players/player_2/player.png';
-import player2JSON from '../../assets/sprites/players/player_2/player.json';
+import playerImg from '../../assets/sprites/characters/player_1/player.png';
+import playerJSON from '../../assets/sprites/characters/player_1/player.json';
+import player2Img from '../../assets/sprites/characters/player_2/player.png';
+import player2JSON from '../../assets/sprites/characters/player_2/player.json';
+import player3Img from '../../assets/sprites/characters/player_3/player.png';
+import player3JSON from '../../assets/sprites/characters/player_3/player.json';
 
 import controlsImg from '../../assets/sprites/ui/controls.png';
 
 import avatarImg from '../../assets/sprites/ui/avatar.png';
 import p2AvatarImg from '../../assets/sprites/ui/player_2_avatar.png';
+import p3AvatarImg from '../../assets/sprites/ui/player_3_avatar.png';
 import healthBarFrameImg from '../../assets/sprites/ui/health_bar_bg.png';
 import healthBarFrameAltImg from '../../assets/sprites/ui/health_bar_bg_alt.png';
+import healthBarFrameAlt2Img from '../../assets/sprites/ui/health_bar_bg_alt_2.png';
 import healthBarFrameEnemyImg from '../../assets/sprites/ui/health_bar_bg_enemy.png';
-
 
 import cloudImg from '../../assets/sprites/entities/cloud/cloud.png';
 import cloudJSON from '../../assets/sprites/entities/cloud/cloud.json';
@@ -72,13 +75,16 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('street-2', street2Img);
         this.load.atlas('cloud', cloudImg, cloudJSON);
         this.load.atlas('player', playerImg, playerJSON);
+        this.load.atlas('player2', player2Img, player2JSON);
+        this.load.atlas('player3', player3Img, player3JSON);
         this.load.image('controls', controlsImg);
         this.load.image('avatar', avatarImg);
         this.load.image('p2Avatar', p2AvatarImg);
+        this.load.image('p3Avatar', p3AvatarImg);
         this.load.image('health-bar-frame', healthBarFrameImg);
         this.load.image('health-bar-frame-alt', healthBarFrameAltImg);
+        this.load.image('health-bar-frame-alt-2', healthBarFrameAlt2Img);
         this.load.image('health-bar-frame-enemy', healthBarFrameEnemyImg);
-        this.load.atlas('player2', player2Img, player2JSON);
         this.load.atlas('chat_bubble', chatBubbleImg, chatBubbleJSON);
         this.load.audio('mainMusic', mainMusicSrc);
         this.load.audio('p2Dialogue1', p2Dialogue1);
