@@ -235,7 +235,6 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
 
     if (Phaser.Input.Keyboard.JustDown(interactKey)) {
         scene.isInteracting = true; // Set the lock
-        scene.interactHint?.setVisible(false);
         
         scene.sound.stopByKey('p3Dialogue1');
         scene.sound.play('p3Dialogue1', { volume: 1 });
@@ -290,7 +289,6 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
             newChatBubble.anims.play('chat_bubble_reverse', true);
             scene.dialogueText?.destroy();
             scene.time.delayedCall(500, () => {
-                scene.interactHint?.setVisible(true);
                 newChatBubble.destroy();
                 scene.isInteracting = false; // Release the lock
             });

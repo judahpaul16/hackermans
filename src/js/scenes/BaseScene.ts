@@ -20,7 +20,6 @@ export default class BaseScene extends Phaser.Scene {
     protected enemy?: Enemy;
     protected chatBubble?: Phaser.GameObjects.Sprite;
     protected dialogueText?: Phaser.GameObjects.Text;
-    protected interactHint?: Phaser.GameObjects.Text;
     protected isInteracting: boolean = false;
     protected p2HealthBarCreated: boolean = false;
     protected p3HealthBarCreated: boolean = false;
@@ -49,71 +48,20 @@ export default class BaseScene extends Phaser.Scene {
     public levelNumber: number = 1;
 
     create() {
-        // Scene Setup  
-        this.game.registry.set('projectileGroup', this.physics.add.group({ gravityY: 0, velocityY: 0 }));
+        // Base Scene Setup
+        
         // Pause Menu setup
-        this.pauseMenu = this.add.container(0, 0).setScrollFactor(0);
-        this.pauseMenuSettings = this.add.container(
-            this.cameras.main.width / 2, // x
-            this.cameras.main.height / 2 - 250 // y
-        ).setScrollFactor(0);
-        this.pauseMenuControls = this.add.image(
-            this.cameras.main.width / 2, // x
-            this.cameras.main.height * 2 / 3 + 100, // y
-            'controls' // texture
-        ).setScrollFactor(0).setOrigin(0.5);
-        this.pauseBackground = this.add.rectangle(
-            0, 0, // x, y
-            this.cameras.main.width, // width
-            this.cameras.main.height, // height
-            0x000000, 0.55 // color, alpha
-        ).setScrollFactor(0).setOrigin(0, 0);
+        this.setupPauseMenu();
 
-        this.pauseButton = this.add.text(0, 0, 'Continue', { color: '#ffffff', fontSize: '32px' }).setOrigin(0.5).setScrollFactor(0);
+        // Add pause button to the top left corner of the camera
+        this.pauseButton = this.add.text(20, 20, '[P] Pause / View Controls', {
+            fontSize: 14,
+            color: '#ffffff',
+            align: 'center',
+            stroke: '#000000',
+            strokeThickness: 3
+        }).setScrollFactor(0);
 
-        // Setup tweens for pause button
-        this.tweens.add({
-            targets: this.pauseButton,
-            scale: 1.1,
-            ease: 'Linear',
-            duration: 500,
-            yoyo: true,
-            repeat: -1
-        });
-        this.tweens.add({
-            targets: this.pauseButton,
-            alpha: 0.5,
-            ease: 'Linear',
-            duration: 500,
-            yoyo: true,
-            repeat: -1
-        });
-
-        // Create volume slider
-        this.createVolumeSlider();
-        this.pauseMenu.setDepth(1000);
-
-        // // Create border around the settings container
-        // const border = this.add.graphics({ lineStyle: { width: 2, color: 0xffffff } });
-        // border.strokeRect(
-        //     this.cameras.main.width / 2 - (this.cameras.main.width * 0.33) / 2, // x
-        //     this.cameras.main.height / 2 - (this.cameras.main.height * 0.33) / 2 - 175, // y
-        //     this.cameras.main.width * 0.33, this.cameras.main.height * 0.33 // width, height
-        // );
-
-        // Add to pause menu containers
-        this.pauseMenuSettings!.add([this.pauseButton]);
-        this.pauseMenu.add([
-            this.pauseBackground,
-            this.pauseMenuSettings!,
-            this.pauseMenuControls!,
-            // border
-        ]);
-
-        // Initially hide the pause menu
-        this.pauseMenu.setVisible(false);
-
-        // Input for clicking the pause button
         this.pauseButton.setInteractive().on('pointerdown', () => {
             this.togglePauseMenu();
         });
@@ -130,38 +78,12 @@ export default class BaseScene extends Phaser.Scene {
             strokeThickness: 3
         }).setScrollFactor(0);
 
-        // Add pauuse button to the top left corner of the camera
-        this.pauseButton = this.add.text(20, 20, '[P] Pause / View Controls', {
-            fontSize: 14,
-            color: '#ffffff',
-            align: 'center',
-            stroke: '#000000',
-            strokeThickness: 3
-        }).setScrollFactor(0);
-
-        this.pauseButton.setInteractive().on('pointerdown', () => {
-            this.togglePauseMenu();
-        });
-
-        // Player setup
-        this.setupPlayers();
-
         this.inputManager = InputManager.getInstance(this);
         // Update Input to apply to current scene
         InputManager.getInstance().updateInput(this);
-        
-        // Attach camera to active player
-        let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
-        if (activePlayer) {
-            // pass activePlayer between scenes
-            activePlayer.name == this.player!.name ? activePlayer = this.player! : activePlayer.name == this.player2!.name ? activePlayer = this.player2! : activePlayer = this.player3!;
-            this.cameras.main.startFollow(activePlayer, true, 0.5, 0.5)
-            activePlayer.toggleIndicator()
-        } else {
-            this.game.registry.set('activePlayer', this.player)
-            this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
-            this.player!.toggleIndicator();
-        }
+
+        // Player setup
+        this.setupPlayers();
         
         // Event listener for if 1, 2, or 3 is pressed and change camera to follow that player
         this.inputManager.switchKey1.on('down', () => {
@@ -209,35 +131,6 @@ export default class BaseScene extends Phaser.Scene {
         this.inputManager.pauseKey.on('down', () => {
             this.togglePauseMenu();
         });
-
-        // Add interact hint
-        this.interactHint = this.add.text(this.player3!.x - 42, this.player3!.y - 82, "Press 'F'", {
-            fontSize: 20,
-            color: '#ffffff',
-            align: 'center',
-            stroke: '#000000',
-            strokeThickness: 4,
-        });
-        // add tweens to make the interact hint float up and down
-        this.tweens.add({
-            targets: this.interactHint,
-            y: this.player3!.y - 50, // Float up and down
-            duration: 1000,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Sine.easeInOut'
-        });
-        
-        this.tweens.add({
-            targets: this.interactHint,
-            fontSize: '24px', // Grow and shrink
-            duration: 500,
-            yoyo: true,
-            repeat: -1,
-            ease: 'Sine.easeInOut'
-        });
-
-        this.interactHint.setVisible(false);
 
         // Debugging
         functions.initializeDebugGUI(this);
@@ -330,6 +223,8 @@ export default class BaseScene extends Phaser.Scene {
     }
 
     protected setupPlayers() {
+        // Projectile setup
+        this.game.registry.set('projectileGroup', this.physics.add.group({ gravityY: 0, velocityY: 0 }));
 
         // Street setup
         this.platforms = this.physics.add.staticGroup();
@@ -431,6 +326,19 @@ export default class BaseScene extends Phaser.Scene {
             // Destroy Player3 health bar
             functions.destroyHealthBar(this.player3!);
             this.p3HealthBarCreated = false;
+        }
+
+        // Attach camera to active player
+        let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
+        if (activePlayer) {
+            // pass activePlayer between scenes
+            activePlayer.name == this.player!.name ? activePlayer = this.player! : activePlayer.name == this.player2!.name ? activePlayer = this.player2! : activePlayer = this.player3!;
+            this.cameras.main.startFollow(activePlayer, true, 0.5, 0.5)
+            activePlayer.toggleIndicator()
+        } else {
+            this.game.registry.set('activePlayer', this.player)
+            this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
+            this.player!.toggleIndicator();
         }
     }
 
@@ -655,6 +563,75 @@ export default class BaseScene extends Phaser.Scene {
                 }
             }
         }
+    }
+
+    public setupPauseMenu() {
+        // Pause Menu setup
+        this.pauseMenu = this.add.container(0, 0).setScrollFactor(0);
+        this.pauseMenuSettings = this.add.container(
+            this.cameras.main.width / 2, // x
+            this.cameras.main.height / 2 - 250 // y
+        ).setScrollFactor(0);
+        this.pauseMenuControls = this.add.image(
+            this.cameras.main.width / 2, // x
+            this.cameras.main.height * 2 / 3 + 100, // y
+            'controls' // texture
+        ).setScrollFactor(0).setOrigin(0.5);
+        this.pauseBackground = this.add.rectangle(
+            0, 0, // x, y
+            this.cameras.main.width, // width
+            this.cameras.main.height, // height
+            0x000000, 0.55 // color, alpha
+        ).setScrollFactor(0).setOrigin(0, 0);
+
+        this.pauseButton = this.add.text(0, 0, 'Continue', { color: '#ffffff', fontSize: '32px' }).setOrigin(0.5).setScrollFactor(0);
+
+        // Setup tweens for pause button
+        this.tweens.add({
+            targets: this.pauseButton,
+            scale: 1.1,
+            ease: 'Linear',
+            duration: 500,
+            yoyo: true,
+            repeat: -1
+        });
+        this.tweens.add({
+            targets: this.pauseButton,
+            alpha: 0.5,
+            ease: 'Linear',
+            duration: 500,
+            yoyo: true,
+            repeat: -1
+        });
+
+        // Create volume slider
+        this.createVolumeSlider();
+        this.pauseMenu.setDepth(1000);
+
+        // // Create border around the settings container
+        // const border = this.add.graphics({ lineStyle: { width: 2, color: 0xffffff } });
+        // border.strokeRect(
+        //     this.cameras.main.width / 2 - (this.cameras.main.width * 0.33) / 2, // x
+        //     this.cameras.main.height / 2 - (this.cameras.main.height * 0.33) / 2 - 175, // y
+        //     this.cameras.main.width * 0.33, this.cameras.main.height * 0.33 // width, height
+        // );
+
+        // Add to pause menu containers
+        this.pauseMenuSettings!.add([this.pauseButton]);
+        this.pauseMenu.add([
+            this.pauseBackground,
+            this.pauseMenuSettings!,
+            this.pauseMenuControls!,
+            // border
+        ]);
+
+        // Initially hide the pause menu
+        this.pauseMenu.setVisible(false);
+
+        // Input for clicking the pause button
+        this.pauseButton.setInteractive().on('pointerdown', () => {
+            this.togglePauseMenu();
+        });
     }
 
     // other functions methods...
