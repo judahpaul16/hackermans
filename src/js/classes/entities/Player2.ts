@@ -25,6 +25,7 @@ export default class Player2 extends Player {
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
+        this.setDepth(5);
 
         // Ensure the scene is not undefined before adding the sprite
         if (scene) {

@@ -30,7 +30,6 @@ export default class Player3 extends Player {
             scene.add.existing(this);
             if (scene.physics && scene.physics.world) {
                 scene.physics.world.enable(this);
-                this.setDepth(5);
             }
         }
     }
