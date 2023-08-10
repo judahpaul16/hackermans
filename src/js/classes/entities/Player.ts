@@ -22,7 +22,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public hurtKey: string = 'hurtP1';
     public crouchKey: string = 'crouchingP1';
     public inputManager: InputManager = new InputManager(this.scene);
-    public projectileGroup: Phaser.Physics.Arcade.Group = this.scene.physics.add.group({ gravityY: 0, velocityY: 0 });
+    public projectileGroup!: Phaser.Physics.Arcade.Group;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);

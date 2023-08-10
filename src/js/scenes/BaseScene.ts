@@ -49,7 +49,8 @@ export default class BaseScene extends Phaser.Scene {
     public levelNumber: number = 1;
 
     create() {
-        // Scene Setup
+        // Scene Setup  
+        this.game.registry.set('projectileGroup', this.physics.add.group({ gravityY: 0, velocityY: 0 }));
         // Pause Menu setup
         this.pauseMenu = this.add.container(0, 0).setScrollFactor(0);
         this.pauseMenuSettings = this.add.container(
@@ -380,11 +381,11 @@ export default class BaseScene extends Phaser.Scene {
             this.player2!.x, this.player2!.y
         );
         this.p2HealthBarCreated = false;
-        if (distance1_2 <= 20 && !this.p2HealthBarCreated) {
+        if (distance1_2 <= 400 && !this.p2HealthBarCreated) {
             // Create Player2 health bar
             functions.createHealthBar(this, this.player2!);
             this.p2HealthBarCreated = true;
-        } else if (distance1_2 > 20 && this.p2HealthBarCreated) {
+        } else if (distance1_2 > 400 && this.p2HealthBarCreated && !this.player2!.isActive()) {
             // Destroy Player2 health bar
             functions.destroyHealthBar(this.player2!);
             this.p2HealthBarCreated = false;
@@ -396,11 +397,11 @@ export default class BaseScene extends Phaser.Scene {
             this.player3!.x, this.player3!.y
         );
         this.p3HealthBarCreated = false;
-        if (distance1_3 <= 20 && !this.p3HealthBarCreated) {
+        if (distance1_3 <= 400 && !this.p3HealthBarCreated) {
             // Create Player3 health bar
             functions.createHealthBar(this, this.player3!);
             this.p3HealthBarCreated = true;
-        } else if (distance1_3 > 20 && this.p3HealthBarCreated) {
+        } else if (distance1_3 > 400 && this.p3HealthBarCreated && !this.player3!.isActive()) {
             // Destroy Player3 health bar
             functions.destroyHealthBar(this.player3!);
             this.p3HealthBarCreated = false;
@@ -473,11 +474,11 @@ export default class BaseScene extends Phaser.Scene {
             this.player2!.x, this.player2!.y
         );
 
-        if (distance1_2 <= 300 && !this.p2HealthBarCreated) {
+        if (distance1_2 <= 400 && !this.p2HealthBarCreated) {
             // Create Player2 health bar
             functions.createHealthBar(this, this.player2!);
             this.p2HealthBarCreated = true;
-        } else if (distance1_2 > 300 && this.p2HealthBarCreated) {
+        } else if (distance1_2 > 400 && this.p2HealthBarCreated && !this.player2!.isActive()) {
             // Destroy Player2 health bar
             functions.destroyHealthBar(this.player2!);
             this.p2HealthBarCreated = false;
@@ -490,11 +491,11 @@ export default class BaseScene extends Phaser.Scene {
             this.player3!.x, this.player3!.y
         );
 
-        if (distance1_3 <= 300 && !this.p3HealthBarCreated) {
+        if (distance1_3 <= 400 && !this.p3HealthBarCreated) {
             // Create Player3 health bar
             functions.createHealthBar(this, this.player3!);
             this.p3HealthBarCreated = true;
-        } else if (distance1_3 > 300 && this.p3HealthBarCreated) {
+        } else if (distance1_3 > 400 && this.p3HealthBarCreated && !this.player3!.isActive()) {
             // Destroy Player3 health bar
             functions.destroyHealthBar(this.player3!);
             this.p3HealthBarCreated = false;
