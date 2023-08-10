@@ -4,13 +4,19 @@ import Player2 from '../classes/entities/Player2';
 import Player3 from '../classes/entities/Player3';
 import Enemy from '../classes/entities/Enemy';
 import InputManager from '../classes/utils/InputManager';
-import * as common from '../helpers/common';
+import * as functions from '../helpers/functions';
 
 export default class BaseScene extends Phaser.Scene {
     protected inputManager!: InputManager;
     protected player?: Player;
     protected player2?: Player2;
     protected player3?: Player3;
+    protected p1StartX: number = 200;
+    protected p1StartY: number = 650;
+    protected p2StartX: number = 275;
+    protected p2StartY: number = 650;
+    protected p3StartX: number = 325;
+    protected p3StartY: number = 650;
     protected enemy?: Enemy;
     protected chatBubble?: Phaser.GameObjects.Sprite;
     protected dialogueText?: Phaser.GameObjects.Text;
@@ -38,6 +44,8 @@ export default class BaseScene extends Phaser.Scene {
     protected volumeHandle?: Phaser.GameObjects.Rectangle;
     protected volumeValue: number = 0.5;
     protected level?: Phaser.GameObjects.Text;
+    protected previousSceneName?: string;
+    public platformKey: string = 'street';
     public levelNumber: number = 1;
 
     create() {
@@ -122,6 +130,9 @@ export default class BaseScene extends Phaser.Scene {
         });
         this.level.setScrollFactor(0);
 
+        // Player setup
+        this.setupPlayers();
+
         this.inputManager = InputManager.getInstance(this);
         // Update Input to apply to current scene
         InputManager.getInstance().updateInput(this);
@@ -145,7 +156,7 @@ export default class BaseScene extends Phaser.Scene {
 
         this.inputManager.resetKey.on('down', () => {
             // Reset player position if 'R' key is pressed
-            this.resetPlayer();
+            this.resetPlayers();
         });
 
         this.inputManager.debugKey.on('down', () => {
@@ -162,7 +173,7 @@ export default class BaseScene extends Phaser.Scene {
         });
         
         // Add interact hint
-        this.interactHint = this.add.text(this.player2!.x - 42, this.player2!.y - 82, "Press 'F'", {
+        this.interactHint = this.add.text(this.player3!.x - 42, this.player3!.y - 82, "Press 'F'", {
             fontSize: 20,
             color: '#ffffff',
             align: 'center',
@@ -172,7 +183,7 @@ export default class BaseScene extends Phaser.Scene {
         // add tweens to make the interact hint float up and down
         this.tweens.add({
             targets: this.interactHint,
-            y: this.player2!.y - 50, // Float up and down
+            y: this.player3!.y - 50, // Float up and down
             duration: 1000,
             yoyo: true,
             repeat: -1,
@@ -189,9 +200,9 @@ export default class BaseScene extends Phaser.Scene {
         });
 
         // Debugging
-        common.initializeDebugGUI(this);
+        functions.initializeDebugGUI(this);
 
-        // any other common setup...
+        // any other functions setup...
     }
 
     update() {
@@ -208,20 +219,20 @@ export default class BaseScene extends Phaser.Scene {
         if (this.player3) if (this.player3.isActive) this.updatePlayer(this.player3);
         
         if (this.inputManager.resetKey.isDown) {
-            this.resetPlayer();
+            this.resetPlayers();
         }
 
-        // Make chat bubble follow Player2
-        if (this.player2) {
+        // Make chat bubble follow Player 3
+        if (this.player3) {
             if (this.chatBubble && this.dialogueText) {
-                this.chatBubble.setPosition(this.player2.x - 123, this.player2.y - 130);
+                this.chatBubble.setPosition(this.player3.x - 123, this.player3.y - 130);
                 this.dialogueText.setPosition(this.chatBubble!.x - (this.chatBubble!.width * 0.1 / 2) - 165,
                     this.chatBubble!.y - (this.chatBubble!.height * 0.1 / 2) - 15);
             }
         }
 
         if (this.player && this.player3) {
-            common.handleInteract(this, this.player, this.player3, this.inputManager.interactKey!);
+            functions.handleInteract(this, this.player, this.player3, this.inputManager.interactKey!);
         }
 
         // if animation key is 'runningP2', set the offset to 12
@@ -252,8 +263,8 @@ export default class BaseScene extends Phaser.Scene {
         }
 
         // Update health bars only if created
-        if (this.player) common.updateHealthBar(this, this.player);
-        if (this.p2HealthBarCreated && this.player2) common.updateHealthBar(this, this.player2);
+        if (this.player) functions.updateHealthBar(this, this.player);
+        if (this.p2HealthBarCreated && this.player2) functions.updateHealthBar(this, this.player2);
 
         // if you die, it's game over
         if (this.player!.currentHealth <= 0) {
@@ -279,8 +290,128 @@ export default class BaseScene extends Phaser.Scene {
             }, [], this);            
         }
 
-        // any other common update logic...
+        // Set Follow
+        if (this.player!.isActive) {
+            this.player2!.follow(this.player!, true);
+            this.player3!.follow(this.player!, false);
+        } else if (this.player2!.isActive) {
+            this.player!.follow(this.player2!, false);
+            this.player3!.follow(this.player2!, false);
+        } else if (this.player3!.isActive) {
+            this.player!.follow(this.player3!, false);
+            this.player2!.follow(this.player3!, true);
+        }
 
+        // any other functions update logic...
+
+    }
+
+    protected setupPlayers() {
+
+        // Street setup
+        this.platforms = this.physics.add.staticGroup();
+        functions.addPlatform(this, 150, 790, 1000, this.platformKey);
+
+        // Player setup
+        // if previous scene is not this scene, start player at the end of the scene
+        let previousSceneName = this.game.registry.get('previousScene');
+
+        // onlt start at the end if the previous scene ends in a number 1 greater than this scene
+        // Extract the number from the current scene key (e.g., 'GameScene2' becomes 2)
+        let currentSceneNumber = parseInt(this.scene.key.match(/\d+/)?.[0] || '0');
+
+        // Extract the number from the previous scene key (e.g., 'GameScene1' becomes 1)
+        let previousSceneNumber = parseInt(previousSceneName.match(/\d+/)?.[0] || '0');
+
+        // Check if the previous scene number is exactly 1 less than the current scene number
+        if (previousSceneNumber === currentSceneNumber + 1) {
+            // The previous scene ends in a number 1 greater than this scene
+            this.player = new Player(this, this.width - 50, 650, 'player');
+            this.player.flipX = true;
+        } else {
+            this.player = new Player(this, this.p1StartX, this.p1StartY, 'player');
+        }
+
+        this.player!.body!.setSize(40, 60);
+        this.player!.setScale(2);
+        this.player!.body!.setOffset(0, 6);
+        this.physics.add.collider(this.player!, this.platforms);
+        
+        // Attach camera to player
+        this.player!.attachCamera();
+
+        // Player 2 setup
+        // onlt start at the end if the previous scene ends in a number 1 greater than this scene
+        // Check if the previous scene number is exactly 1 less than the current scene number
+        if (previousSceneNumber === currentSceneNumber + 1) {
+            // The previous scene ends in a number 1 greater than this scene
+            this.player2! = new Player2(this, this.width - 50, 650, 'player2');
+            this.player2!.flipX = true;
+        } else {
+            this.player2! = new Player2(this, this.p2StartX, this.p2StartY, 'player2');
+        }
+
+        this.player2!.body!.setSize(40, 60);
+        this.player2!.setScale(2);
+        this.player2!.body!.setOffset(0, 6);
+        this.physics.add.collider(this.player2!, this.platforms);
+
+        this.player2!.play('standingP2', true);
+        this.player2!.flipX = true;
+
+        // Player 3 setup
+        // onlt start at the end if the previous scene ends in a number 1 greater than this scene
+        // Check if the previous scene number is exactly 1 less than the current scene number
+        if (previousSceneNumber === currentSceneNumber + 1) {
+            // The previous scene ends in a number 1 greater than this scene
+            this.player3! = new Player3(this, this.width - 50, 650, 'player3');
+            this.player3!.flipX = true;
+        } else {
+            this.player3! = new Player3(this, this.p3StartX, this.p3StartY, 'player3');
+        }
+
+        this.player3!.body!.setSize(40, 60);
+        this.player3!.setScale(2);
+        this.player3!.body!.setOffset(0, 6);
+        this.physics.add.collider(this.player3!, this.platforms);
+
+        this.player3!.play('standingP3', true);
+        this.player3!.flipX = true;
+
+        // Health Bar setup
+        functions.createHealthBar(this, this.player!);
+
+        // Calculate distance between player and Player2
+        const distance1_2 = Phaser.Math.Distance.Between(
+            this.player!.x, this.player!.y,
+            this.player2!.x, this.player2!.y
+        );
+        this.p2HealthBarCreated = false;
+        if (distance1_2 <= 20 && !this.p2HealthBarCreated) {
+            // Create Player2 health bar
+            functions.createHealthBar(this, this.player2!);
+            this.p2HealthBarCreated = true;
+        } else if (distance1_2 > 20 && this.p2HealthBarCreated) {
+            // Destroy Player2 health bar
+            functions.destroyHealthBar(this.player2!);
+            this.p2HealthBarCreated = false;
+        }
+
+        // Calculate distance between player and Player3
+        const distance1_3 = Phaser.Math.Distance.Between(
+            this.player!.x, this.player!.y,
+            this.player3!.x, this.player3!.y
+        );
+        this.p3HealthBarCreated = false;
+        if (distance1_3 <= 20 && !this.p3HealthBarCreated) {
+            // Create Player3 health bar
+            functions.createHealthBar(this, this.player3!);
+            this.p3HealthBarCreated = true;
+        } else if (distance1_3 > 20 && this.p3HealthBarCreated) {
+            // Destroy Player3 health bar
+            functions.destroyHealthBar(this.player3!);
+            this.p3HealthBarCreated = false;
+        }
     }
 
     updatePlayer(player: Player) {
@@ -338,11 +469,65 @@ export default class BaseScene extends Phaser.Scene {
                 player.attack();
             }
         }
+
+        // Update Player2 and Health Bars
+        // Calculate distance between player and Player2
+        const distance1_2 = Phaser.Math.Distance.Between(
+            this.player!.x, this.player!.y,
+            this.player2!.x, this.player2!.y
+        );
+
+        if (distance1_2 <= 300 && !this.p2HealthBarCreated) {
+            // Create Player2 health bar
+            functions.createHealthBar(this, this.player2!);
+            this.p2HealthBarCreated = true;
+        } else if (distance1_2 > 300 && this.p2HealthBarCreated) {
+            // Destroy Player2 health bar
+            functions.destroyHealthBar(this.player2!);
+            this.p2HealthBarCreated = false;
+        }
+
+        // Update Player3 and Health Bars
+        // Calculate distance between player and Player3
+        const distance1_3 = Phaser.Math.Distance.Between(
+            this.player!.x, this.player!.y,
+            this.player3!.x, this.player3!.y
+        );
+
+        if (distance1_3 <= 300 && !this.p3HealthBarCreated) {
+            // Create Player3 health bar
+            functions.createHealthBar(this, this.player3!);
+            this.p3HealthBarCreated = true;
+        } else if (distance1_3 > 300 && this.p3HealthBarCreated) {
+            // Destroy Player3 health bar
+            functions.destroyHealthBar(this.player3!);
+            this.p3HealthBarCreated = false;
+        }
+
+        // Update health bars only if created
+        if (this.player) functions.updateHealthBar(this, this.player);
+        if (this.p2HealthBarCreated && this.player2) functions.updateHealthBar(this, this.player2);
+        if (this.p3HealthBarCreated && this.player3) functions.updateHealthBar(this, this.player3);
+
+        // if player moves beyond the right edge of the world, start the next scene
+        if (this.player!.x > this.width) {
+            this.dg!.destroy();
+            this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) + 1).toString()));
+            this.game.registry.set('previousScene', this.scene.key);
+        }
+
+        // if player moves beyond the left edge of the world, start the previous scene
+        if (this.player!.x < 0) {
+            this.dg!.destroy();
+            this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) - 1).toString()));
+            this.game.registry.set('previousScene', this.scene.key);
+        }
     }
 
-    protected resetPlayer() {
-        // This method can be implemented in the derived classes
-        throw new Error("resetPlayer method must be implemented in derived classes");
+    protected resetPlayers() {
+        if (this.player) this.player.setPosition(200, 650);
+        if (this.player2) this.player2.setPosition(275, 650);
+        if (this.player3) this.player3.setPosition(325, 650);
     }
 
     protected togglePauseMenu() {
@@ -414,6 +599,6 @@ export default class BaseScene extends Phaser.Scene {
         this.pauseMenuSettings!.add([label, this.volumeBar, this.volumeHandle]);
     }
     
-    // other common methods...
+    // other functions methods...
 
 }

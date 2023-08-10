@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import * as common from '../helpers/common';
+import * as functions from '../helpers/functions';
 
 export default class MainMenuScene extends Phaser.Scene {
     private coin!: Phaser.GameObjects.Sprite;
@@ -19,7 +19,7 @@ export default class MainMenuScene extends Phaser.Scene {
         this.clickCounter = 0;
 
         // Setup Animations
-        common.setupAnimations(this);
+        functions.setupAnimations(this);
 
         // Load the Insert Coin Menu
         this.insertCoinMenu();

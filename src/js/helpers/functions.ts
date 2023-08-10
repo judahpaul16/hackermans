@@ -229,63 +229,6 @@ export function destroyHealthBar(player: Player | Player2 | Enemy) {
         player.hudContainer.destroy();
     }
 }
-export function follow(
-    scene: any,
-    player2: Player2 | Player3,
-    player: Player,
-    interactHint: Phaser.GameObjects.Text,
-    followSpeed: number = 300,
-    bufferZone: number = (player2 instanceof Player2 ? 300 : 150),
-    walkSpeed: number = 175,
-    jumpStrength: number = 200 ) {
-
-    if (player2.body!.touching.down) {
-        const distanceToPlayer = player2.x - player.x;
-        let startFollowing = false;
-        let standingKey: string = player2.standKey;
-        let walkingKey: string = player2.walkKey;
-        let runningKey: string = player2.runKey;
-        let jumpingKey: string = player2.jumpKey;
-
-        if (distanceToPlayer <= 400 || startFollowing) {
-            startFollowing = true;
-            interactHint.setVisible(false);
-            // If Player2 is close to the player, stop moving
-            if (Math.abs(distanceToPlayer) < bufferZone) {
-                player2.play(standingKey, true);
-                player2.setVelocityX(0);
-                interactHint.x = player2.x - 40;
-                if (scene.chatBubble) if (!scene.chatBubble.visible) interactHint.setVisible(true);
-                if (!scene.chatBubble) interactHint.setVisible(true);
-            } else {
-                const isCloser = Math.abs(distanceToPlayer) < walkSpeed;
-                const animation = isCloser ? walkingKey : runningKey;
-                const speed = isCloser ? walkSpeed : followSpeed;
-
-                player2.y -= 10;
-                player2.setOffset(0, -12);
-                player2.play(animation, true);
-                player2.setVelocityX(distanceToPlayer < 0 ? speed : -speed);
-                // player2.setVelocityY(-200); // Keep the Player2 from falling through the ground
-                player2.flipX = distanceToPlayer > 0;
-
-                // Check if there's an obstacle in the way
-                if (obstacleInWay(player2)) {
-                    player2.play(jumpingKey, true);
-                    player2.setVelocityY(-jumpStrength);
-                }
-            }
-        }
-    }
-}
-
-
-// You'll need to define what an obstacle is in your game environment
-function obstacleInWay(player2: Player2 | Player3): boolean {
-    // Implement your logic to detect obstacles here.
-    // This could include raycasting, collision checks, or other techniques specific to your game.
-    return false; // Return true if an obstacle is detected
-}
 
 export function handleInteract(scene: any, player: Player, player2: Player2, interactKey: Phaser.Input.Keyboard.Key) {
     if (scene.isInteracting) return; // Exit if interaction is already in progress
@@ -294,8 +237,8 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
         scene.isInteracting = true; // Set the lock
         scene.interactHint?.setVisible(false);
         
-        scene.sound.stopByKey('p2Dialogue1');
-        scene.sound.play('p2Dialogue1', { volume: 1 });
+        scene.sound.stopByKey('p3Dialogue1');
+        scene.sound.play('p3Dialogue1', { volume: 1 });
 
         if (scene.chatBubble && scene.chatBubble.anims && scene.chatBubble.anims.isPlaying) {
             if (scene.timerEvent) {

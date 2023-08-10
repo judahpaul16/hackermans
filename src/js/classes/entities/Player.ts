@@ -12,6 +12,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public amask!: Phaser.GameObjects.Graphics;
     public hudContainer!: Phaser.GameObjects.Container;
     public isActive: boolean = true;
+    public isFollowing: boolean = true;
     public standKey: string = 'standingP1';
     public walkKey: string = 'walkingP1';
     public runKey: string = 'runningP1';
@@ -101,6 +102,44 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this) {
             this.play(this.attackKey, true);
             this.scene.sound.play(this.attackKey, { volume: 0.5, loop: false });
+        }
+    }
+    
+    public follow(
+        playerToBeFollowed: any,
+        isP2: boolean,
+        followSpeed: number = 300,
+        bufferZone: number = (isP2 ? 300 : 150),
+        walkSpeed: number = 175) {
+
+        if (this.isActive) return;
+
+        if (this.body!.touching.down) {
+            let distanceToPlayer = this.x - playerToBeFollowed.x;
+            let startFollowing = false;
+            let standingKey: string = this.standKey;
+            let walkingKey: string = this.walkKey;
+            let runningKey: string = this.runKey;
+
+            if (distanceToPlayer <= 400 || startFollowing || this.isFollowing) {
+                startFollowing = true;
+                this.isFollowing = true;
+                // If close to the player, stop moving
+                if (Math.abs(distanceToPlayer) < bufferZone) {
+                    this.play(standingKey, true);
+                    this.setVelocityX(0);
+                } else {
+                    let isCloser = Math.abs(distanceToPlayer) < walkSpeed;
+                    let animation = isCloser ? walkingKey : runningKey;
+                    let speed = isCloser ? walkSpeed : followSpeed;
+
+                    this.y -= 10;
+                    this.setOffset(0, -12);
+                    this.play(animation, true);
+                    this.setVelocityX(distanceToPlayer < 0 ? speed : -speed);
+                    this.flipX = distanceToPlayer > 0;
+                }
+            }
         }
     }
 }
