@@ -92,13 +92,13 @@ export default class BaseScene extends Phaser.Scene {
         this.createVolumeSlider();
         this.pauseMenu.setDepth(1000);
 
-        // Create border around the settings container
-        const border = this.add.graphics({ lineStyle: { width: 2, color: 0xffffff } });
-        border.strokeRect(
-            this.cameras.main.width / 2 - (this.cameras.main.width * 0.33) / 2, // x
-            this.cameras.main.height / 2 - (this.cameras.main.height * 0.33) / 2 - 175, // y
-            this.cameras.main.width * 0.33, this.cameras.main.height * 0.33 // width, height
-        );
+        // // Create border around the settings container
+        // const border = this.add.graphics({ lineStyle: { width: 2, color: 0xffffff } });
+        // border.strokeRect(
+        //     this.cameras.main.width / 2 - (this.cameras.main.width * 0.33) / 2, // x
+        //     this.cameras.main.height / 2 - (this.cameras.main.height * 0.33) / 2 - 175, // y
+        //     this.cameras.main.width * 0.33, this.cameras.main.height * 0.33 // width, height
+        // );
 
         // Add to pause menu containers
         this.pauseMenuSettings!.add([this.pauseButton]);
@@ -106,7 +106,7 @@ export default class BaseScene extends Phaser.Scene {
             this.pauseBackground,
             this.pauseMenuSettings!,
             this.pauseMenuControls!,
-            border
+            // border
         ]);
 
         // Initially hide the pause menu
@@ -595,7 +595,8 @@ export default class BaseScene extends Phaser.Scene {
             }
         });
     
-        this.volumeHandle.setDepth(1001);
+        this.volumeHandle.setDepth(1001).setScrollFactor(0);
+        this.volumeBar.setScrollFactor(0)
     
         // Add the volume slider elements to the settings container
         this.pauseMenuSettings!.add([label, this.volumeBar, this.volumeHandle]);
