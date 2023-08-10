@@ -13,10 +13,10 @@ export default class BaseScene extends Phaser.Scene {
     protected player3?: Player3;
     protected p1StartX: number = 200;
     protected p1StartY: number = 650;
-    protected p2StartX: number = 275;
-    protected p2StartY: number = 650;
-    protected p3StartX: number = 325;
-    protected p3StartY: number = 650;
+    protected p2StartX: number = this.p1StartX + 25;
+    protected p2StartY: number = this.p1StartY;
+    protected p3StartX: number = this.p2StartX + 50;
+    protected p3StartY: number = this.p1StartY;
     protected enemy?: Enemy;
     protected chatBubble?: Phaser.GameObjects.Sprite;
     protected dialogueText?: Phaser.GameObjects.Text;
@@ -137,21 +137,32 @@ export default class BaseScene extends Phaser.Scene {
         // Update Input to apply to current scene
         InputManager.getInstance().updateInput(this);
         
+        // Attach camera to active player
+        let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
+        (activePlayer) ? 
+            this.cameras.main.startFollow(activePlayer, true, 0.5, 0.5)
+            :
+            this.game.registry.set('activePlayer', this.player)
+            this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
+        
         // Event listener for if 1, 2, or 3 is pressed and change camera to follow that player
         this.inputManager.switchKey1.on('down', () => {
-            if (this.player) this.player.switchTo();
-            this.player2!.isActive = false;
-            this.player3!.isActive = false;
+            if (this.player) {
+                this.game.registry.set('activePlayer', this.player);
+                this.cameras.main.startFollow(this.player, true, 0.5, 0.5);
+            }
         });
         this.inputManager.switchKey2.on('down', () => {
-            if (this.player2) this.player2.switchTo();
-            this.player!.isActive = false;
-            this.player3!.isActive = false;
+            if (this.player2) {
+                this.game.registry.set('activePlayer', this.player2);
+                this.cameras.main.startFollow(this.player2, true, 0.5, 0.5);
+            }
         });
         this.inputManager.switchKey3.on('down', () => {
-            if (this.player3) this.player3.switchTo();
-            this.player!.isActive = false;
-            this.player2!.isActive = false;
+            if (this.player3) {
+                this.game.registry.set('activePlayer', this.player3);
+                this.cameras.main.startFollow(this.player3, true, 0.5, 0.5);
+            }
         });
 
         this.inputManager.resetKey.on('down', () => {
@@ -216,9 +227,9 @@ export default class BaseScene extends Phaser.Scene {
         this.backgroundImages!.foreground.tilePositionX = camX * 0.5;
 
         // Update Player
-        if (this.player) if (this.player.isActive) this.updatePlayer(this.player);
-        if (this.player2) if (this.player2.isActive) this.updatePlayer(this.player2);
-        if (this.player3) if (this.player3.isActive) this.updatePlayer(this.player3);
+        if (this.player) if (this.player.isActive()) this.updatePlayer(this.player);
+        if (this.player2) if (this.player2.isActive()) this.updatePlayer(this.player2);
+        if (this.player3) if (this.player3.isActive()) this.updatePlayer(this.player3);
         
         if (this.inputManager.resetKey.isDown) {
             this.resetPlayers();
@@ -276,13 +287,13 @@ export default class BaseScene extends Phaser.Scene {
         }
 
         // Set Follow
-        if (this.player!.isActive) {
+        if (this.player!.isActive()) {
             this.player2!.follow(this.player!, true);
             this.player3!.follow(this.player!, false);
-        } else if (this.player2!.isActive) {
+        } else if (this.player2!.isActive()) {
             this.player!.follow(this.player2!, false);
             this.player3!.follow(this.player2!, false);
-        } else if (this.player3!.isActive) {
+        } else if (this.player3!.isActive()) {
             this.player!.follow(this.player3!, false);
             this.player2!.follow(this.player3!, true);
         }
@@ -321,9 +332,6 @@ export default class BaseScene extends Phaser.Scene {
         this.player!.setScale(2);
         this.player!.body!.setOffset(0, 6);
         this.physics.add.collider(this.player!, this.platforms);
-        
-        // Attach camera to player
-        this.player!.attachCamera();
 
         // Player 2 setup
         // onlt start at the end if the previous scene ends in a number 1 greater than this scene
@@ -507,21 +515,8 @@ export default class BaseScene extends Phaser.Scene {
             this.player3!.y = 660;
         }
 
-        // if player moves beyond the right edge of the world, start the next scene
-        if (this.player!.x > this.width) {
-            this.dg!.destroy();
-            this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) + 1).toString()));
-            this.game.registry.set('previousScene', this.scene.key);
-        }
-
-        // if player moves beyond the left edge of the world, start the previous scene
-        if (this.scene.key !== 'GameScene1'){
-            if (this.player!.x < 0) {
-                this.dg!.destroy();
-                this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) - 1).toString()));
-                this.game.registry.set('previousScene', this.scene.key);
-            }
-        }
+        // check scene transition
+        this.checkSceneTransition();
     }
 
     protected resetPlayers() {
@@ -600,6 +595,36 @@ export default class BaseScene extends Phaser.Scene {
         this.pauseMenuSettings!.add([label, this.volumeBar, this.volumeHandle]);
     }
     
+    protected checkSceneTransition() {
+        // find active player
+        let activePlayer!: Player | Player2 | Player3;
+        for (let player of [this.player, this.player2, this.player3]) {
+            if (player) {
+                if (player.isActive()) {
+                    activePlayer = player;
+                    break;
+                }
+            }
+        }
+        if (activePlayer) {
+            // if player moves beyond the right edge of the world, start the next scene
+            if (activePlayer!.x > this.width) {
+                this.dg!.destroy();
+                this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) + 1).toString()));
+                this.game.registry.set('previousScene', this.scene.key);
+            }
+
+            // if player moves beyond the left edge of the world, start the previous scene
+            if (this.scene.key !== 'GameScene1'){
+                if (activePlayer!.x < 0) {
+                    this.dg!.destroy();
+                    this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) - 1).toString()));
+                    this.game.registry.set('previousScene', this.scene.key);
+                }
+            }
+        }
+    }
+
     // other functions methods...
 
 }

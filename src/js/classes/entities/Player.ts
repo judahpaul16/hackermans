@@ -12,7 +12,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public avatar!: Phaser.GameObjects.Image;
     public amask!: Phaser.GameObjects.Graphics;
     public hudContainer!: Phaser.GameObjects.Container;
-    public isActive: boolean = true;
     public isFollowing: boolean = true;
     public standKey: string = 'standingP1';
     public walkKey: string = 'walkingP1';
@@ -35,8 +34,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 scene.physics.world.enable(this);
             }
         }
-        // Keep the player's inside bounds
-        this.setCollideWorldBounds(true)
+        // // Keep the player's inside the scene
+        // this.setCollideWorldBounds(true)
 
         // Setup event listeners for animationstart and animationcomplete
         this.on('animationstart', this.handleAnimationStart, this);
@@ -75,13 +74,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         return this.currentAnimation;
     }
 
-    public switchTo() {
-        this.isActive = true;
-        this.attachCamera();
-    }
-
-    public attachCamera() {
-        this.scene.cameras.main.startFollow(this, true, 0.5, 0.5);
+    public isActive() {
+        return (this.scene.game.registry.get('activePlayer').name === this.name);
     }
 
     public takeDamage(amount: number) {
@@ -119,7 +113,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         bufferZone: number = (isP2 ? 300 : 150),
         walkSpeed: number = 175) {
 
-        if (this.isActive) return;
+        if (this.scene.registry.get('activePlayer') as Player === this) return;
 
         if (this.body!.touching.down) {
             let distanceToPlayer = this.x - playerToBeFollowed.x;

@@ -13,7 +13,6 @@ export default class Player3 extends Player {
     public amask!: Phaser.GameObjects.Graphics;
     public hudContainer!: Phaser.GameObjects.Container;
     private shootSound: Phaser.Sound.BaseSound | null = null;
-    public isActive: boolean = false;
     public standKey: string = 'standingP3';
     public walkKey: string = 'walkingP3';
     public runKey: string = 'runningP3';

@@ -12,6 +12,7 @@ export default class GameScene2 extends BaseScene {
     public backgroundKey3: string = 'back-buildings';
     public backgroundKey4: string = 'far-buildings';
     public levelNumber: number = 2;
+    public p1StartX: number = 75;
 
     constructor() {
         super({ key: 'GameScene2' });

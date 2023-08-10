@@ -18,6 +18,7 @@ export default class GameScene3 extends BaseScene {
     public sfactor2: number = 0;
     public sfactor3: number = 0.4;
     public sfactor4: number = 0.9;
+    public p1StartX: number = 75;
 
     constructor() {
         super({ key: 'GameScene3' });

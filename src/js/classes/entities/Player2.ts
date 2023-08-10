@@ -13,7 +13,6 @@ export default class Player2 extends Player {
     public amask!: Phaser.GameObjects.Graphics;
     public hudContainer!: Phaser.GameObjects.Container;
     private shootSound: Phaser.Sound.BaseSound | null = null;
-    public isActive: boolean = false;
     public standKey: string = 'standingP2';
     public walkKey: string = 'walkingP2';
     public runKey: string = 'runningP2';
@@ -43,7 +42,6 @@ export default class Player2 extends Player {
             this.setVelocityY(0);
         }
         super.handleAnimationStart(animation, frame);
-        console.log('Animation started:', animation.key);
     }
 
     protected handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
@@ -54,7 +52,6 @@ export default class Player2 extends Player {
         if (this.currentAnimation === animation.key) {
             this.currentAnimation = undefined;
         }
-        console.log('Animation completed:', animation.key);
     }
 
     public jump() {

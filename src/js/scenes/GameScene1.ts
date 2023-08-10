@@ -14,11 +14,8 @@ export default class GameScene1 extends BaseScene {
     public levelNumber: number = 1;
     public width: number = 2000;
     public p1StartX: number = 200;
-    public p1StartY: number = 650;
     public p2StartX: number = 525;
-    public p2StartY: number = 650;
     public p3StartX: number = 1500;
-    public p3StartY: number = 650;
 
     constructor() {
         super({ key: 'GameScene1' });
