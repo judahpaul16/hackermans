@@ -68,7 +68,7 @@ export default class BaseScene extends Phaser.Scene {
             0x000000, 0.55 // color, alpha
         ).setScrollFactor(0).setOrigin(0, 0);
 
-        this.pauseButton = this.add.text(0, 0, 'Continue', { color: '#ffffff', fontSize: '32px' }).setOrigin(0.5);
+        this.pauseButton = this.add.text(0, 0, 'Continue', { color: '#ffffff', fontSize: '32px' }).setOrigin(0.5).setScrollFactor(0);
 
         // Setup tweens for pause button
         this.tweens.add({
