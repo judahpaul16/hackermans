@@ -23,6 +23,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public crouchKey: string = 'crouchingP1';
     public inputManager: InputManager = new InputManager(this.scene);
     public projectileGroup!: Phaser.Physics.Arcade.Group;
+    public indicator!: Phaser.GameObjects.Image;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
@@ -32,9 +33,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             scene.add.existing(this);
             if (scene.physics && scene.physics.world) {
                 scene.physics.world.enable(this);
+
+                if (!this.indicator) {
+                    // Create an inidicator that floats above the player then disappears after 2 seconds
+                    this.indicator = scene.add.image(this.x, this.y - 75, 'player-indicator');
+                    this.indicator.setDepth(10).setVisible(false);              
+                }
             }
         }
         this.setDepth(4);
+
         // // Keep the player's inside the scene
         // this.setCollideWorldBounds(true)
 
@@ -77,6 +85,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     public isActive() {
         return (this.scene.game.registry.get('activePlayer').name === this.name);
+    }
+
+    public toggleIndicator() {
+        if (this.indicator.visible === false && this.isActive()) {
+            this.indicator.setVisible(true);
+            // Hide the indicator after 2 seconds
+            setTimeout(() => {
+                this.indicator!.setVisible(false);
+            }, 2000);
+        } else {
+            this.indicator.setVisible(false);
+        }
+    }
+
+    public updateIndicatorPosition() {
+        if (this.indicator) {
+            this.indicator.setPosition(this.x, this.y - 100);
+        }
     }
 
     public takeDamage(amount: number) {

@@ -152,32 +152,46 @@ export default class BaseScene extends Phaser.Scene {
         
         // Attach camera to active player
         let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
-        (activePlayer) ? 
+        if (activePlayer) {
+            // pass activePlayer between scenes
+            activePlayer.name == this.player!.name ? activePlayer = this.player! : activePlayer.name == this.player2!.name ? activePlayer = this.player2! : activePlayer = this.player3!;
             this.cameras.main.startFollow(activePlayer, true, 0.5, 0.5)
-            :
+            activePlayer.toggleIndicator()
+        } else {
             this.game.registry.set('activePlayer', this.player)
             this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
+            this.player!.toggleIndicator();
+        }
         
         // Event listener for if 1, 2, or 3 is pressed and change camera to follow that player
         this.inputManager.switchKey1.on('down', () => {
-            if (this.player) {
+            if (this.player && this.player2 && this.player3) {
                 this.game.registry.set('activePlayer', this.player);
                 this.cameras.main.startFollow(this.player, true, 0.5, 0.5);
+                this.player.toggleIndicator();
+                this.player2.toggleIndicator();
+                this.player3.toggleIndicator();
             }
         });
         this.inputManager.switchKey2.on('down', () => {
-            if (this.player2) {
+            if (this.player && this.player2 && this.player3) {
                 this.game.registry.set('activePlayer', this.player2);
                 this.cameras.main.startFollow(this.player2, true, 0.5, 0.5);
+                this.player.toggleIndicator();
+                this.player2.toggleIndicator();
+                this.player3.toggleIndicator();
             }
         });
         this.inputManager.switchKey3.on('down', () => {
-            if (this.player3) {
+            if (this.player && this.player2 && this.player3) {
                 this.game.registry.set('activePlayer', this.player3);
                 this.cameras.main.startFollow(this.player3, true, 0.5, 0.5);
+                this.player.toggleIndicator();
+                this.player2.toggleIndicator();
+                this.player3.toggleIndicator();
             }
         });
-
+        
         this.inputManager.resetKey.on('down', () => {
             // Reset player position if 'R' key is pressed
             this.resetPlayers();
@@ -195,7 +209,7 @@ export default class BaseScene extends Phaser.Scene {
         this.inputManager.pauseKey.on('down', () => {
             this.togglePauseMenu();
         });
-        
+
         // Add interact hint
         this.interactHint = this.add.text(this.player3!.x - 42, this.player3!.y - 82, "Press 'F'", {
             fontSize: 20,
@@ -423,6 +437,11 @@ export default class BaseScene extends Phaser.Scene {
     updatePlayer(player: Player) {
         if (player.isDead) return;
         if (this.inputManager.isInputDisabled()) return;
+
+        // Update Indicator position
+        if (this.player) if (this.player.indicator) this.player.updateIndicatorPosition();
+        if (this.player2) if (this.player2.indicator) this.player2.updateIndicatorPosition();
+        if (this.player3) if (this.player3.indicator) this.player3.updateIndicatorPosition();
 
         // Update health bars only if created
         if (this.player) functions.updateHealthBar(this, this.player);

@@ -29,6 +29,8 @@ import healthBarFrameAltImg from '../../assets/sprites/ui/health_bar_bg_alt.png'
 import healthBarFrameAlt2Img from '../../assets/sprites/ui/health_bar_bg_alt_2.png';
 import healthBarFrameEnemyImg from '../../assets/sprites/ui/health_bar_bg_enemy.png';
 
+import playerIndicatorImg from '../../assets/sprites/ui/player_indicator.png';
+
 import cloudImg from '../../assets/sprites/entities/cloud/cloud.png';
 import cloudJSON from '../../assets/sprites/entities/cloud/cloud.json';
 
@@ -111,6 +113,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('skyline-a', skyLineA);
         this.load.image('skyline-b', skyLineB);
         this.load.atlas('projectile-1', projectile1Img, projectile1JSON);
+        this.load.image('player-indicator', playerIndicatorImg);
     }
 
     create() {
