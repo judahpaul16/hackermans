@@ -67,6 +67,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    public heal(amount: number) {
+        this.currentHealth += amount;
+        if (this.currentHealth >= 100) {
+            this.currentHealth = 100; // Ensure health doesn't go past 100
+        }
+    }
+
     public jump() {
         if (this && this.body!.touching.down) {
             this.setVelocityY(-450);
