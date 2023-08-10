@@ -37,7 +37,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.on('animationcomplete', this.handleAnimationComplete, this);
     }
     
-    private handleAnimationStart(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+    protected handleAnimationStart(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
         this.currentAnimation = animation.key;
     }
 
