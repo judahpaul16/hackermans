@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import Player from './Player';
 
 export default class Player2 extends Player {
-    public name: string = 'Anonymoose';
+    public name: string = 'Anonymuse';
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
@@ -12,9 +12,16 @@ export default class Player2 extends Player {
     public avatar!: Phaser.GameObjects.Image;
     public amask!: Phaser.GameObjects.Graphics;
     public hudContainer!: Phaser.GameObjects.Container;
-    private isShootP2Playing: boolean = false;
-    private shootP2Sound: Phaser.Sound.BaseSound | null = null;
+    private shootSound: Phaser.Sound.BaseSound | null = null;
     public isActive: boolean = false;
+    public standKey: string = 'standingP2';
+    public walkKey: string = 'walkingP2';
+    public runKey: string = 'runningP2';
+    public runShootKey: string = 'runShootP2';
+    public jumpKey: string = 'jumpingP2';
+    public hurtKey: string = 'hurtP2';
+    public attackKey: string = 'shootP2';
+    public dyingKey: string = 'hurtP2';
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
@@ -24,7 +31,6 @@ export default class Player2 extends Player {
             scene.add.existing(this);
             if (scene.physics && scene.physics.world) {
                 scene.physics.world.enable(this);
-                this.setDepth(5);
             }
         }
     }
@@ -32,24 +38,30 @@ export default class Player2 extends Player {
     public jump() {
         if (this && this.body!.touching.down) {
             this.setVelocityY(-450);
-            this.play('jumpingP2', true);
+            this.play(this.jumpKey, true);
         }
     }
 
     public attack() {
         if (this) {
-            // if shoot p2 sound not playing
-            if (this.currentAnimation !== 'shootP2') this.play('shootP2', true);
+            // if moving in x direction, play runShoot animation
+            if (this.body!.velocity.x !== 0) {
+                // play animation if not already playing
+                if (this.currentAnimation !== this.runShootKey) this.play(this.runShootKey, false);
+            } else {
+                // play animation if not already playing
+                if (this.currentAnimation !== this.attackKey) this.play(this.attackKey, true);
+            }
     
-            if (!this.shootP2Sound) {
-                this.shootP2Sound = this.scene.sound.add('shootP2');
-                this.shootP2Sound.on('complete', () => {
-                    this.shootP2Sound = null;
+            if (!this.shootSound) {
+                this.shootSound = this.scene.sound.add(this.attackKey);
+                this.shootSound.on('complete', () => {
+                    this.shootSound = null;
                 });
             }
     
-            if (!this.shootP2Sound.isPlaying) {
-                this.shootP2Sound.play({ volume: 0.5, loop: false });
+            if (!this.shootSound.isPlaying) {
+                this.shootSound.play({ volume: 0.5, loop: false });
             }
         }
     }    

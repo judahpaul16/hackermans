@@ -12,6 +12,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public amask!: Phaser.GameObjects.Graphics;
     public hudContainer!: Phaser.GameObjects.Container;
     public isActive: boolean = true;
+    public standKey: string = 'standingP1';
+    public walkKey: string = 'walkingP1';
+    public runKey: string = 'runningP1';
+    public jumpKey: string = 'jumpingP1';
+    public attackKey: string = 'meleeP1';
+    public dyingKey: string = 'dyingP1';
+    public hurtKey: string = 'hurtP1';
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
@@ -34,11 +41,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     private handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
-        if (animation.key === 'dyingP1') {
+        if (animation.key === this.dyingKey) {
             this.isDead = true;
         }
         // Tweak the hitbox for the dying animation
-        if (animation.key === 'dyingP1' && frame.index === 4) {
+        if (animation.key === this.dyingKey && frame.index === 4) {
             const newWidth = 78;
             const newHeight = 12;
             this.body!.setSize(newWidth, newHeight);
@@ -47,7 +54,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         // If the animation is 'meleeP1', reset gravity
-        if (animation.key === 'meleeP1') {
+        if (animation.key === this.attackKey) {
             this.setVelocityY(-100);
         }
 
@@ -58,6 +65,15 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     
     public getCurrentAnimation() {
         return this.currentAnimation;
+    }
+
+    public switchTo() {
+        this.isActive = true;
+        this.attachCamera();
+    }
+
+    public attachCamera() {
+        this.scene.cameras.main.startFollow(this, true, 0.5, 0.5);
     }
 
     public takeDamage(amount: number) {
@@ -77,14 +93,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public jump() {
         if (this && this.body!.touching.down) {
             this.setVelocityY(-450);
-            this.play('jumpingP1', true);
+            this.play(this.jumpKey, true);
         }
     }
 
     public attack() {
         if (this) {
-            this.play('meleeP1', true);
-            this.scene.sound.play('meleeP1', { volume: 0.5, loop: false });
+            this.play(this.attackKey, true);
+            this.scene.sound.play(this.attackKey, { volume: 0.5, loop: false });
         }
     }
 }

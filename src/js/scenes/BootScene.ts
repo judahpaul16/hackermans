@@ -22,8 +22,8 @@ import player3JSON from '../../assets/sprites/characters/player_3/player.json';
 import controlsImg from '../../assets/sprites/ui/controls.png';
 
 import avatarImg from '../../assets/sprites/ui/avatar.png';
-import p2AvatarImg from '../../assets/sprites/ui/player_2_avatar.png';
-import p3AvatarImg from '../../assets/sprites/ui/player_3_avatar.png';
+import p3AvatarImg from '../../assets/sprites/ui/player_2_avatar.png';
+import p2AvatarImg from '../../assets/sprites/ui/player_3_avatar.png';
 import healthBarFrameImg from '../../assets/sprites/ui/health_bar_bg.png';
 import healthBarFrameAltImg from '../../assets/sprites/ui/health_bar_bg_alt.png';
 import healthBarFrameAlt2Img from '../../assets/sprites/ui/health_bar_bg_alt_2.png';
@@ -54,11 +54,12 @@ import industrialFarBuildings from '../../assets/sprites/backgrounds/industrial-
 
 import mainMusicSrc from '../../assets/audio/music/main.mp3';
 
-import p2Dialogue1 from '../../assets/audio/dialogue/player2_1.mp3';
+import p3Dialogue1 from '../../assets/audio/dialogue/player3_1.mp3';
 
 import coinSound from '../../assets/audio/sfx/coin.mp3';
 import meleeSoundP1 from '../../assets/audio/sfx/p1_melee.mp3';
-import shootSoundP2 from '../../assets/audio/sfx/p2_shoot.mp3';
+import shootSoundP3 from '../../assets/audio/sfx/p3_shoot.mp3';
+// import shootSoundP2 from '../../assets/audio/sfx/p2_shoot.mp2';
 
 export default class BootScene extends Phaser.Scene {
     constructor() {
@@ -79,17 +80,18 @@ export default class BootScene extends Phaser.Scene {
         this.load.atlas('player3', player3Img, player3JSON);
         this.load.image('controls', controlsImg);
         this.load.image('avatar', avatarImg);
-        this.load.image('p2Avatar', p2AvatarImg);
         this.load.image('p3Avatar', p3AvatarImg);
+        this.load.image('p2Avatar', p2AvatarImg);
         this.load.image('health-bar-frame', healthBarFrameImg);
         this.load.image('health-bar-frame-alt', healthBarFrameAltImg);
         this.load.image('health-bar-frame-alt-2', healthBarFrameAlt2Img);
         this.load.image('health-bar-frame-enemy', healthBarFrameEnemyImg);
         this.load.atlas('chat_bubble', chatBubbleImg, chatBubbleJSON);
         this.load.audio('mainMusic', mainMusicSrc);
-        this.load.audio('p2Dialogue1', p2Dialogue1);
+        this.load.audio('p3Dialogue1', p3Dialogue1);
         this.load.audio('meleeP1', meleeSoundP1);
-        this.load.audio('shootP2', shootSoundP2);
+        this.load.audio('shootP3', shootSoundP3);
+        this.load.audio('shootP2', shootSoundP3);
         this.load.audio('coinSound', coinSound);
         this.load.image('far-buildings', farBuildings);
         this.load.image('back-buildings', backBuildings);

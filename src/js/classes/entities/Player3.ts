@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import Player from './Player';
 
 export default class Player3 extends Player {
-    public name: string = 'Anonymuse';
+    public name: string = 'Anonymoose';
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
@@ -12,9 +12,15 @@ export default class Player3 extends Player {
     public avatar!: Phaser.GameObjects.Image;
     public amask!: Phaser.GameObjects.Graphics;
     public hudContainer!: Phaser.GameObjects.Container;
-    private isShootP2Playing: boolean = false;
-    private shootP2Sound: Phaser.Sound.BaseSound | null = null;
+    private shootSound: Phaser.Sound.BaseSound | null = null;
     public isActive: boolean = false;
+    public standKey: string = 'standingP3';
+    public walkKey: string = 'walkingP3';
+    public runKey: string = 'runningP3';
+    public jumpKey: string = 'jumpingP3';
+    public hurtKey: string = 'hurtP3';
+    public attackKey: string = 'shootP3';
+    public dyingKey: string = 'dyingP3';
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
@@ -24,6 +30,7 @@ export default class Player3 extends Player {
             scene.add.existing(this);
             if (scene.physics && scene.physics.world) {
                 scene.physics.world.enable(this);
+                this.setDepth(5);
             }
         }
     }
@@ -31,24 +38,24 @@ export default class Player3 extends Player {
     public jump() {
         if (this && this.body!.touching.down) {
             this.setVelocityY(-450);
-            this.play('jumpingP3', true);
+            this.play(this.jumpKey, true);
         }
     }
 
     public attack() {
         if (this) {
-            // if shoot p2 sound not playing
-            if (this.currentAnimation !== 'shootP3') this.play('shootP3', true);
+            // play animation if not already playing
+            if (this.currentAnimation !== this.attackKey) this.play(this.attackKey, true);
     
-            if (!this.shootP2Sound) {
-                this.shootP2Sound = this.scene.sound.add('shootP3');
-                this.shootP2Sound.on('complete', () => {
-                    this.shootP2Sound = null;
+            if (!this.shootSound) {
+                this.shootSound = this.scene.sound.add(this.attackKey);
+                this.shootSound.on('complete', () => {
+                    this.shootSound = null;
                 });
             }
     
-            if (!this.shootP2Sound.isPlaying) {
-                this.shootP2Sound.play({ volume: 0.5, loop: false });
+            if (!this.shootSound.isPlaying) {
+                this.shootSound.play({ volume: 0.5, loop: false });
             }
         }
     }    

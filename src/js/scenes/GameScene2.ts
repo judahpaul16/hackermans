@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import BaseScene from './BaseScene';
 import Player from '../classes/entities/Player';
 import Player2 from '../classes/entities/Player2';
+import Player3 from '../classes/entities/Player3';
 import Enemy from '../classes/entities/Enemy';
 import * as common from '../helpers/common';
 

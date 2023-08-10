@@ -57,7 +57,9 @@ export default class GameScene1 extends BaseScene {
         this.player.setScale(2);
         this.player.body!.setOffset(0, 6);
         this.physics.add.collider(this.player, this.platforms);
-        this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
+        
+        // Attach camera to player
+        this.player!.attachCamera();
 
         // Player 2 setup
         // if previous scene is GameScene2, start player2 at the end of the scene
@@ -65,7 +67,7 @@ export default class GameScene1 extends BaseScene {
             this.player2 = new Player2(this, this.width - 50, 650, 'player2');
             this.player.flipX = true;
         } else {
-            this.player2 = new Player2(this, 1325, 650, 'player2');
+            this.player2 = new Player2(this, 525, 650, 'player2');
         }
         this.player2.body!.setSize(40, 60);
         this.player2.setScale(2);
@@ -81,7 +83,7 @@ export default class GameScene1 extends BaseScene {
             this.player3 = new Player3(this, this.width - 50, 650, 'player3');
             this.player.flipX = true;
         } else {
-            this.player3 = new Player3(this, 525, 650, 'player3');
+            this.player3 = new Player3(this, 1325, 650, 'player3');
         }
         this.player3.body!.setSize(40, 60);
         this.player3.setScale(2);

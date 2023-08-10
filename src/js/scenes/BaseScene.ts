@@ -125,6 +125,23 @@ export default class BaseScene extends Phaser.Scene {
         this.inputManager = InputManager.getInstance(this);
         // Update Input to apply to current scene
         InputManager.getInstance().updateInput(this);
+        
+        // Event listener for if 1, 2, or 3 is pressed and change camera to follow that player
+        this.inputManager.switchKey1.on('down', () => {
+            if (this.player) this.player.switchTo();
+            this.player2!.isActive = false;
+            this.player3!.isActive = false;
+        });
+        this.inputManager.switchKey2.on('down', () => {
+            if (this.player2) this.player2.switchTo();
+            this.player!.isActive = false;
+            this.player3!.isActive = false;
+        });
+        this.inputManager.switchKey3.on('down', () => {
+            if (this.player3) this.player3.switchTo();
+            this.player!.isActive = false;
+            this.player2!.isActive = false;
+        });
 
         this.inputManager.resetKey.on('down', () => {
             // Reset player position if 'R' key is pressed
@@ -185,8 +202,10 @@ export default class BaseScene extends Phaser.Scene {
         this.backgroundImages!.middle.tilePositionX = camX * 0.3;
         this.backgroundImages!.foreground.tilePositionX = camX * 0.5;
 
-        // Update Player1
-        this.updatePlayer();
+        // Update Player
+        if (this.player) if (this.player.isActive) this.updatePlayer(this.player);
+        if (this.player2) if (this.player2.isActive) this.updatePlayer(this.player2);
+        if (this.player3) if (this.player3.isActive) this.updatePlayer(this.player3);
         
         if (this.inputManager.resetKey.isDown) {
             this.resetPlayer();
@@ -201,8 +220,8 @@ export default class BaseScene extends Phaser.Scene {
             }
         }
 
-        if (this.player && this.player2) {
-            common.handleInteract(this, this.player, this.player2, this.inputManager.interactKey!);
+        if (this.player && this.player3) {
+            common.handleInteract(this, this.player, this.player3, this.inputManager.interactKey!);
         }
 
         // if animation key is 'runningP2', set the offset to 12
@@ -264,9 +283,8 @@ export default class BaseScene extends Phaser.Scene {
 
     }
 
-    updatePlayer() {
-        if (!this.player) return;
-        if (this.player.isDead) return;
+    updatePlayer(player: Player) {
+        if (player.isDead) return;
         if (this.inputManager.isInputDisabled()) return;
 
         let isMovingLeft = this.inputManager.cursors.left!.isDown || this.inputManager.moveLeftKey.isDown;
@@ -275,49 +293,49 @@ export default class BaseScene extends Phaser.Scene {
         let isJumping = this.inputManager.cursors.up!.isDown || this.inputManager.jumpKey!.isDown;
         let isAttacking = this.inputManager.cursors.space!.isDown;
 
-        if (this.player.currentHealth <= 0 && !this.player.isDead) {
+        if (player.currentHealth <= 0 && !player.isDead) {
             this.physics.world.gravity.y = 0;
-            this.player.play('dyingP1', true);
+            player.play(player.dyingKey, true);
             return;
         }
 
-        if (this.player.getCurrentAnimation() === 'meleeP1' || this.player.getCurrentAnimation() === 'jumpingP1') return;
+        if (player.getCurrentAnimation() === player.attackKey || player.getCurrentAnimation() === player.jumpKey) return;
 
         if (isMovingRight) {
             if (isRunning) {
-                this.player.setVelocityX(300);
-                this.player.play('runningP1', true);
+                player.setVelocityX(300);
+                player.play(player.runKey, true);
             } else if (isJumping) {
-                this.player.jump();
+                player.jump();
             } else {
-                this.player.setVelocityX(175);
-                this.player.play('walkingP1', true);
+                player.setVelocityX(175);
+                player.play(player.walkKey, true);
             }
-            this.player.flipX = false;
+            player.flipX = false;
             if (isAttacking) {
-                this.player.attack();
+                player.attack();
             }
         } else if (isMovingLeft) {
             if (isRunning) {
-                this.player.setVelocityX(-300);
-                this.player.play('runningP1', true);
+                player.setVelocityX(-300);
+                player.play(player.runKey, true);
             } else if (isJumping) {
-                this.player.jump();
+                player.jump();
             } else {
-                this.player.setVelocityX(-175);
-                this.player.play('walkingP1', true);
+                player.setVelocityX(-175);
+                player.play(player.walkKey, true);
             }
-            this.player.flipX = true;
+            player.flipX = true;
             if (isAttacking) {
-                this.player.attack();
+                player.attack();
             }
         } else if (isJumping) {
-            this.player.jump();
+            player.jump();
         } else {
-            this.player.setVelocityX(0);
-            this.player.play('standingP1', true);
+            player.setVelocityX(0);
+            player.play(player.standKey, true);
             if (isAttacking) {
-                this.player.attack();
+                player.attack();
             }
         }
     }
