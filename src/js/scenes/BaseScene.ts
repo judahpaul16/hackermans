@@ -236,23 +236,6 @@ export default class BaseScene extends Phaser.Scene {
         if (this.player && this.player3) {
             functions.handleInteract(this, this.player, this.player3, this.inputManager.interactKey!);
         }
-
-        // if animation key is 'runningP2', set the offset to 12
-        if (this.player2!.anims.currentAnim!.key == 'runningP2' || this.player2!.anims.currentAnim!.key == 'walkingP2') {
-            this.player2!.setOffset(0, -12);
-        } else {
-            this.player2!.setOffset(0, -8);
-        }
-        
-        // if player falls off the world, reset their position
-        if (this.player!.y > this.height + 70) {
-            this.player!.y = 650;
-        }
-
-        // if player2 falls off the world, reset their position
-        if (this.player2!.y > this.height + 70) {
-            this.player2!.y = 650;
-        }
         
         // if this.level not in camera top right corner, move it there
         if (this.level!.x != this.cameras.main.width - 90 || this.level!.y != 30) {
@@ -511,6 +494,21 @@ export default class BaseScene extends Phaser.Scene {
         if (this.p2HealthBarCreated && this.player2) functions.updateHealthBar(this, this.player2);
         if (this.p3HealthBarCreated && this.player3) functions.updateHealthBar(this, this.player3);
 
+        // if player falls off the world, reset their position
+        if (this.player!.y > this.height + 65) {
+            this.player!.y = 650;
+        }
+
+        // if player2 falls off the world, reset their position
+        if (this.player2!.y > this.height + 65) {
+            this.player2!.y = 650;
+        }
+
+        // if player3 falls off the world, reset their position
+        if (this.player3!.y > this.height + 65) {
+            this.player3!.y = 650;
+        }
+
         // if player moves beyond the right edge of the world, start the next scene
         if (this.player!.x > this.width) {
             this.dg!.destroy();
@@ -519,10 +517,12 @@ export default class BaseScene extends Phaser.Scene {
         }
 
         // if player moves beyond the left edge of the world, start the previous scene
-        if (this.player!.x < 0) {
-            this.dg!.destroy();
-            this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) - 1).toString()));
-            this.game.registry.set('previousScene', this.scene.key);
+        if (this.scene.key !== 'GameScene1'){
+            if (this.player!.x < 0) {
+                this.dg!.destroy();
+                this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) - 1).toString()));
+                this.game.registry.set('previousScene', this.scene.key);
+            }
         }
     }
 

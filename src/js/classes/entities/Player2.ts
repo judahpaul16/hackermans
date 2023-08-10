@@ -36,12 +36,20 @@ export default class Player2 extends Player {
     }
 
     protected handleAnimationStart(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+        // Tweak the hitbox for the running and walking animation
+        if (animation.key === this.runKey || animation.key === this.walkKey) {
+            this.setVelocityY(0);
+        }
         super.handleAnimationStart(animation, frame);
     }
 
     protected handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
         if (animation.key === this.dyingKey) {
             this.isDead = true;
+        }
+
+        if (this.currentAnimation === animation.key) {
+            this.currentAnimation = undefined;
         }
     }
 

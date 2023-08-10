@@ -36,12 +36,22 @@ export default class Player3 extends Player {
     }
 
     protected handleAnimationStart(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+
+        const newWidth = 35;
+        const newHeight = 78;
+        this.body!.setSize(newWidth, newHeight);
+        this.body!.setOffset(0, -20);
+
         super.handleAnimationStart(animation, frame);
     }
 
     protected handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
         if (animation.key === this.dyingKey) {
             this.isDead = true;
+        }
+
+        if (this.currentAnimation === animation.key) {
+            this.currentAnimation = undefined;
         }
     }
 
