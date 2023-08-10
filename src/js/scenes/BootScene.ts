@@ -61,6 +61,9 @@ import meleeSoundP1 from '../../assets/audio/sfx/p1_melee.mp3';
 import shootSoundP3 from '../../assets/audio/sfx/p3_shoot.mp3';
 // import shootSoundP2 from '../../assets/audio/sfx/p2_shoot.mp2';
 
+import projectile1Img from '../../assets/sprites/effects/projectiles/1/projectile-1.png';
+import projectile1JSON from '../../assets/sprites/effects/projectiles/1/projectile-1.json';
+
 export default class BootScene extends Phaser.Scene {
     constructor() {
         super({ key: 'BootScene' });
@@ -107,6 +110,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('near-buildings', nearBuildings);
         this.load.image('skyline-a', skyLineA);
         this.load.image('skyline-b', skyLineB);
+        this.load.atlas('projectile-1', projectile1Img, projectile1JSON);
     }
 
     create() {

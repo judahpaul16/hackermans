@@ -403,6 +403,11 @@ export default class BaseScene extends Phaser.Scene {
         if (player.isDead) return;
         if (this.inputManager.isInputDisabled()) return;
 
+        // Update health bars only if created
+        if (this.player) functions.updateHealthBar(this, this.player);
+        if (this.p2HealthBarCreated && this.player2) functions.updateHealthBar(this, this.player2);
+        if (this.p3HealthBarCreated && this.player3) functions.updateHealthBar(this, this.player3);
+
         let isMovingLeft = this.inputManager.cursors.left!.isDown || this.inputManager.moveLeftKey.isDown;
         let isMovingRight = this.inputManager.cursors.right!.isDown || this.inputManager.moveRightKey!.isDown;
         let isRunning = this.inputManager.cursors.shift!.isDown;
@@ -421,41 +426,36 @@ export default class BaseScene extends Phaser.Scene {
         if (isMovingRight) {
             if (isRunning) {
                 player.setVelocityX(300);
-                player.play(player.runKey, true);
+                if (!isAttacking) player.play(player.runKey, true);
             } else if (isJumping) {
                 player.jump();
             } else {
                 player.setVelocityX(175);
-                player.play(player.walkKey, true);
+                if (!isAttacking) player.play(player.walkKey, true);
             }
             player.flipX = false;
-            if (isAttacking) {
-                player.attack();
-            }
         } else if (isMovingLeft) {
             if (isRunning) {
                 player.setVelocityX(-300);
-                player.play(player.runKey, true);
+                if (!isAttacking) player.play(player.runKey, true);
             } else if (isJumping) {
                 player.jump();
             } else {
                 player.setVelocityX(-175);
-                player.play(player.walkKey, true);
+                if (!isAttacking) player.play(player.walkKey, true);
             }
             player.flipX = true;
-            if (isAttacking) {
-                player.attack();
-            }
         } else if (isJumping) {
             player.jump();
         } else if (isCrouching) {
             player.play(player.crouchKey, true); 
         } else {
             player.setVelocityX(0);
-            player.play(player.standKey, true);
-            if (isAttacking) {
-                player.attack();
-            }
+            if (!isAttacking) player.play(player.standKey, true);
+        }
+        
+        if (isAttacking) {
+            player.attack();
         }
 
         // Update Player2 and Health Bars
@@ -492,24 +492,19 @@ export default class BaseScene extends Phaser.Scene {
             this.p3HealthBarCreated = false;
         }
 
-        // Update health bars only if created
-        if (this.player) functions.updateHealthBar(this, this.player);
-        if (this.p2HealthBarCreated && this.player2) functions.updateHealthBar(this, this.player2);
-        if (this.p3HealthBarCreated && this.player3) functions.updateHealthBar(this, this.player3);
-
         // if player falls off the world, reset their position
         if (this.player!.y > this.height + 65) {
-            this.player!.y = 650;
+            this.player!.y = 660;
         }
 
         // if player2 falls off the world, reset their position
         if (this.player2!.y > this.height + 65) {
-            this.player2!.y = 650;
+            this.player2!.y = 660;
         }
 
         // if player3 falls off the world, reset their position
         if (this.player3!.y > this.height + 65) {
-            this.player3!.y = 650;
+            this.player3!.y = 660;
         }
 
         // if player moves beyond the right edge of the world, start the next scene

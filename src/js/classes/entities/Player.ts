@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import InputManager from '../utils/InputManager';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     public name: string = 'Anonymouse';
@@ -21,6 +22,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public dyingKey: string = 'dyingP1';
     public hurtKey: string = 'hurtP1';
     public crouchKey: string = 'crouchingP1';
+    public inputManager: InputManager = new InputManager(this.scene);
+    public projectileGroup: Phaser.Physics.Arcade.Group = this.scene.physics.add.group({ gravityY: 0, velocityY: 0 });
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
@@ -32,6 +35,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 scene.physics.world.enable(this);
             }
         }
+        // Keep the player's inside bounds
+        this.setCollideWorldBounds(true)
 
         // Setup event listeners for animationstart and animationcomplete
         this.on('animationstart', this.handleAnimationStart, this);

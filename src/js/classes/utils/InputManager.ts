@@ -1,5 +1,5 @@
 class InputManager {
-    private static instance: InputManager;
+    public static instance: InputManager;
 
     public cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
     public debugKey!: Phaser.Input.Keyboard.Key;
@@ -14,9 +14,9 @@ class InputManager {
     public switchKey2!: Phaser.Input.Keyboard.Key;
     public switchKey3!: Phaser.Input.Keyboard.Key;
 
-    private keysDisabled: boolean = false;
+    public keysDisabled: boolean = false;
 
-    private constructor(scene: Phaser.Scene) {
+    public constructor(scene: Phaser.Scene) {
         this.initializeKeys(scene);
     }
 

@@ -65,11 +65,13 @@ export default class Player3 extends Player {
     public attack() {
         if (this) {
             // play animation if not already playing
-            if (this.currentAnimation !== this.attackKey) this.play(this.attackKey, true);
-    
+            this.play(this.attackKey, true);
+            // Create projectile
             if (!this.shootSound) {
                 this.shootSound = this.scene.sound.add(this.attackKey);
                 this.shootSound.on('complete', () => {
+                    // Create projectile
+                    this.emitProjectile();
                     this.shootSound = null;
                 });
             }
@@ -78,5 +80,13 @@ export default class Player3 extends Player {
                 this.shootSound.play({ volume: 0.5, loop: false });
             }
         }
-    }    
+    }
+
+    private emitProjectile() {
+        // Create a projectile at player's position
+        let projectile = this.projectileGroup.create(this.x, this.y, 'projectile-1').setGravityY(0).setVelocityY(0);
+        projectile.setVelocityX(this.flipX ? -2250 : 2250); // Set velocity based on player's direction
+
+        // Optionally, set additional properties, collision handling, etc.
+    }
 }
