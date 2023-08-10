@@ -41,10 +41,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.currentAnimation = animation.key;
     }
 
-    private handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+    protected handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
         if (animation.key === this.dyingKey) {
             this.isDead = true;
         }
+
         // Tweak the hitbox for the dying animation
         if (animation.key === this.dyingKey && frame.index === 4) {
             const newWidth = 78;

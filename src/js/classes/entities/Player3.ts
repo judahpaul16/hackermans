@@ -35,6 +35,12 @@ export default class Player3 extends Player {
         }
     }
 
+    protected handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+        if (animation.key === this.dyingKey) {
+            this.isDead = true;
+        }
+    }
+
     public jump() {
         if (this && this.body!.touching.down) {
             this.setVelocityY(-450);
