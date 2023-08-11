@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
-import Player from '../classes/entities/Player';
-import Player2 from '../classes/entities/Player3';
-import Player3 from '../classes/entities/Player2';
-import Enemy from '../classes/entities/Enemy';
+import Player from '../classes/characters/Player';
+import Player2 from '../classes/characters/Player3';
+import Player3 from '../classes/characters/Player2';
+import Enemy from '../classes/characters/Enemy';
 import * as dat from 'dat.gui';
 
 export function createBackground(scene: any, key: string, width: number, height: number): Phaser.GameObjects.TileSprite {

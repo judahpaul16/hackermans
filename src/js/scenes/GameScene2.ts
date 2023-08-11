@@ -1,9 +1,9 @@
 import Phaser from 'phaser';
 import BaseScene from './BaseScene';
-import Player from '../classes/entities/Player';
-import Player2 from '../classes/entities/Player2';
-import Player3 from '../classes/entities/Player3';
-import Enemy from '../classes/entities/Enemy';
+import Player from '../classes/characters/Player';
+import Player2 from '../classes/characters/Player2';
+import Player3 from '../classes/characters/Player3';
+import Enemy from '../classes/characters/Enemy';
 import * as functions from '../helpers/functions';
 
 export default class GameScene2 extends BaseScene {

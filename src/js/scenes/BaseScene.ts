@@ -1,8 +1,8 @@
 import Phaser from 'phaser';
-import Player from '../classes/entities/Player';
-import Player2 from '../classes/entities/Player2';
-import Player3 from '../classes/entities/Player3';
-import Enemy from '../classes/entities/Enemy';
+import Player from '../classes/characters/Player';
+import Player2 from '../classes/characters/Player2';
+import Player3 from '../classes/characters/Player3';
+import Enemy from '../classes/characters/Enemy';
 import InputManager from '../classes/utils/InputManager';
 import * as functions from '../helpers/functions';
 
