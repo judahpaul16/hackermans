@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import Player from '../classes/characters/Player';
 import Player2 from '../classes/characters/Player2';
 import Player3 from '../classes/characters/Player3';
+import NPC from '../classes/characters/NPC';
 import Enemy from '../classes/characters/Enemy';
 import InputManager from '../classes/utils/InputManager';
 import * as functions from '../helpers/functions';
@@ -18,11 +19,12 @@ export default class BaseScene extends Phaser.Scene {
     protected p3StartX: number = this.p2StartX + 50;
     protected p3StartY: number = this.p1StartY;
     protected enemies: Enemy[] = [];
+    protected npcs: NPC[] = [];
     protected chatBubble?: Phaser.GameObjects.Sprite;
     protected dialogueText?: Phaser.GameObjects.Text;
     protected isInteracting: boolean = false;
-    protected p2HealthBarCreated: boolean = false;
-    protected p3HealthBarCreated: boolean = false;
+    protected npcHealthBarCreated: boolean = false;
+    protected enemyHealthBarCreated: boolean = false;
     protected width: number = 3000;
     protected height: number = 650;
     // scale factors
@@ -70,7 +72,7 @@ export default class BaseScene extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, this.width, 800);
         
         // Add Lv. # to the top right corner of the camera
-        this.level = this.add.text(this.cameras.main.width - 90, 30, `Lv. ${this.levelNumber}`, {
+        this.level = this.add.text(this.cameras.main.width - 80, 20, `Lv. ${this.levelNumber}`, {
             fontSize: 20,
             color: '#ffffff',
             align: 'center',
@@ -180,7 +182,18 @@ export default class BaseScene extends Phaser.Scene {
 
         // Update health bars only if created
         if (this.player) functions.updateHealthBar(this, this.player);
-        if (this.p2HealthBarCreated && this.player2) functions.updateHealthBar(this, this.player2);
+        if (this.player2) functions.updateHealthBar(this, this.player2);
+        if (this.player3) functions.updateHealthBar(this, this.player3);
+        if (this.npcs) {
+            for (let npc of this.npcs) {
+                functions.updateHealthBar(this, npc);
+            }
+        }
+        if (this.enemies) {
+            for (let enemy of this.enemies) {
+                functions.updateHealthBar(this, enemy);
+            }
+        }
 
         // if you die, it's game over
         if (this.player!.currentHealth <= 0) {
@@ -294,43 +307,57 @@ export default class BaseScene extends Phaser.Scene {
         this.player3!.play('standingP3', true);
         this.player3!.flipX = true;
 
+        if (this.npcs)
+            for (let npc of this.npcs)
+                this.physics.add.collider(npc, this.platforms);
+
         if (this.enemies)
             for (let enemy of this.enemies)
                 this.physics.add.collider(enemy, this.platforms);
         
         // Health Bar setup
         functions.createHealthBar(this, this.player!);
+        functions.createHealthBar(this, this.player2!);
+        functions.createHealthBar(this, this.player3!);
 
-        // Calculate distance between player and Player2
-        const distance1_2 = Phaser.Math.Distance.Between(
-            this.player!.x, this.player!.y,
-            this.player2!.x, this.player2!.y
-        );
-        this.p2HealthBarCreated = false;
-        if (distance1_2 <= 400 && !this.p2HealthBarCreated) {
-            // Create Player2 health bar
-            functions.createHealthBar(this, this.player2!);
-            this.p2HealthBarCreated = true;
-        } else if (distance1_2 > 400 && this.p2HealthBarCreated && !this.player2!.isActive()) {
-            // Destroy Player2 health bar
-            functions.destroyHealthBar(this.player2!);
-            this.p2HealthBarCreated = false;
+        // Calculate distance between the active player and nearest NPC
+        this.npcHealthBarCreated = false;
+        if (this.npcs) {
+            for (let npc of this.npcs) {
+                let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
+                if (activePlayer) {
+                    let distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
+                    if (distanceA <= 400 && !this.npcHealthBarCreated) {
+                        // Create NPC health bar
+                        functions.createHealthBar(this, npc!);
+                        this.npcHealthBarCreated = true;
+                    } else if (distanceA > 400 && this.npcHealthBarCreated) {
+                        // Destroy NPC health bar
+                        functions.destroyHealthBar(npc!);
+                        this.npcHealthBarCreated = false;
+                    }
+                }
+            }
         }
 
-        // Calculate distance between player and Player3
-        const distance1_3 = Phaser.Math.Distance.Between(
-            this.player!.x, this.player!.y,
-            this.player3!.x, this.player3!.y
-        );
-        this.p3HealthBarCreated = false;
-        if (distance1_3 <= 400 && !this.p3HealthBarCreated) {
-            // Create Player3 health bar
-            functions.createHealthBar(this, this.player3!);
-            this.p3HealthBarCreated = true;
-        } else if (distance1_3 > 400 && this.p3HealthBarCreated && !this.player3!.isActive()) {
-            // Destroy Player3 health bar
-            functions.destroyHealthBar(this.player3!);
-            this.p3HealthBarCreated = false;
+        // Calculate distance between the active player and nearest Enemy
+        this.enemyHealthBarCreated = false;
+        if (this.enemies) {
+            for (let enemy of this.enemies) {
+                let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
+                if (activePlayer) {
+                    let distanceB = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, enemy.x, enemy.y);
+                    if (distanceB <= 400 && !this.enemyHealthBarCreated) {
+                        // Create Enemy health bar
+                        functions.createHealthBar(this, enemy!);
+                        this.enemyHealthBarCreated = true;
+                    } else if (distanceB > 400 && this.enemyHealthBarCreated) {
+                        // Destroy Enemy health bar
+                        functions.destroyHealthBar(enemy!);
+                        this.enemyHealthBarCreated = false;
+                    }
+                }
+            }
         }
 
         // Attach camera to active player
@@ -371,6 +398,15 @@ export default class BaseScene extends Phaser.Scene {
             onProjectileHitPlayer(player3, projectile);
         });
 
+        // Add collider for npcs
+        if (this.npcs) {
+            for (let npc of this.npcs) {
+                this.physics.add.collider(npc, enemyProjectileGroup, (npc, projectile) => {
+                    onProjectileHitPlayer(npc, projectile);
+                });
+            }
+        }
+
         // Add collider for enemy
         if (this.enemies) {
             for (let enemy of this.enemies) {
@@ -390,10 +426,49 @@ export default class BaseScene extends Phaser.Scene {
         if (this.player2) if (this.player2.indicator) this.player2.updateIndicatorPosition();
         if (this.player3) if (this.player3.indicator) this.player3.updateIndicatorPosition();
 
-        // Update health bars only if created
+        // Update health bars
         if (this.player) functions.updateHealthBar(this, this.player);
-        if (this.p2HealthBarCreated && this.player2) functions.updateHealthBar(this, this.player2);
-        if (this.p3HealthBarCreated && this.player3) functions.updateHealthBar(this, this.player3);
+        if (this.player2) functions.updateHealthBar(this, this.player2);
+        if (this.player3) functions.updateHealthBar(this, this.player3);
+
+        // Calculate distance between the active player and nearest NPC
+        this.npcHealthBarCreated = false;
+        if (this.npcs) {
+            for (let npc of this.npcs) {
+                let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
+                if (activePlayer) {
+                    let distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
+                    if (distanceA <= 400 && !this.npcHealthBarCreated) {
+                        // Create NPC health bar
+                        functions.createHealthBar(this, npc!);
+                        this.npcHealthBarCreated = true;
+                    } else if (distanceA > 400 && this.npcHealthBarCreated) {
+                        // Destroy NPC health bar
+                        functions.destroyHealthBar(npc!);
+                        this.npcHealthBarCreated = false;
+                    }
+                }
+            }
+        }
+        // Calculate distance between the active player and nearest Enemy
+        this.enemyHealthBarCreated = false;
+        if (this.enemies) {
+            for (let enemy of this.enemies) {
+                let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
+                if (activePlayer) {
+                    let distanceB = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, enemy.x, enemy.y);
+                    if (distanceB <= 400 && !this.enemyHealthBarCreated) {
+                        // Create Enemy health bar
+                        functions.createHealthBar(this, enemy!);
+                        this.enemyHealthBarCreated = true;
+                    } else if (distanceB > 400 && this.enemyHealthBarCreated) {
+                        // Destroy Enemy health bar
+                        functions.destroyHealthBar(enemy!);
+                        this.enemyHealthBarCreated = false;
+                    }
+                }
+            }
+        }
 
         let isMovingLeft = this.inputManager.cursors.left!.isDown || this.inputManager.moveLeftKey.isDown;
         let isMovingRight = this.inputManager.cursors.right!.isDown || this.inputManager.moveRightKey!.isDown;
@@ -438,40 +513,8 @@ export default class BaseScene extends Phaser.Scene {
         if (isAttacking) {
             player.attack();
         }
+        
 
-        // Update Player2 and Health Bars
-        // Calculate distance between player and Player2
-        const distance1_2 = Phaser.Math.Distance.Between(
-            this.player!.x, this.player!.y,
-            this.player2!.x, this.player2!.y
-        );
-
-        if (distance1_2 <= 400 && !this.p2HealthBarCreated) {
-            // Create Player2 health bar
-            functions.createHealthBar(this, this.player2!);
-            this.p2HealthBarCreated = true;
-        } else if (distance1_2 > 400 && this.p2HealthBarCreated && !this.player2!.isActive()) {
-            // Destroy Player2 health bar
-            functions.destroyHealthBar(this.player2!);
-            this.p2HealthBarCreated = false;
-        }
-
-        // Update Player3 and Health Bars
-        // Calculate distance between player and Player3
-        const distance1_3 = Phaser.Math.Distance.Between(
-            this.player!.x, this.player!.y,
-            this.player3!.x, this.player3!.y
-        );
-
-        if (distance1_3 <= 400 && !this.p3HealthBarCreated) {
-            // Create Player3 health bar
-            functions.createHealthBar(this, this.player3!);
-            this.p3HealthBarCreated = true;
-        } else if (distance1_3 > 400 && this.p3HealthBarCreated && !this.player3!.isActive()) {
-            // Destroy Player3 health bar
-            functions.destroyHealthBar(this.player3!);
-            this.p3HealthBarCreated = false;
-        }
 
         // if player falls off the world, reset their position
         if (this.player!.y > this.height + 65) {
@@ -486,6 +529,15 @@ export default class BaseScene extends Phaser.Scene {
         // if player3 falls off the world, reset their position
         if (this.player3!.y > this.height + 65) {
             this.player3!.y = 660;
+        }
+
+        // if an npc falls off the world, reset their position
+        if (this.npcs) {
+            for (let npc of this.npcs) {
+                if (npc.y > this.height + 65) {
+                    npc.y = 660;
+                }
+            }
         }
 
         // if an enemy falls off the world, reset their position

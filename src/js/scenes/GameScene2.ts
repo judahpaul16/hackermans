@@ -3,6 +3,7 @@ import BaseScene from './BaseScene';
 import Player from '../classes/characters/Player';
 import Player2 from '../classes/characters/Player2';
 import Player3 from '../classes/characters/Player3';
+import NPC from '../classes/characters/NPC';
 import Enemy from '../classes/characters/Enemy';
 import * as functions from '../helpers/functions';
 
@@ -33,6 +34,15 @@ export default class GameScene2 extends BaseScene {
         // Cloud Setup
         functions.createClouds(this, 10);
         
+        // Enemy setup
+        this.enemies = [
+            new Enemy(this, 1000, 600, 'enemy', 'standingE1'),
+            new Enemy(this, 1200, 600, 'enemy', 'standingE1'),
+            new Enemy(this, 1400, 600, 'enemy', 'standingE1'),
+            new Enemy(this, 1600, 600, 'enemy', 'standingE1'),
+            new Enemy(this, 1800, 600, 'enemy', 'standingE1'),
+        ];
+
         // Super
         super.create();
     }

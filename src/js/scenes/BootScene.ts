@@ -18,17 +18,24 @@ import player2Img from '../../assets/sprites/characters/players/player_2/player.
 import player2JSON from '../../assets/sprites/characters/players/player_2/player.json';
 import player3Img from '../../assets/sprites/characters/players/player_3/player.png';
 import player3JSON from '../../assets/sprites/characters/players/player_3/player.json';
-import enemyImg from '../../assets/sprites/characters/enemies/enemy/enemy.png';
-import enemyJSON from '../../assets/sprites/characters/enemies/enemy/enemy.json';
+
+import npcImg from '../../assets/sprites/characters/npcs/npc_1/npc.png';
+import npcJSON from '../../assets/sprites/characters/npcs/npc_1/npc.json';
+
+import enemyImg from '../../assets/sprites/characters/enemies/enemy_1/enemy.png';
+import enemyJSON from '../../assets/sprites/characters/enemies/enemy_1/enemy.json';
 
 import controlsImg from '../../assets/sprites/ui/controls.png';
 
 import avatarImg from '../../assets/sprites/ui/avatar.png';
 import p3AvatarImg from '../../assets/sprites/ui/player_2_avatar.png';
 import p2AvatarImg from '../../assets/sprites/ui/player_3_avatar.png';
+import npcAvatarImg from '../../assets/sprites/ui/npc_avatar.png';
+import enemyAvatarImg from '../../assets/sprites/ui/enemy_avatar.png';
 import healthBarFrameImg from '../../assets/sprites/ui/health_bar_bg.png';
 import healthBarFrameAltImg from '../../assets/sprites/ui/health_bar_bg_alt.png';
 import healthBarFrameAlt2Img from '../../assets/sprites/ui/health_bar_bg_alt_2.png';
+import healthBarFrameNPCImg from '../../assets/sprites/ui/health_bar_bg_npc.png';
 import healthBarFrameEnemyImg from '../../assets/sprites/ui/health_bar_bg_enemy.png';
 
 import playerIndicatorImg from '../../assets/sprites/ui/player_indicator.png';
@@ -88,14 +95,18 @@ export default class BootScene extends Phaser.Scene {
         this.load.atlas('player', playerImg, playerJSON);
         this.load.atlas('player2', player2Img, player2JSON);
         this.load.atlas('player3', player3Img, player3JSON);
+        this.load.atlas('npc', npcImg, npcJSON);
         this.load.atlas('enemy', enemyImg, enemyJSON);
         this.load.image('controls', controlsImg);
         this.load.image('avatar', avatarImg);
         this.load.image('p3Avatar', p3AvatarImg);
         this.load.image('p2Avatar', p2AvatarImg);
+        this.load.image('npcAvatar', npcAvatarImg);
+        this.load.image('enemyAvatar', enemyAvatarImg);
         this.load.image('health-bar-frame', healthBarFrameImg);
         this.load.image('health-bar-frame-alt', healthBarFrameAltImg);
         this.load.image('health-bar-frame-alt-2', healthBarFrameAlt2Img);
+        this.load.image('health-bar-frame-npc', healthBarFrameNPCImg);
         this.load.image('health-bar-frame-enemy', healthBarFrameEnemyImg);
         this.load.atlas('chat_bubble', chatBubbleImg, chatBubbleJSON);
         this.load.audio('mainMusic', mainMusicSrc);

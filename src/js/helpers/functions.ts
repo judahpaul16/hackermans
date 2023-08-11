@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import Player from '../classes/characters/Player';
 import Player2 from '../classes/characters/Player3';
 import Player3 from '../classes/characters/Player2';
+import NPC from '../classes/characters/NPC';
 import Enemy from '../classes/characters/Enemy';
 import * as dat from 'dat.gui';
 
@@ -166,11 +167,14 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
     // Determine if the character is an Player2
     const isP2 = player instanceof Player2;
     const isP3 = player instanceof Player3;
+    const isNPC = player instanceof NPC;
     const isEnemy = player instanceof Enemy;
+    const avatarOffsetX = isNPC || isEnemy ? 255 : 0;
+    const fillOffsetX = isNPC || isEnemy ? -15 : 0;
 
     // Adjust the x-position of the health bar for P3 & Enemy
     let xOffset = isP2 ? 340 : 0;
-    if (isEnemy) xOffset = 600;
+    if (isEnemy || isNPC) xOffset = 1140;
 
     // Adjust the y-position of the health bar for P2
     let yOffset = isP3 ? 100 : 0;
@@ -178,11 +182,13 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
     // Adding the avatar image at the top left corner with xOffset
     let someAvatar = isP2 ? 'p2Avatar' : 'avatar';
     if (isP3) someAvatar = 'p3Avatar';
-    player.avatar = scene.add.image(100 + xOffset, 100 + yOffset, someAvatar);
+    if (isNPC) someAvatar = 'npcAvatar';
+    if (isEnemy) someAvatar = 'enemyAvatar';
+    player.avatar = scene.add.image(100 + xOffset + avatarOffsetX, 100 + yOffset, someAvatar);
 
     // Creating a circular mask using a Graphics object
     player.amask = scene.make.graphics({});
-    player.amask.fillCircle(100 + xOffset, 100 + yOffset, 30); // X, Y, radius with xOffset
+    player.amask.fillCircle(100 + xOffset + avatarOffsetX, 100 + yOffset, 30); // X, Y, radius with xOffset
 
     // Applying the mask to the avatar
     player.avatar.setMask(player.amask.createGeometryMask());
@@ -197,14 +203,20 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
 
     // Background of the health bar (position it relative to avatar, with the possible offset for P2)
     let frameKey = 'health-bar-frame';
-    if (player instanceof Player2) {
+    if (isP2) {
         frameKey = 'health-bar-frame-alt';
-    } else if (player instanceof Player3) {
+    } else if (isP3) {
         frameKey = 'health-bar-frame-alt-2';
-    } else if (player instanceof Enemy) {
+    } else if (isNPC) {
+        frameKey = 'health-bar-frame-npc';
+    } else if (isEnemy) {
         frameKey = 'health-bar-frame-enemy';
     }
-    player.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, frameKey).setOrigin(0);
+    if (isNPC || isEnemy) {
+        player.healthBarFrame = scene.add.image(player.avatar.x - avatarOffsetX, player.avatar.y - 35, frameKey).setOrigin(0);
+    } else {
+        player.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, frameKey).setOrigin(0);
+    }
     
     // Scale the healthBarFrame to match the avatar's height
     const healthBarFrameScale = avatarHeight / player!.healthBarFrame.height;
@@ -213,6 +225,7 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
     // Foreground/fill of the health bar (same position as background)
     // Create a Graphics object
     player!.healthBarFill = scene.add.graphics({ fillStyle: { color: 0x00ff00 } });
+    player!.healthBarFill.x += fillOffsetX;
 
     // Determine the width based on the current health percentage
     let fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
@@ -229,7 +242,12 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
     player!.healthBarFill.setDepth(3);
 
     // Add the player's name above the avatar
-    const name = scene.add.text(player.avatar.x + 36, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' });
+    let name = null;
+    if (isNPC || isEnemy) {
+        name = scene.add.text(player.avatar.x - 130, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' });
+    } else {
+        name = scene.add.text(player.avatar.x + 36, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' });
+    }
 
     // Check if the HUD elements are defined before creating the container
     if (player!.avatar && player!.healthBarFrame && player!.healthBarFill) {
@@ -373,6 +391,13 @@ export function setupAnimations(scene: any) {
         { key: 'crouchingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'crouch-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
         { key: 'projectile-1', frames: scene.anims.generateFrameNames('projectile-1', { prefix: 'shot-', start: 1, end: 3 }), frameRate: 3, repeat: -1 },
         { key: 'hitSprite1', frames: scene.anims.generateFrameNames('hitSprite1', { prefix: 'hits-1-', start: 1, end: 5 }), frameRate: 10, repeat: 0 },
+        // NPC 1
+        { key: 'walkingNPC1', frames: scene.anims.generateFrameNames('npc1', { prefix: 'walk-', start: 1, end: 16 }), frameRate: 10, repeat: -1 },
+        { key: 'runningNPC1', frames: scene.anims.generateFrameNames('npc1', { prefix: 'run-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },
+        { key: 'jumpingNPC1', frames: scene.anims.generateFrameNames('npc1', { prefix: 'jump-', start: 1, end: 4 }), frameRate: 7, repeat: 0 },
+        { key: 'shootNPC1', frames: scene.anims.generateFrameNames('npc1', { prefix: 'shoot-', start: 1, end: 1 }), frameRate: 10, repeat: 0 },
+        { key: 'standingNPC1', frames: scene.anims.generateFrameNames('npc1', { prefix: 'idle-', start: 1, end: 4 }), frameRate: 6, repeat: -1 },
+        { key: 'dyingNPC1', frames: scene.anims.generateFrameNames('npc1', { prefix: 'jump-', start: 3, end: 3 }), frameRate: 1, repeat: 0 },
         // Enemy 1
         { key: 'walkingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'walking-', start: 1, end: 16 }), frameRate: 10, repeat: -1 },
         { key: 'runningE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'running-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },

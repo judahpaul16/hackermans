@@ -4,6 +4,7 @@ import Player from '../classes/characters/Player';
 import Player2 from '../classes/characters/Player2';
 import Player3 from '../classes/characters/Player3';
 import Enemy from '../classes/characters/Enemy';
+import NPC from '../classes/characters/NPC';
 import * as functions from '../helpers/functions';
 
 export default class GameScene1 extends BaseScene {
@@ -12,7 +13,7 @@ export default class GameScene1 extends BaseScene {
     public backgroundKey3: string = 'back-buildings';
     public backgroundKey4: string = 'far-buildings';
     public levelNumber: number = 1;
-    public width: number = 2000;
+    public width: number = 3000;
     public p1StartX: number = 200;
     public p2StartX: number = 525;
     public p3StartX: number = 1500;
@@ -32,21 +33,17 @@ export default class GameScene1 extends BaseScene {
             middle: functions.createBackground(this, this.backgroundKey2, this.width, this.height*this.sfactor3),
             foreground: functions.createBackground(this, this.backgroundKey1, this.width, this.height*this.sfactor4),
         };
-        
-        // Enemy setup
-        this.enemies = [
-            new Enemy(this, 1000, 600, 'enemy', 'standingE1'),
-            new Enemy(this, 1200, 600, 'enemy', 'standingE1'),
-            new Enemy(this, 1400, 600, 'enemy', 'standingE1'),
-            new Enemy(this, 1600, 600, 'enemy', 'standingE1'),
-            new Enemy(this, 1800, 600, 'enemy', 'standingE1'),
+
+        // Cloud Setup
+        functions.createClouds(this, 10);
+
+        // NPC setup
+        this.npcs = [
+            new NPC(this, 2750, 600, 'npc', 'standingNPC1'),
         ];
 
         // Super
         super.create();
-
-        // Cloud Setup
-        functions.createClouds(this, 10);
     }
 
     update() {
