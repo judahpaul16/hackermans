@@ -4,6 +4,10 @@ import Player from './Player';
 export default class Player3 extends Player {
     public number: number = 3;
     public name: string = 'Anonymoose';
+    public width: number = 83;
+    public height: number = 186;
+    public offsetX: number = -2;
+    public offsetY: number = -38.4;
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
@@ -31,22 +35,14 @@ export default class Player3 extends Player {
             scene.add.existing(this);
             if (scene.physics && scene.physics.world) {
                 scene.physics.world.enable(this);
+                this.body!.setSize(this.width, this.height);
+                this.body!.setOffset(this.offsetX, this.offsetY);
             }
         }
         this.setDepth(3);
     }
 
     protected handleAnimationStart(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
-
-        const newWidth = 35;
-        const newHeight = 78;
-        this.body!.setSize(newWidth, newHeight);
-        this.body!.setOffset(0, -20);
-
-        if (animation.key === this.crouchKey) {
-            if (this.y > 670) this.y -= 10;
-        }
-
         super.handleAnimationStart(animation, frame);
     }
 

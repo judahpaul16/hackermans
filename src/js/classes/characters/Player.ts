@@ -52,15 +52,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.on('animationstart', this.handleAnimationStart, this);
         this.on('animationcomplete', this.handleAnimationComplete, this);
     }
-
-    public configureDebugGUI(dg: any) {
-        // Add a debug folder for altering the player's hitbox
-        let debugFolder = dg.add.folder(`Player ${this.number} Debug`);
-        debugFolder.add(this.body?.offset, 'x', -100, 100).name('Hitbox X Offset').listen();
-        debugFolder.add(this.body?.offset, 'y', -100, 100).name('Hitbox Y Offset').listen();
-        debugFolder.add(this.body, 'width', 0, 100).name('Hitbox Width').listen();
-        debugFolder.add(this.body, 'height', 0, 100).name('Hitbox Height').listen();
-    }
     
     protected handleAnimationStart(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
         this.currentAnimation = animation.key;
