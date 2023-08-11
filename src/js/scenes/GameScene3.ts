@@ -10,13 +10,13 @@ export default class GameScene3 extends BaseScene {
     public backgroundKey1: string = 'foreground-2';
     public backgroundKey2: string = 'middle';
     public backgroundKey3: string = 'back-buildings';
-    public backgroundKey4: string = 'skyline-a';
+    public backgroundKey4: string = 'far-buildings';
     public platformKey: string = 'street-2';
     public levelNumber: number = 3;
     public width: number = 1600;
     public sfactor1: number = 1.3;
-    public sfactor2: number = 0;
-    public sfactor3: number = 0.4;
+    public sfactor2: number = 1;
+    public sfactor3: number = 1.4;
     public sfactor4: number = 0.9;
     public p1StartX: number = 75;
 
