@@ -4,6 +4,11 @@ import InputManager from '../utils/InputManager';
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     public number: number = 1;
     public name: string = 'Anonymouse';
+    public width!: number;
+    public height!: number;
+    public offsetX!: number;
+    public offsetY!: number;
+    public scale!: number;
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
@@ -35,6 +40,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             scene.add.existing(this);
             if (scene.physics && scene.physics.world) {
                 scene.physics.world.enable(this);
+                if (this.scale) this.setScale(this.scale);
+                if (this.width && this.height) this.body!.setSize(this.width, this.height);
+                if (this.offsetX && this.offsetY) this.body!.setOffset(this.offsetX, this.offsetY);
 
                 if (!this.indicator) {
                     // Create an inidicator that floats above the player then disappears after 2 seconds
