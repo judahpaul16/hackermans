@@ -333,6 +333,7 @@ export function setupAnimations(scene: any) {
         { key: 'hurtP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'hurt-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
         { key: 'crouchingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'crouch-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
         { key: 'projectile-1', frames: scene.anims.generateFrameNames('projectile-1', { prefix: 'shot-', start: 1, end: 3 }), frameRate: 10, repeat: -1 },
+        { key: 'hitSprite1', frames: scene.anims.generateFrameNames('hitSprite1', { prefix: 'hits-1-', start: 1, end: 5 }), frameRate: 10, repeat: 0 },
     ];
 
     // Create animations

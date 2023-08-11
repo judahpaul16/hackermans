@@ -24,6 +24,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public inputManager: InputManager = new InputManager(this.scene);
     public projectileGroup!: Phaser.Physics.Arcade.Group;
     public indicator!: Phaser.GameObjects.Image;
+    public hitSprite!: Phaser.GameObjects.Sprite;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
@@ -106,6 +107,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     public takeDamage(amount: number) {
         this.currentHealth -= amount;
+        this.play(this.hurtKey, true);
+        this.hitSprite = this.scene.add.sprite(this.x, this.y, 'hitSprite1').setDepth(10).play('hitSprite1').on('animationcomplete', () => {
+            this.hitSprite.destroy();
+        });
         if (this.currentHealth <= 0) {
             this.currentHealth = 0; // Ensure health doesn't go negative
             this.scene.physics.world.gravity.y = 0;

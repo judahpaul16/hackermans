@@ -66,6 +66,9 @@ import shootSoundP3 from '../../assets/audio/sfx/p3_shoot.mp3';
 import projectile1Img from '../../assets/sprites/effects/projectiles/1/projectile-1.png';
 import projectile1JSON from '../../assets/sprites/effects/projectiles/1/projectile-1.json';
 
+import hitSprite1Img from '../../assets/sprites/effects/hits/hits-1/hits-1.png';
+import hitSprite1JSON from '../../assets/sprites/effects/hits/hits-1/hits-1.json';
+
 export default class BootScene extends Phaser.Scene {
     constructor() {
         super({ key: 'BootScene' });
@@ -114,6 +117,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('skyline-b', skyLineB);
         this.load.atlas('projectile-1', projectile1Img, projectile1JSON);
         this.load.image('player-indicator', playerIndicatorImg);
+        this.load.atlas('hitSprite1', hitSprite1Img, hitSprite1JSON);
     }
 
     create() {
