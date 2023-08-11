@@ -354,6 +354,7 @@ export function setupAnimations(scene: any) {
         { key: 'backJumpP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'back-jump-', start: 1, end: 7 }), frameRate: 7, repeat: 0 },
         { key: 'climbP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'climb-', start: 1, end: 6 }), frameRate: 7, repeat: -1 },
         { key: 'hurtP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'hurt-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
+        { key: 'dyingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'jump-', start: 3, end: 3 }), frameRate: 1, repeat: 0 },
         { key: 'crouchingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'crouch-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
         { key: 'projectile-1', frames: scene.anims.generateFrameNames('projectile-1', { prefix: 'shot-', start: 1, end: 3 }), frameRate: 3, repeat: -1 },
         { key: 'hitSprite1', frames: scene.anims.generateFrameNames('hitSprite1', { prefix: 'hits-1-', start: 1, end: 5 }), frameRate: 10, repeat: 0 },
