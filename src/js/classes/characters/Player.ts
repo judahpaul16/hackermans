@@ -105,20 +105,28 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.indicator)
             this.indicator.setPosition(this.x, this.y - 100);
     }
-
+    
     public takeDamage(amount: number) {
         this.currentHealth -= amount;
         this.play(this.hurtKey, true);
-        this.hitSprite = this.scene.add.sprite(this.x, this.y, 'hitSprite1').setDepth(10).play('hitSprite1').on('animationcomplete', () => {
-            this.hitSprite.destroy();
-        });
+    
+        if (!this.hitSprite) {
+            this.hitSprite = this.scene.add.sprite(this.x, this.y, 'hitSprite1').setDepth(10).setAlpha(0);
+            // Add an event to set the sprite's alpha to 0 after the animation is complete
+            this.hitSprite.on('animationcomplete', () => {
+                this.hitSprite.setAlpha(0);
+            });
+        }
+    
+        this.hitSprite.setPosition(this.x, this.y).setAlpha(1).play('hitSprite1');
+    
         if (this.currentHealth <= 0) {
             this.currentHealth = 0; // Ensure health doesn't go negative
             this.scene.physics.world.gravity.y = 0;
             this.anims.stop();
             this.play(this.dyingKey, true);
         }
-    }
+    }    
 
     public heal(amount: number) {
         this.currentHealth += amount;
