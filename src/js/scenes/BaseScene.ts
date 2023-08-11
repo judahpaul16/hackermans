@@ -650,6 +650,14 @@ export default class BaseScene extends Phaser.Scene {
         this.pauseButton.setInteractive().on('pointerdown', () => {
             this.togglePauseMenu();
         });
+
+        // on window resize, update pause menu
+        this.scale.on('resize', (gameSize: Phaser.Structs.Size) => {
+            // Update pause menu
+            this.pauseMenuSettings!.setPosition(gameSize.width / 2, gameSize.height / 2 - 250);
+            this.pauseMenuControls!.setPosition(gameSize.width / 2, gameSize.height * 2 / 3 + 100);
+            this.pauseBackground!.setSize(gameSize.width, gameSize.height);
+        });
     }
 
     // other functions methods...
