@@ -320,8 +320,7 @@ export default class BaseScene extends Phaser.Scene {
         functions.createHealthBar(this, this.player2!);
         functions.createHealthBar(this, this.player3!);
 
-        // Calculate distance between the active player and nearest NPC
-        this.npcHealthBarCreated = false;
+        // Calculate distance between the active player and nearest NPC or Enemy to create health bar
         if (this.npcs) {
             for (let npc of this.npcs) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
@@ -340,8 +339,6 @@ export default class BaseScene extends Phaser.Scene {
             }
         }
 
-        // Calculate distance between the active player and nearest Enemy
-        this.enemyHealthBarCreated = false;
         if (this.enemies) {
             for (let enemy of this.enemies) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
