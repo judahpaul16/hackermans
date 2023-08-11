@@ -24,6 +24,7 @@ export default class Player3 extends Player {
     public jumpKey: string = 'jumpingP3';
     public hurtKey: string = 'hurtP3';
     public attackKey: string = 'shootP3';
+    public runShootKey: string = 'runShootP3';
     public dyingKey: string = 'dyingP3';
     public crouchKey: string = 'crouchingP3';
 
@@ -70,7 +71,11 @@ export default class Player3 extends Player {
     public attack() {
         if (this) {
             // play animation if not already playing
-            this.play(this.attackKey, true);
+            if (this.body!.velocity.x !== 0) {
+                this.play(this.runShootKey, true);
+            } else {
+                this.play(this.attackKey, true);
+            }
             // Create projectile
             if (!this.shootSound) {
                 this.shootSound = this.scene.sound.add(this.attackKey);
