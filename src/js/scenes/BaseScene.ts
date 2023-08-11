@@ -17,7 +17,7 @@ export default class BaseScene extends Phaser.Scene {
     protected p2StartY: number = this.p1StartY;
     protected p3StartX: number = this.p2StartX + 50;
     protected p3StartY: number = this.p1StartY;
-    protected enemy?: Enemy;
+    protected enemies: Enemy[] = [];
     protected chatBubble?: Phaser.GameObjects.Sprite;
     protected dialogueText?: Phaser.GameObjects.Text;
     protected isInteracting: boolean = false;
@@ -224,7 +224,8 @@ export default class BaseScene extends Phaser.Scene {
 
     protected setupPlayers() {
         // Projectile setup
-        this.game.registry.set('projectileGroup', this.physics.add.group({ gravityY: 0, velocityY: 0 }));
+        this.game.registry.set('friendlyProjectileGroup', this.physics.add.group({ gravityY: 0, velocityY: 0 }));
+        this.game.registry.set('enemyProjectileGroup', this.physics.add.group({ gravityY: 0, velocityY: 0 }));
 
         // Street setup
         this.platforms = this.physics.add.staticGroup();
@@ -292,6 +293,10 @@ export default class BaseScene extends Phaser.Scene {
 
         this.player3!.play('standingP3', true);
         this.player3!.flipX = true;
+
+        if (this.enemies)
+            for (let enemy of this.enemies)
+                this.physics.add.collider(enemy, this.platforms);
         
         // Health Bar setup
         functions.createHealthBar(this, this.player!);
@@ -348,22 +353,32 @@ export default class BaseScene extends Phaser.Scene {
         };
         
         // Projectile Collision
-        let projectileGroup = this.game.registry.get('projectileGroup') as Phaser.Physics.Arcade.Group;
+        let friendlyProjectileGroup = this.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
+        let enemyProjectileGroup = this.game.registry.get('enemyProjectileGroup') as Phaser.Physics.Arcade.Group;
         
         // Adding collider for player 1
-        this.physics.add.collider(this.player, projectileGroup, (player, projectile) => {
+        this.physics.add.collider(this.player, enemyProjectileGroup, (player, projectile) => {
             onProjectileHitPlayer(player, projectile);
         });
         
         // Adding collider for player 2
-        this.physics.add.collider(this.player2, projectileGroup, (player, projectile) => {
-            onProjectileHitPlayer(player, projectile);
+        this.physics.add.collider(this.player2, enemyProjectileGroup, (player2, projectile) => {
+            onProjectileHitPlayer(player2, projectile);
         });
         
         // Adding collider for player 3
-        this.physics.add.collider(this.player3, projectileGroup, (player, projectile) => {
-            onProjectileHitPlayer(player, projectile);
+        this.physics.add.collider(this.player3, enemyProjectileGroup, (player3, projectile) => {
+            onProjectileHitPlayer(player3, projectile);
         });
+
+        // Add collider for enemy
+        if (this.enemies) {
+            for (let enemy of this.enemies) {
+                this.physics.add.collider(enemy, friendlyProjectileGroup, (enemy, projectile) => {
+                    onProjectileHitPlayer(enemy, projectile);
+                });
+            }
+        }
     }
 
     updatePlayer(player: Player) {
@@ -471,6 +486,15 @@ export default class BaseScene extends Phaser.Scene {
         // if player3 falls off the world, reset their position
         if (this.player3!.y > this.height + 65) {
             this.player3!.y = 660;
+        }
+
+        // if an enemy falls off the world, reset their position
+        if (this.enemies) {
+            for (let enemy of this.enemies) {
+                if (enemy.y > this.height + 65) {
+                    enemy.y = 660;
+                }
+            }
         }
 
         // check scene transition

@@ -32,6 +32,15 @@ export default class GameScene1 extends BaseScene {
             middle: functions.createBackground(this, this.backgroundKey2, this.width, this.height*this.sfactor3),
             foreground: functions.createBackground(this, this.backgroundKey1, this.width, this.height*this.sfactor4),
         };
+        
+        // Enemy setup
+        this.enemies = [
+            new Enemy(this, 1000, 600, 'enemy', 'standingE1'),
+            new Enemy(this, 1200, 600, 'enemy', 'standingE1'),
+            new Enemy(this, 1400, 600, 'enemy', 'standingE1'),
+            new Enemy(this, 1600, 600, 'enemy', 'standingE1'),
+            new Enemy(this, 1800, 600, 'enemy', 'standingE1'),
+        ];
 
         // Super
         super.create();

@@ -36,8 +36,6 @@ export default class Player3 extends Player {
             scene.add.existing(this);
             if (scene.physics && scene.physics.world) {
                 scene.physics.world.enable(this);
-                this.body!.setSize(this.width, this.height);
-                this.body!.setOffset(this.offsetX, this.offsetY);
             }
         }
         this.setDepth(3);
@@ -95,7 +93,7 @@ export default class Player3 extends Player {
     private emitProjectile() {
         if (this.scene && this.scene.game && this.scene.game.registry   ) {
             // Create a projectile at player's position
-            let projectileGroup = this.scene.game.registry.get('projectileGroup') as Phaser.Physics.Arcade.Group;
+            let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
             let y = (this.body!.velocity.x > 0) ? this.y : this.y - 42;
             let projectile = projectileGroup.create(this.x, y, 'projectile-1').setGravityY(0).setVelocityY(0).setScale(1.5);
             projectile.flipX = this.flipX;

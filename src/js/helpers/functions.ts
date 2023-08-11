@@ -61,22 +61,37 @@ export function initializeDebugGUI(scene: any) {
         });
         
         // Add a debug folder for altering the player's hitbox
-        const playerFolder = scene.dg.addFolder('Players');
-        const player1Folder = playerFolder.addFolder('Player 1');
+        const characterFolder = scene.dg.addFolder('Characters');
+        const enemyFolder = characterFolder.addFolder('Enemies');
+        const player1Folder = characterFolder.addFolder('Player 1');
+        player1Folder.add(scene.player!, 'scale', 0.1, 2).name('Sprite Scale').listen();    
         player1Folder.add(scene.player!.body!, 'width', 0, 200).name('Hitbox Width').listen();
         player1Folder.add(scene.player!.body!, 'height', 0, 200).name('Hitbox Height').listen();
         player1Folder.add(scene.player!.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
         player1Folder.add(scene.player!.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
-        const player2Folder = playerFolder.addFolder('Player 2');
+        const player2Folder = characterFolder.addFolder('Player 2');
+        player2Folder.add(scene.player2!, 'scale', 0.1, 2).name('Sprite Scale').listen();
         player2Folder.add(scene.player2!.body!, 'width', 0, 200).name('Hitbox Width').listen();
         player2Folder.add(scene.player2!.body!, 'height', 0, 200).name('Hitbox Height').listen();
         player2Folder.add(scene.player2!.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
         player2Folder.add(scene.player2!.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
-        const player3Folder = playerFolder.addFolder('Player 3');
+        const player3Folder = characterFolder.addFolder('Player 3');
+        player3Folder.add(scene.player3!, 'scale', 0.1, 2).name('Sprite Scale').listen();
         player3Folder.add(scene.player3!.body!, 'width', 0, 200).name('Hitbox Width').listen();
         player3Folder.add(scene.player3!.body!, 'height', 0, 200).name('Hitbox Height').listen();
         player3Folder.add(scene.player3!.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
         player3Folder.add(scene.player3!.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
+        if (scene.enemies) {
+            for (let i = 0; i < scene.enemies!.length; i++) {
+                let enemy = scene.enemies![i];
+                let enemyFolderN = enemyFolder.addFolder('Enemy ' + i);
+                enemyFolderN.add(enemy, 'scale', 0.1, 2).name('Sprite Scale').listen();
+                enemyFolderN.add(enemy.body!, 'width', 0, 200).name('Hitbox Width').listen();
+                enemyFolderN.add(enemy.body!, 'height', 0, 200).name('Hitbox Height').listen();
+                enemyFolderN.add(enemy.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
+                enemyFolderN.add(enemy.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
+            }
+        }
     }
 }
 
@@ -358,6 +373,13 @@ export function setupAnimations(scene: any) {
         { key: 'crouchingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'crouch-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
         { key: 'projectile-1', frames: scene.anims.generateFrameNames('projectile-1', { prefix: 'shot-', start: 1, end: 3 }), frameRate: 3, repeat: -1 },
         { key: 'hitSprite1', frames: scene.anims.generateFrameNames('hitSprite1', { prefix: 'hits-1-', start: 1, end: 5 }), frameRate: 10, repeat: 0 },
+        // Enemy 1
+        { key: 'walkingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'walking-', start: 1, end: 16 }), frameRate: 10, repeat: -1 },
+        { key: 'runningE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'running-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },
+        { key: 'jumpingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'jumping-', start: 1, end: 4 }), frameRate: 7, repeat: 0 },
+        { key: 'shootE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'shoot-', start: 1, end: 1 }), frameRate: 10, repeat: 0 },
+        { key: 'standingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'standing-', start: 1, end: 4 }), frameRate: 6, repeat: -1 },
+        { key: 'dyingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'jumping-', start: 3, end: 3 }), frameRate: 1, repeat: 0 },
     ];
 
     // Create animations

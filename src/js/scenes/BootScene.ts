@@ -12,12 +12,14 @@ import platformImg from '../../assets/sprites/platforms/rock.png';
 import streetImg from '../../assets/sprites/platforms/street.png';
 import street2Img from '../../assets/sprites/platforms/street-2.png';
 
-import playerImg from '../../assets/sprites/characters/player_1/player.png';
-import playerJSON from '../../assets/sprites/characters/player_1/player.json';
-import player2Img from '../../assets/sprites/characters/player_2/player.png';
-import player2JSON from '../../assets/sprites/characters/player_2/player.json';
-import player3Img from '../../assets/sprites/characters/player_3/player.png';
-import player3JSON from '../../assets/sprites/characters/player_3/player.json';
+import playerImg from '../../assets/sprites/characters/players/player_1/player.png';
+import playerJSON from '../../assets/sprites/characters/players/player_1/player.json';
+import player2Img from '../../assets/sprites/characters/players/player_2/player.png';
+import player2JSON from '../../assets/sprites/characters/players/player_2/player.json';
+import player3Img from '../../assets/sprites/characters/players/player_3/player.png';
+import player3JSON from '../../assets/sprites/characters/players/player_3/player.json';
+import enemyImg from '../../assets/sprites/characters/enemies/enemy/enemy.png';
+import enemyJSON from '../../assets/sprites/characters/enemies/enemy/enemy.json';
 
 import controlsImg from '../../assets/sprites/ui/controls.png';
 
@@ -86,6 +88,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.atlas('player', playerImg, playerJSON);
         this.load.atlas('player2', player2Img, player2JSON);
         this.load.atlas('player3', player3Img, player3JSON);
+        this.load.atlas('enemy', enemyImg, enemyJSON);
         this.load.image('controls', controlsImg);
         this.load.image('avatar', avatarImg);
         this.load.image('p3Avatar', p3AvatarImg);
