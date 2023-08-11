@@ -25,7 +25,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public inputManager: InputManager = new InputManager(this.scene);
     public projectileGroup!: Phaser.Physics.Arcade.Group;
     public indicator!: Phaser.GameObjects.Image;
-    public hitSprite!: Phaser.GameObjects.Sprite;
+    private hitSpritePool: Phaser.GameObjects.Sprite[] = [];
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
@@ -105,20 +105,22 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this.indicator)
             this.indicator.setPosition(this.x, this.y - 100);
     }
-    
+
     public takeDamage(amount: number) {
         this.currentHealth -= amount;
         this.play(this.hurtKey, true);
     
-        if (!this.hitSprite) {
-            this.hitSprite = this.scene.add.sprite(this.x, this.y, 'hitSprite1').setDepth(10).setAlpha(0);
-            // Add an event to set the sprite's alpha to 0 after the animation is complete
-            this.hitSprite.on('animationcomplete', () => {
-                this.hitSprite.setAlpha(0);
+        // Reuse or create a new hit sprite
+        let hitSprite = this.hitSpritePool.find(sprite => !sprite.active);
+        if (!hitSprite) {
+            hitSprite = this.scene.add.sprite(this.x, this.y, 'hitSprite1').setDepth(10).setAlpha(0);
+            hitSprite.on('animationcomplete', () => {
+                if (hitSprite) hitSprite.setVisible(false).setActive(false);
             });
+            this.hitSpritePool.push(hitSprite);
         }
     
-        this.hitSprite.setPosition(this.x, this.y).setAlpha(1).play('hitSprite1');
+        hitSprite.setPosition(this.x, this.y).setAlpha(1).setVisible(true).setActive(true).play('hitSprite1');
     
         if (this.currentHealth <= 0) {
             this.currentHealth = 0; // Ensure health doesn't go negative
@@ -126,7 +128,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.anims.stop();
             this.play(this.dyingKey, true);
         }
-    }    
+    }
 
     public heal(amount: number) {
         this.currentHealth += amount;
