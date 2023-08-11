@@ -33,7 +33,7 @@ export default class BaseScene extends Phaser.Scene {
     protected backgroundImages?: { [key: string]: Phaser.GameObjects.TileSprite } = {};
     protected clouds: Phaser.GameObjects.Sprite[] = [];
     protected platforms?: Phaser.Physics.Arcade.StaticGroup;
-    protected dg?: dat.GUI;
+    protected dg!: dat.GUI;
     protected pauseMenu?: Phaser.GameObjects.Container;
     protected pauseMenuSettings?: Phaser.GameObjects.Container;
     protected pauseMenuControls?: Phaser.GameObjects.Image;

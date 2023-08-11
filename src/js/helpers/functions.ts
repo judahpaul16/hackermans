@@ -59,6 +59,24 @@ export function initializeDebugGUI(scene: any) {
         scaleFolder.add(scene, 'sfactor4', 0, 2).onChange((value: number) => {
             updateWorldBounds(scene, value);
         });
+        
+        // Add a debug folder for altering the player's hitbox
+        const playerFolder = scene.dg.addFolder('Players');
+        const player1Folder = playerFolder.addFolder('Player 1');
+        player1Folder.add(scene.player!.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
+        player1Folder.add(scene.player!.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
+        player1Folder.add(scene.player!.body!, 'width', 0, 200).name('Hitbox Width').listen();
+        player1Folder.add(scene.player!.body!, 'height', 0, 200).name('Hitbox Height').listen();
+        const player2Folder = playerFolder.addFolder('Player 2');
+        player2Folder.add(scene.player2!.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
+        player2Folder.add(scene.player2!.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
+        player2Folder.add(scene.player2!.body!, 'width', 0, 200).name('Hitbox Width').listen();
+        player2Folder.add(scene.player2!.body!, 'height', 0, 200).name('Hitbox Height').listen();
+        const player3Folder = playerFolder.addFolder('Player 3');
+        player3Folder.add(scene.player3!.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
+        player3Folder.add(scene.player3!.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
+        player3Folder.add(scene.player3!.body!, 'width', 0, 200).name('Hitbox Width').listen();
+        player3Folder.add(scene.player3!.body!, 'height', 0, 200).name('Hitbox Height').listen();
     }
 }
 

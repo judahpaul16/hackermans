@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import Player from './Player';
 
 export default class Player3 extends Player {
+    public number: number = 3;
     public name: string = 'Anonymoose';
     public currentAnimation?: string;
     public maxHealth: number = 100;
