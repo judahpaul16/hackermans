@@ -42,12 +42,20 @@ export default class Player3 extends Player {
         this.body!.setSize(newWidth, newHeight);
         this.body!.setOffset(0, -20);
 
+        if (animation.key === this.crouchKey) {
+            if (this.y > 670) this.y -= 10;
+        }
+
         super.handleAnimationStart(animation, frame);
     }
 
     protected handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
         if (animation.key === this.dyingKey) {
             this.isDead = true;
+        }
+
+        if (animation.key === this.attackKey) {
+            if (this.y > 670) this.y -= 10;
         }
 
         if (this.currentAnimation === animation.key) {

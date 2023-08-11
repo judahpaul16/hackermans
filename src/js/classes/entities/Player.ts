@@ -66,7 +66,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             const newHeight = 12;
             this.body!.setSize(newWidth, newHeight);
             this.body!.setOffset(0, 0);
-            this.y += 42;
+            if (this.y > 670) this.y -= 10;
         }
 
         // If the animation is 'meleeP1', reset gravity
@@ -100,23 +100,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     public updateIndicatorPosition() {
-        if (this.indicator) {
+        if (this.indicator)
             this.indicator.setPosition(this.x, this.y - 100);
-        }
     }
 
     public takeDamage(amount: number) {
         this.currentHealth -= amount;
         if (this.currentHealth <= 0) {
             this.currentHealth = 0; // Ensure health doesn't go negative
+            this.scene.physics.world.gravity.y = 0;
+            this.anims.stop();
+            this.play(this.dyingKey, true);
         }
     }
 
     public heal(amount: number) {
         this.currentHealth += amount;
-        if (this.currentHealth >= 100) {
+        if (this.currentHealth >= 100)
             this.currentHealth = 100; // Ensure health doesn't go past 100
-        }
     }
 
     public jump() {
@@ -127,10 +128,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     public attack() {
-        if (this) {
-            this.play(this.attackKey, true);
+        if (this)
+            this.play(this.attackKey, true)
             this.scene.sound.play(this.attackKey, { volume: 0.5, loop: false });
-        }
     }
     
     public follow(

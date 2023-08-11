@@ -13,6 +13,7 @@ class InputManager {
     public switchKey1!: Phaser.Input.Keyboard.Key;
     public switchKey2!: Phaser.Input.Keyboard.Key;
     public switchKey3!: Phaser.Input.Keyboard.Key;
+    public attackKey!: Phaser.Input.Keyboard.Key;
 
     public keysDisabled: boolean = false;
 
@@ -33,6 +34,7 @@ class InputManager {
         this.switchKey1 = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
         this.switchKey2 = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         this.switchKey3 = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
+        this.attackKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.DELETE);
     }
 
     public static getInstance(scene?: Phaser.Scene): InputManager {

@@ -292,7 +292,7 @@ export default class BaseScene extends Phaser.Scene {
 
         this.player3!.play('standingP3', true);
         this.player3!.flipX = true;
-
+        
         // Health Bar setup
         functions.createHealthBar(this, this.player!);
 
@@ -340,6 +340,30 @@ export default class BaseScene extends Phaser.Scene {
             this.cameras.main.startFollow(this.player!, true, 0.5, 0.5);
             this.player!.toggleIndicator();
         }
+
+        // Define a common collision handler
+        const onProjectileHitPlayer = (player: any, projectile: any) => {
+            projectile.destroy();
+            player.takeDamage(10);
+        };
+        
+        // Projectile Collision
+        let projectileGroup = this.game.registry.get('projectileGroup') as Phaser.Physics.Arcade.Group;
+        
+        // Adding collider for player 1
+        this.physics.add.collider(this.player, projectileGroup, (player, projectile) => {
+            onProjectileHitPlayer(player, projectile);
+        });
+        
+        // Adding collider for player 2
+        this.physics.add.collider(this.player2, projectileGroup, (player, projectile) => {
+            onProjectileHitPlayer(player, projectile);
+        });
+        
+        // Adding collider for player 3
+        this.physics.add.collider(this.player3, projectileGroup, (player, projectile) => {
+            onProjectileHitPlayer(player, projectile);
+        });
     }
 
     updatePlayer(player: Player) {
@@ -360,14 +384,8 @@ export default class BaseScene extends Phaser.Scene {
         let isMovingRight = this.inputManager.cursors.right!.isDown || this.inputManager.moveRightKey!.isDown;
         let isRunning = this.inputManager.cursors.shift!.isDown;
         let isJumping = this.inputManager.cursors.up!.isDown || this.inputManager.jumpKey!.isDown;
-        let isAttacking = this.inputManager.cursors.space!.isDown;
+        let isAttacking = this.inputManager.cursors.space!.isDown || this.inputManager.attackKey!.isDown;
         let isCrouching = this.inputManager.cursors.down!.isDown || this.inputManager.crouchKey!.isDown;
-
-        if (player.currentHealth <= 0 && !player.isDead) {
-            this.physics.world.gravity.y = 0;
-            player.play(player.dyingKey, true);
-            return;
-        }
 
         if (player.getCurrentAnimation() === player.attackKey || player.getCurrentAnimation() === player.jumpKey) return;
 
