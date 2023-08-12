@@ -74,7 +74,7 @@ export default class BaseScene extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, this.width, 800);
         
         // Add Lv. # to the top right corner of the camera
-        this.level = this.add.text(this.cameras.main.width - 70, 10, `Lv. ${this.levelNumber}`, {
+        this.level = this.add.text(this.cameras.main.width - 80, 20, `Lv. ${this.levelNumber}`, {
             fontSize: 20,
             color: '#ffffff',
             align: 'center',
@@ -169,9 +169,9 @@ export default class BaseScene extends Phaser.Scene {
         if (this.player && this.player3)
             functions.handleInteract(this, this.player, this.player3, this.inputManager.interactKey!);
         
-        // if this.level not in camera top right corner, move it there
-        if (this.level!.x != this.cameras.main.width - 90 || this.level!.y != 30)
-            this.level!.setPosition(this.cameras.main.width - 90, 30);
+        // if Lv. # not in camera top right corner, move it there
+        if (this.level!.x != this.cameras.main.width - 80 || this.level!.y != 20)
+            this.level!.setPosition(this.cameras.main.width - 80, 20);
 
         // if pauseMenu width not equal to camera width, set it to camera width
         if (this.pauseBackground!.width != this.cameras.main.width)
@@ -206,18 +206,6 @@ export default class BaseScene extends Phaser.Scene {
                     }
                 });
             }, [], this);            
-        }
-
-        // Set Follow
-        if (this.player!.isActive()) {
-            this.player2!.follow(this.player!, true);
-            this.player3!.follow(this.player!, false);
-        } else if (this.player2!.isActive()) {
-            this.player!.follow(this.player2!, false);
-            this.player3!.follow(this.player2!, false);
-        } else if (this.player3!.isActive()) {
-            this.player!.follow(this.player3!, false);
-            this.player2!.follow(this.player3!, true);
         }
 
         // any other functions update logic...
@@ -523,6 +511,18 @@ export default class BaseScene extends Phaser.Scene {
 
         // if an enemy falls off the world, reset their position
         if (this.enemies) for (let enemy of this.enemies) if (enemy.y > this.height + 65) enemy.y = 660;
+
+        // Set Follow
+        if (this.player!.isActive()) {
+            this.player2!.follow(this.player!, true);
+            this.player3!.follow(this.player!, false);
+        } else if (this.player2!.isActive()) {
+            this.player!.follow(this.player2!, false);
+            this.player3!.follow(this.player2!, false);
+        } else if (this.player3!.isActive()) {
+            this.player!.follow(this.player3!, false);
+            this.player2!.follow(this.player3!, true);
+        }
 
         // check scene transition
         this.checkSceneTransition();
