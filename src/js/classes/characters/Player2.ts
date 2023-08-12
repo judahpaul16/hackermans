@@ -8,11 +8,6 @@ export default class Player2 extends Player {
     public maxHealth: number = 100;
     public currentHealth: number = 100;
     public isDead: boolean = false;
-    public healthBarFill!: Phaser.GameObjects.Graphics;
-    public healthBarFrame!: Phaser.GameObjects.Image;
-    public avatar!: Phaser.GameObjects.Image;
-    public amask!: Phaser.GameObjects.Graphics;
-    public hudContainer!: Phaser.GameObjects.Container;
     private shootSound: Phaser.Sound.BaseSound | null = null;
     public standKey: string = 'standingP2';
     public walkKey: string = 'walkingP2';

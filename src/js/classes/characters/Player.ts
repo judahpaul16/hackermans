@@ -13,11 +13,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public maxHealth: number = 100;
     public currentHealth: number = 100;
     public isDead: boolean = false;
-    public healthBarFill!: Phaser.GameObjects.Graphics;
-    public healthBarFrame!: Phaser.GameObjects.Image;
-    public avatar!: Phaser.GameObjects.Image;
-    public amask!: Phaser.GameObjects.Graphics;
-    public hudContainer!: Phaser.GameObjects.Container;
+    public healthBarFill?: Phaser.GameObjects.Graphics;
+    public healthBarFrame?: Phaser.GameObjects.Image;
+    public avatar?: Phaser.GameObjects.Image;
+    public amask?: Phaser.GameObjects.Graphics;
+    public hudContainer?: Phaser.GameObjects.Container;
     public isFollowing: boolean = true;
     public standKey: string = 'standingP1';
     public walkKey: string = 'walkingP1';

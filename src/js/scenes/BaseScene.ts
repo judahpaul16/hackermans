@@ -23,8 +23,6 @@ export default class BaseScene extends Phaser.Scene {
     protected chatBubble?: Phaser.GameObjects.Sprite;
     protected dialogueText?: Phaser.GameObjects.Text;
     protected isInteracting: boolean = false;
-    protected npcHealthBarCreated: boolean = false;
-    protected enemyHealthBarCreated: boolean = false;
     protected width: number = 3000;
     protected height: number = 650;
     // scale factors
@@ -32,6 +30,10 @@ export default class BaseScene extends Phaser.Scene {
     protected sfactor2: number = 1.1;
     protected sfactor3: number = 0.9;
     protected sfactor4: number = 0.9;
+    // distance between active player and nearest NPC
+    protected distanceA: number = 100000;
+    // distance between active player and nearest Enemy
+    protected distanceB: number = 100000;
     protected backgroundImages?: { [key: string]: Phaser.GameObjects.TileSprite } = {};
     protected clouds: Phaser.GameObjects.Sprite[] = [];
     protected platforms?: Phaser.Physics.Arcade.StaticGroup;
@@ -307,20 +309,29 @@ export default class BaseScene extends Phaser.Scene {
         functions.createHealthBar(this, this.player2!);
         functions.createHealthBar(this, this.player3!);
 
+        // Set active player if not already set
+        if (!this.game.registry.get('activePlayer')) {
+            this.game.registry.set('activePlayer', this.player);
+        } else {
+            for (let player of [this.player, this.player2, this.player3]) {
+                if (player!.name === this.game.registry.get('activePlayer').name) {
+                    this.game.registry.set('activePlayer', player);
+                }
+            }
+        }
+        
         // Calculate distance between the active player and nearest NPC
         if (this.npcs) {
             for (let npc of this.npcs) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
-                    let distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
-                    if (distanceA <= 500 && !this.npcHealthBarCreated) {
+                    this.distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
+                    if (this.distanceA <= 500) {
                         // Create NPC health bar
                         functions.createHealthBar(this, npc!);
-                        this.npcHealthBarCreated = true;
-                    } else if (distanceA > 500 && this.npcHealthBarCreated) {
+                    } else if (this.distanceA > 500) {
                         // Destroy NPC health bar
                         functions.destroyHealthBar(npc!);
-                        this.npcHealthBarCreated = false;
                     }
                 }
             }
@@ -330,15 +341,13 @@ export default class BaseScene extends Phaser.Scene {
             for (let enemy of this.enemies) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
-                    let distanceB = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, enemy.x, enemy.y);
-                    if (distanceB <= 500 && !this.enemyHealthBarCreated) {
+                    this.distanceB = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, enemy.x, enemy.y);
+                    if (this.distanceB <= 500) {
                         // Create Enemy health bar
                         functions.createHealthBar(this, enemy!);
-                        this.enemyHealthBarCreated = true;
-                    } else if (distanceB > 500 && this.enemyHealthBarCreated) {
+                    } else if (this.distanceB > 500) {
                         // Destroy Enemy health bar
                         functions.destroyHealthBar(enemy!);
-                        this.enemyHealthBarCreated = false;
                     }
                 }
             }
@@ -401,7 +410,7 @@ export default class BaseScene extends Phaser.Scene {
         }
     }
 
-    updatePlayer(player: Player) {
+    updatePlayer(player: Player | Player2 | Player3) {
         if (player.isDead) return;
         if (this.inputManager.isInputDisabled()) return;
 
@@ -420,17 +429,16 @@ export default class BaseScene extends Phaser.Scene {
             for (let npc of this.npcs) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
-                    let distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
-                    if (distanceA <= 500 && !this.npcHealthBarCreated) {
+                    this.distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
+                    if (this.distanceA <= 500) {
                         // Create NPC health bar
                         functions.createHealthBar(this, npc!);
-                        this.npcHealthBarCreated = true;
-                    } else if (distanceA > 500 && this.npcHealthBarCreated) {
+                    } else if (this.distanceA > 500) {
                         // Destroy NPC health bar
                         functions.destroyHealthBar(npc!);
-                        this.npcHealthBarCreated = false;
                     }
                 }
+                console.log(this.distanceA)
             }
         }
         // Calculate distance between the active player and nearest Enemy
@@ -438,17 +446,16 @@ export default class BaseScene extends Phaser.Scene {
             for (let enemy of this.enemies) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
-                    let distanceB = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, enemy.x, enemy.y);
-                    if (distanceB <= 500 && !this.enemyHealthBarCreated) {
+                    this.distanceB = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, enemy.x, enemy.y);
+                    if (this.distanceB <= 500) {
                         // Create Enemy health bar
                         functions.createHealthBar(this, enemy!);
-                        this.enemyHealthBarCreated = true;
-                    } else if (distanceB > 500 && this.enemyHealthBarCreated) {
+                    } else if (this.distanceB > 500) {
                         // Destroy Enemy health bar
                         functions.destroyHealthBar(enemy!);
-                        this.enemyHealthBarCreated = false;
                     }
                 }
+                console.log(this.distanceB)
             }
         }
 
@@ -495,8 +502,6 @@ export default class BaseScene extends Phaser.Scene {
         if (isAttacking) {
             player.attack();
         }
-        
-
 
         // if player falls off the world, reset their position
         if (this.player!.y > this.height + 65) {
@@ -613,19 +618,19 @@ export default class BaseScene extends Phaser.Scene {
         if (activePlayer) {
             // if player moves beyond the right edge of the world, start the next scene
             if (activePlayer!.x > this.width) {
-                this.dg!.destroy();
+                if (this.dg) this.dg.destroy();
                 this.scale.off('resize', this.resizeCallback);
-                this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) + 1).toString()));
                 this.game.registry.set('previousScene', this.scene.key);
+                this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) + 1).toString()));
             }
 
             // if player moves beyond the left edge of the world, start the previous scene
             if (this.scene.key !== 'GameScene1'){
                 if (activePlayer!.x < 0) {
-                    this.dg!.destroy();
+                    if (this.dg) this.dg.destroy();
                     this.scale.off('resize', this.resizeCallback);
-                    this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) - 1).toString()));
                     this.game.registry.set('previousScene', this.scene.key);
+                    this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) - 1).toString()));
                 }
             }
         }

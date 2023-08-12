@@ -164,116 +164,125 @@ export function updateClouds(scene: any) {
 }
 
 export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy) {
-    // Determine type of character
-    const isP2 = player instanceof Player2;
-    const isP3 = player instanceof Player3;
-    const isNPC = player instanceof NPC;
-    const isEnemy = player instanceof Enemy;
-    const avatarOffsetX = isNPC || isEnemy ? 255 : 0;
-    const fillOffsetX = isNPC || isEnemy ? -15 : 0;
+    if (player && !player.avatar && !player.amask && !player.healthBarFrame && !player.healthBarFill && !player.hudContainer) {
+        // Determine type of character
+        const isP2 = player instanceof Player2;
+        const isP3 = player instanceof Player3;
+        const isNPC = player instanceof NPC;
+        const isEnemy = player instanceof Enemy;
+        const avatarOffsetX = isNPC || isEnemy ? 255 : 0;
+        const fillOffsetX = isNPC || isEnemy ? -15 : 0;
 
-    // Adjust the x-position of the health bar for P3 & Enemy
-    let xOffset = isP2 ? 340 : 0;
-    if (isEnemy || isNPC) xOffset = 1140;
+        // Adjust the x-position of the health bar for P3 & Enemy
+        let xOffset = isP2 ? 340 : 0;
+        if (isEnemy || isNPC) xOffset = 1140;
 
-    // Adjust the y-position of the health bar for P2
-    let yOffset = isP3 ? 100 : 0;
+        // Adjust the y-position of the health bar for P2
+        let yOffset = isP3 ? 100 : 0;
 
-    // Adding the avatar image at the top left corner with xOffset
-    let someAvatar = isP2 ? 'p2Avatar' : 'avatar';
-    if (isP3) someAvatar = 'p3Avatar';
-    if (isNPC) someAvatar = 'npcAvatar';
-    if (isEnemy) someAvatar = 'enemyAvatar';
-    player.avatar = scene.add.image(100 + xOffset + avatarOffsetX, 100 + yOffset, someAvatar);
+        // Adding the avatar image at the top left corner with xOffset
+        let someAvatar = isP2 ? 'p2Avatar' : 'avatar';
+        if (isP3) someAvatar = 'p3Avatar';
+        if (isNPC) someAvatar = 'npcAvatar';
+        if (isEnemy) someAvatar = 'enemyAvatar';
+        player.avatar = scene.add.image(100 + xOffset + avatarOffsetX, 100 + yOffset, someAvatar);
 
-    // Creating a circular mask using a Graphics object
-    player.amask = scene.make.graphics({});
-    player.amask.fillCircle(100 + xOffset + avatarOffsetX, 100 + yOffset, 30); // X, Y, radius with xOffset
+        // Creating a circular mask using a Graphics object
+        player.amask = scene.make.graphics({});
+        player.amask.fillCircle(100 + xOffset + avatarOffsetX, 100 + yOffset, 30); // X, Y, radius with xOffset
 
-    // Applying the mask to the avatar
-    player.avatar.setMask(player.amask.createGeometryMask());
-    player.amask.setScrollFactor(0);
+        // Applying the mask to the avatar
+        player.avatar.setMask(player.amask.createGeometryMask());
+        player.amask.setScrollFactor(0);
 
-    // Scale the avatar
-    const avatarScale = 0.6;
-    player.avatar.setScale(avatarScale);
+        // Scale the avatar
+        const avatarScale = 0.6;
+        player.avatar.setScale(avatarScale);
 
-    // Get the scaled height of the avatar
-    const avatarHeight = player.avatar.height * avatarScale;
+        // Get the scaled height of the avatar
+        const avatarHeight = player.avatar.height * avatarScale;
 
-    // Background of the health bar (position it relative to avatar, with the possible offset for P2)
-    let frameKey = 'health-bar-frame';
-    if (isP2) {
-        frameKey = 'health-bar-frame-alt';
-    } else if (isP3) {
-        frameKey = 'health-bar-frame-alt-2';
-    } else if (isNPC) {
-        frameKey = 'health-bar-frame-npc';
-    } else if (isEnemy) {
-        frameKey = 'health-bar-frame-enemy';
-    }
-    (isNPC || isEnemy) ?
-        player.healthBarFrame = scene.add.image(player.avatar.x - avatarOffsetX, player.avatar.y - 35, frameKey).setOrigin(0)
-    :
-        player.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, frameKey).setOrigin(0);
-    
-    // Scale the healthBarFrame to match the avatar's height
-    const healthBarFrameScale = avatarHeight / player!.healthBarFrame.height;
-    player!.healthBarFrame.setScale(healthBarFrameScale);
+        // Background of the health bar (position it relative to avatar, with the possible offset for P2)
+        let frameKey = 'health-bar-frame';
+        if (isP2) {
+            frameKey = 'health-bar-frame-alt';
+        } else if (isP3) {
+            frameKey = 'health-bar-frame-alt-2';
+        } else if (isNPC) {
+            frameKey = 'health-bar-frame-npc';
+        } else if (isEnemy) {
+            frameKey = 'health-bar-frame-enemy';
+        }
+        (isNPC || isEnemy) ?
+            player.healthBarFrame = scene.add.image(player.avatar.x - avatarOffsetX, player.avatar.y - 35, frameKey).setOrigin(0)
+        :
+            player.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, frameKey).setOrigin(0);
+        
+        // Scale the healthBarFrame to match the avatar's height
+        const healthBarFrameScale = avatarHeight / player.healthBarFrame.height;
+        player.healthBarFrame.setScale(healthBarFrameScale);
 
-    // Foreground/fill of the health bar (same position as background)
-    // Create a Graphics object
-    player!.healthBarFill = scene.add.graphics({ fillStyle: { color: 0x00ff00 } });
-    player!.healthBarFill.x += fillOffsetX;
+        // Foreground/fill of the health bar (same position as background)
+        // Create a Graphics object
+        player.healthBarFill = scene.add.graphics({ fillStyle: { color: 0x00ff00 } });
+        player.healthBarFill.x += fillOffsetX;
 
-    // Determine the width based on the current health percentage
-    let fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
+        // Determine the width based on the current health percentage
+        let fillWidth = (player.currentHealth / player.maxHealth) * 265;
 
-    // Draw a rectangle representing the fill
-    player!.healthBarFill.fillRect(player!.healthBarFrame.x + 20, player!.healthBarFrame.y + 20, fillWidth, 30);
+        // Draw a rectangle representing the fill
+        player.healthBarFill.fillRect(player.healthBarFrame.x + 20, player.healthBarFrame.y + 20, fillWidth, 30);
 
-    player!.healthBarFill = updateHealthBar(scene, player);
-            
-    // Set the depth of the avatar to ensure it's rendered in front of the frame
-    player.avatar.setDepth(5);
-    // Set the depth of the health bar to ensure it's rendered in behind the frame
-    player!.healthBarFrame.setDepth(4);
-    player!.healthBarFill.setDepth(3);
+        player.healthBarFill = updateHealthBar(scene, player);
+                
+        // Set the depth of the avatar to ensure it's rendered in front of the frame
+        player.avatar.setDepth(5);
+        // Set the depth of the health bar to ensure it's rendered in behind the frame
+        player.healthBarFrame.setDepth(4);
+        if (player.healthBarFill) player.healthBarFill.setDepth(3);
 
-    // Add the player's name above the avatar
-    let name = null;
-    (isNPC || isEnemy) ?
-        name = scene.add.text(player.avatar.x - 130, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' })
-    :
-        name = scene.add.text(player.avatar.x + 36, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' });
+        // Add the player's name above the avatar
+        let name = null;
+        (isNPC || isEnemy) ?
+            name = scene.add.text(player.avatar.x - 130, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' })
+        :
+            name = scene.add.text(player.avatar.x + 36, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' });
 
-    // Check if the HUD elements are defined before creating the container
-    if (player!.avatar && player!.healthBarFrame && player!.healthBarFill) {
-        player!.hudContainer = scene.add.container(0, 0, [player!.healthBarFill, player!.avatar, player!.healthBarFrame, name]);
-        player!.hudContainer.setDepth(2);        
+        // Check if the HUD elements are defined before creating the container
+        if (player.avatar && player.healthBarFrame && player.healthBarFill) {
+            player.hudContainer = scene.add.container(0, 0, [player.healthBarFill, player.avatar, player.healthBarFrame, name]);
+            player.hudContainer.setDepth(2);        
+        }
     }
 }
 
 export function updateHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy) {
-    // Update the HUD container's position to match the camera's scroll
-    if (player!.hudContainer && scene.cameras.main)
-        player!.hudContainer.setPosition(scene.cameras.main.scrollX, scene.cameras.main.scrollY);
-    // Update the width of the health bar fill
-    let fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
-    if (player!.healthBarFill) {
-        player!.healthBarFill.clear();
-        player!.healthBarFill.fillRect(player!.healthBarFrame.x + 20, player!.healthBarFrame.y + 20, fillWidth, 30);
+    if (player && player.healthBarFill && player.healthBarFrame && player.hudContainer) {
+        // Update the HUD container's position to match the camera's scroll
+        if (player.hudContainer && scene.cameras.main)
+            player.hudContainer.setPosition(scene.cameras.main.scrollX, scene.cameras.main.scrollY);
+        // Update the width of the health bar fill
+        let fillWidth = (player.currentHealth / player.maxHealth) * 265;
+        if (player.healthBarFill) {
+            player.healthBarFill.clear();
+            player.healthBarFill.fillRect(player.healthBarFrame.x + 20, player.healthBarFrame.y + 20, fillWidth, 30);
+        }
     }
-    return player!.healthBarFill;
+    return player.healthBarFill;
 }
 
 export function destroyHealthBar(player: Player | Player2 | Player3 | NPC | Enemy) {
     if (player.avatar && player.amask && player.healthBarFrame && player.healthBarFill && player.hudContainer) {
         player.avatar.destroy();
+        player.avatar = undefined;
         player.amask.destroy();
+        player.amask = undefined;
         player.healthBarFrame.destroy();
+        player.healthBarFrame = undefined;
         player.healthBarFill.destroy();
+        player.healthBarFill = undefined;
         player.hudContainer.destroy();
+        player.hudContainer = undefined;
     }
 }
 
