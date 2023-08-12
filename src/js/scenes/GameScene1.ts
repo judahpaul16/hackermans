@@ -39,7 +39,7 @@ export default class GameScene1 extends BaseScene {
 
         // NPC setup
         this.npcs = [
-            new NPC(this, 2750, 600, 'npc', 'standingNPC1').setFlipX(true),
+            new NPC(this, 2750, 600, 'npc').setFlipX(true).play('standingNPC1', true),
         ];
 
         // Super

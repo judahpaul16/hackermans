@@ -426,7 +426,6 @@ export default class BaseScene extends Phaser.Scene {
                         functions.destroyHealthBar(npc!);
                     }
                 }
-                console.log(this.distanceA)
             }
         }
         // Calculate distance between the active player and nearest Enemy
@@ -443,7 +442,6 @@ export default class BaseScene extends Phaser.Scene {
                         functions.destroyHealthBar(enemy!);
                     }
                 }
-                console.log(this.distanceB)
             }
         }
 

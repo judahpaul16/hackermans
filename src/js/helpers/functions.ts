@@ -358,10 +358,10 @@ export function setupAnimations(scene: any) {
     // Define animations
     const animations = [
         { key: 'coinAnimation', frames: scene.anims.generateFrameNames('coin', { prefix: 'coin', start: 1, end: 8, zeroPad: 2 }), frameRate: 15, repeat: -1 },
-        { key: 'logoAnimation', frames: scene.anims.generateFrameNames('logo', { prefix: 'logo_', start: 1, end: 31, zeroPad: 4 }), frameRate: 15, repeat: -1 },
+        { key: 'logoAnimation', frames: scene.anims.generateFrameNames('logo', { prefix: 'logo_', start: 1, end: 29, zeroPad: 4 }), frameRate: 15, repeat: -1 },
         { key: 'cloud', frames: scene.anims.generateFrameNames('cloud', { prefix: 'cloud', start: 1, end: 4, zeroPad: 4 }), frameRate: 7, repeat: -1 },
-        { key: 'chat_bubble', frames: scene.anims.generateFrameNames('chat_bubble', { prefix: 'chat', start: 1, end: 4, zeroPad: 2 }), frameRate: 7, repeat: 0 },
-        { key: 'chat_bubble_reverse', frames: scene.anims.generateFrameNames('chat_bubble', { prefix: 'chat', start: 1, end: 4, zeroPad: 2 }).reverse(), frameRate: 7, repeat: 0 },
+        { key: 'chat_bubble', frames: scene.anims.generateFrameNames('chat_bubble', { prefix: 'chat', start: 0, end: 3, zeroPad: 2 }), frameRate: 7, repeat: 0 },
+        { key: 'chat_bubble_reverse', frames: scene.anims.generateFrameNames('chat_bubble', { prefix: 'chat', start: 1, end: 3, zeroPad: 2 }).reverse(), frameRate: 7, repeat: 0 },
         // Player 1
         { key: 'standingP1', frames: scene.anims.generateFrameNames('player', { prefix: 'standing', start: 1, end: 11, zeroPad: 4 }), frameRate: 3, repeat: -1 },
         { key: 'walkingP1', frames: scene.anims.generateFrameNames('player', { prefix: 'walk', start: 1, end: 7, zeroPad: 4 }), frameRate: 10, repeat: -1 },
@@ -397,19 +397,19 @@ export function setupAnimations(scene: any) {
         { key: 'projectile-1', frames: scene.anims.generateFrameNames('projectile-1', { prefix: 'shot-', start: 1, end: 3 }), frameRate: 3, repeat: -1 },
         { key: 'hitSprite1', frames: scene.anims.generateFrameNames('hitSprite1', { prefix: 'hits-1-', start: 1, end: 5 }), frameRate: 10, repeat: 0 },
         // NPC 1
-        { key: 'walkingNPC1', frames: scene.anims.generateFrameNames('npc1', { prefix: 'walk-', start: 1, end: 16 }), frameRate: 10, repeat: -1 },
-        { key: 'runningNPC1', frames: scene.anims.generateFrameNames('npc1', { prefix: 'run-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },
-        { key: 'jumpingNPC1', frames: scene.anims.generateFrameNames('npc1', { prefix: 'jump-', start: 1, end: 4 }), frameRate: 7, repeat: 0 },
-        { key: 'shootNPC1', frames: scene.anims.generateFrameNames('npc1', { prefix: 'shoot-', start: 1, end: 1 }), frameRate: 10, repeat: 0 },
-        { key: 'standingNPC1', frames: scene.anims.generateFrameNames('npc1', { prefix: 'idle-', start: 1, end: 4 }), frameRate: 6, repeat: -1 },
-        { key: 'dyingNPC1', frames: scene.anims.generateFrameNames('npc1', { prefix: 'jump-', start: 3, end: 3 }), frameRate: 1, repeat: 0 },
+        { key: 'walkingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'walk', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
+        { key: 'runningNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'run', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
+        { key: 'jumpingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'jump', start: 1, end: 7, zeroPad: 4  }), frameRate: 7, repeat: 0 },
+        { key: 'shootNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'shoot', start: 1, end: 1, zeroPad: 4  }), frameRate: 10, repeat: 0 },
+        { key: 'standingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'standing', start: 1, end: 12, zeroPad: 4  }), frameRate: 4, repeat: -1 },
+        { key: 'dyingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'jump', start: 3, end: 3, zeroPad: 4  }), frameRate: 1, repeat: 0 },
         // Enemy 1
-        { key: 'walkingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'walking-', start: 1, end: 16 }), frameRate: 10, repeat: -1 },
-        { key: 'runningE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'running-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },
-        { key: 'jumpingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'jumping-', start: 1, end: 4 }), frameRate: 7, repeat: 0 },
-        { key: 'shootE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'shoot-', start: 1, end: 1 }), frameRate: 10, repeat: 0 },
-        { key: 'standingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'standing-', start: 1, end: 4 }), frameRate: 6, repeat: -1 },
-        { key: 'dyingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'jumping-', start: 3, end: 3 }), frameRate: 1, repeat: 0 },
+        { key: 'walkingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'walk', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
+        { key: 'runningE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'run', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
+        { key: 'jumpingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'jump', start: 1, end: 7, zeroPad: 4  }), frameRate: 7, repeat: 0 },
+        { key: 'shootE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'shoot', start: 1, end: 1, zeroPad: 4  }), frameRate: 10, repeat: 0 },
+        { key: 'standingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'standing', start: 1, end: 12, zeroPad: 4  }), frameRate: 4, repeat: -1 },
+        { key: 'dyingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'jump', start: 3, end: 3, zeroPad: 4  }), frameRate: 1, repeat: 0 },
     ];
 
     // Create animations
