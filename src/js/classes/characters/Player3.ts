@@ -56,7 +56,7 @@ export default class Player3 extends Player {
 
     public jump() {
         if (this && this.body!.touching.down) {
-            this.setVelocityY(-450);
+            this.setVelocityY(-400);
             this.play(this.jumpKey, true);
         }
     }
@@ -83,6 +83,10 @@ export default class Player3 extends Player {
                 this.shootSound.play({ volume: 0.5, loop: false });
             }
         }
+    }
+
+    public specialAttack() {
+        return;
     }
 
     private emitProjectile() {

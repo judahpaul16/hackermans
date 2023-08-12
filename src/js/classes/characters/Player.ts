@@ -146,7 +146,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     public jump() {
         if (this && this.body!.touching.down) {
-            this.setVelocityY(-450);
+            this.setVelocityY(-400);
             this.play(this.jumpKey, true);
         }
     }
@@ -155,6 +155,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if (this)
             this.play(this.attackKey, true)
             this.scene.sound.play(this.attackKey, { volume: 0.5, loop: false });
+    }
+
+    public specialAttack() {
+        return;
     }
     
     public follow(

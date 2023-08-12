@@ -14,6 +14,8 @@ class InputManager {
     public switchKey2!: Phaser.Input.Keyboard.Key;
     public switchKey3!: Phaser.Input.Keyboard.Key;
     public attackKey!: Phaser.Input.Keyboard.Key;
+    public specialAttackKey1!: Phaser.Input.Keyboard.Key;
+    public specialAttackKey2!: Phaser.Input.Keyboard.Key;
 
     public keysDisabled: boolean = false;
 
@@ -35,6 +37,8 @@ class InputManager {
         this.switchKey2 = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
         this.switchKey3 = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.THREE);
         this.attackKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.DELETE);
+        this.specialAttackKey1 = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.G);
+        this.specialAttackKey2 = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.INSERT);
     }
 
     public static getInstance(scene?: Phaser.Scene): InputManager {
