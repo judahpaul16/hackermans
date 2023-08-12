@@ -164,7 +164,7 @@ export function updateClouds(scene: any) {
 }
 
 export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy) {
-    // Determine if the character is an Player2
+    // Determine type of character
     const isP2 = player instanceof Player2;
     const isP3 = player instanceof Player3;
     const isNPC = player instanceof NPC;
@@ -254,7 +254,7 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
     }
 }
 
-export function updateHealthBar(scene: Phaser.Scene, player: Player) {
+export function updateHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy) {
     // Update the HUD container's position to match the camera's scroll
     if (player!.hudContainer && scene.cameras.main)
         player!.hudContainer.setPosition(scene.cameras.main.scrollX, scene.cameras.main.scrollY);

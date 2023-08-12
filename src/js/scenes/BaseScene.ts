@@ -128,11 +128,12 @@ export default class BaseScene extends Phaser.Scene {
                 this.dg.domElement.style.display = this.dg.domElement.style.display === 'none' ? '' : 'none';
             }
         });
+        
+        // Reset players if 'R' key is pressed
+        this.inputManager.resetKey.on('down', () => { this.resetPlayers() });
 
-        // Add pause key listener
-        this.inputManager.pauseKey.on('down', () => {
-            this.togglePauseMenu();
-        });
+        // Pause game if 'P' key is pressed
+        this.inputManager.pauseKey.on('down', () => { this.togglePauseMenu(); });
 
         // Debugging
         functions.initializeDebugGUI(this);
@@ -152,10 +153,6 @@ export default class BaseScene extends Phaser.Scene {
         if (this.player) if (this.player.isActive()) this.updatePlayer(this.player);
         if (this.player2) if (this.player2.isActive()) this.updatePlayer(this.player2);
         if (this.player3) if (this.player3.isActive()) this.updatePlayer(this.player3);
-        
-        if (this.inputManager.resetKey.isDown) {
-            this.resetPlayers();
-        }
 
         // Make chat bubble follow Player 3
         if (this.player3) {
@@ -166,34 +163,24 @@ export default class BaseScene extends Phaser.Scene {
             }
         }
 
-        if (this.player && this.player3) {
+        // Handle Interactions
+        if (this.player && this.player3)
             functions.handleInteract(this, this.player, this.player3, this.inputManager.interactKey!);
-        }
         
         // if this.level not in camera top right corner, move it there
-        if (this.level!.x != this.cameras.main.width - 90 || this.level!.y != 30) {
+        if (this.level!.x != this.cameras.main.width - 90 || this.level!.y != 30)
             this.level!.setPosition(this.cameras.main.width - 90, 30);
-        }
 
         // if pauseMenu width not equal to camera width, set it to camera width
-        if (this.pauseBackground!.width != this.cameras.main.width) {
+        if (this.pauseBackground!.width != this.cameras.main.width)
             this.pauseBackground!.width = this.cameras.main.width;
-        }
 
         // Update health bars only if created
         if (this.player) functions.updateHealthBar(this, this.player);
         if (this.player2) functions.updateHealthBar(this, this.player2);
         if (this.player3) functions.updateHealthBar(this, this.player3);
-        if (this.npcs) {
-            for (let npc of this.npcs) {
-                functions.updateHealthBar(this, npc);
-            }
-        }
-        if (this.enemies) {
-            for (let enemy of this.enemies) {
-                functions.updateHealthBar(this, enemy);
-            }
-        }
+        if (this.npcs) for (let npc of this.npcs) functions.updateHealthBar(this, npc);
+        if (this.enemies) for (let enemy of this.enemies) functions.updateHealthBar(this, enemy);
 
         // if you die, it's game over
         if (this.player!.currentHealth <= 0) {
@@ -320,7 +307,7 @@ export default class BaseScene extends Phaser.Scene {
         functions.createHealthBar(this, this.player2!);
         functions.createHealthBar(this, this.player3!);
 
-        // Calculate distance between the active player and nearest NPC or Enemy to create health bar
+        // Calculate distance between the active player and nearest NPC
         if (this.npcs) {
             for (let npc of this.npcs) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
@@ -338,7 +325,7 @@ export default class BaseScene extends Phaser.Scene {
                 }
             }
         }
-
+        // Calculate distance between the active player and nearest Enemy
         if (this.enemies) {
             for (let enemy of this.enemies) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
@@ -527,22 +514,10 @@ export default class BaseScene extends Phaser.Scene {
         }
 
         // if an npc falls off the world, reset their position
-        if (this.npcs) {
-            for (let npc of this.npcs) {
-                if (npc.y > this.height + 65) {
-                    npc.y = 660;
-                }
-            }
-        }
+        if (this.npcs) for (let npc of this.npcs) if (npc.y > this.height + 65) npc.y = 660;
 
         // if an enemy falls off the world, reset their position
-        if (this.enemies) {
-            for (let enemy of this.enemies) {
-                if (enemy.y > this.height + 65) {
-                    enemy.y = 660;
-                }
-            }
-        }
+        if (this.enemies) for (let enemy of this.enemies) if (enemy.y > this.height + 65) enemy.y = 660;
 
         // check scene transition
         this.checkSceneTransition();
@@ -639,6 +614,7 @@ export default class BaseScene extends Phaser.Scene {
             // if player moves beyond the right edge of the world, start the next scene
             if (activePlayer!.x > this.width) {
                 this.dg!.destroy();
+                this.scale.off('resize', this.resizeCallback);
                 this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) + 1).toString()));
                 this.game.registry.set('previousScene', this.scene.key);
             }
@@ -647,6 +623,7 @@ export default class BaseScene extends Phaser.Scene {
             if (this.scene.key !== 'GameScene1'){
                 if (activePlayer!.x < 0) {
                     this.dg!.destroy();
+                    this.scale.off('resize', this.resizeCallback);
                     this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) - 1).toString()));
                     this.game.registry.set('previousScene', this.scene.key);
                 }
@@ -718,17 +695,19 @@ export default class BaseScene extends Phaser.Scene {
         this.pauseMenu.setVisible(false);
 
         // Input for clicking the pause button
-        this.pauseButton.setInteractive().on('pointerdown', () => {
-            this.togglePauseMenu();
-        });
+        this.pauseButton.setInteractive().on('pointerdown', () => { this.togglePauseMenu(); });
 
         // on window resize, update pause menu
-        this.scale.on('resize', (gameSize: Phaser.Structs.Size) => {
-            // Update pause menu
-            this.pauseMenuSettings!.setPosition(gameSize.width / 2, gameSize.height / 2 - 250);
-            this.pauseMenuControls!.setPosition(gameSize.width / 2, gameSize.height * 2 / 3 + 100);
-            this.pauseBackground!.setSize(gameSize.width, gameSize.height);
-        });
+        this.scale.on('resize', this.resizeCallback, this);
+    }
+
+    public resizeCallback (gameSize: Phaser.Structs.Size) {
+        // Update pause menu
+        if (this.pauseMenu && this.pauseMenuSettings && this.pauseMenuControls && this.pauseBackground) {
+            this.pauseMenuSettings.setPosition(gameSize.width / 2, gameSize.height / 2 - 250);
+            this.pauseMenuControls.setPosition(gameSize.width / 2, gameSize.height * 2 / 3 + 100);
+            this.pauseBackground.setSize(gameSize.width, gameSize.height);
+        }
     }
 
     // other functions methods...

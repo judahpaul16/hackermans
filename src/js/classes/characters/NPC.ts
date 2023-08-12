@@ -4,7 +4,7 @@ import Player from './Player';
 export default class NPC extends Player {
     public name: string = 'Anonymusk';
     public currentAnimation?: string;
-    public scale = 1.9;
+    public scale = 1.8;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
     public isDead: boolean = false;
