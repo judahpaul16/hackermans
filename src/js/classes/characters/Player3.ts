@@ -93,7 +93,7 @@ export default class Player3 extends Player {
         if (this.scene && this.scene.game && this.scene.game.registry   ) {
             // Create a projectile at player's position
             let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
-            let y = (this.body!.velocity.x > 0) ? this.y : this.y - 42;
+            let y = (this.body!.velocity.x != 0) ? this.y : this.y - 42;
             let projectile = projectileGroup.create(this.x, y, 'projectile-1').setGravityY(0).setVelocityY(0).setScale(1.5);
             projectile.flipX = this.flipX;
             projectile.setVelocityX(this.flipX ? -2250 : 2250); // Set velocity based on player's direction
