@@ -308,32 +308,60 @@ export default class BaseScene extends Phaser.Scene {
             }
         }
         
-        // Calculate distance between the active player and nearest NPC
+        // Setup NPCs
         if (this.npcs) {
             for (let npc of this.npcs) {
+                // Create an interact hint only if it doesn't already exist
+                if (!npc.interactHint) {                    
+                    npc.interactHint = this.add.text(npc.x - 30, npc.y - 15, 'Press [F]', {
+                        fontSize: 15,
+                        color: '#ffffff',
+                        align: 'center',
+                        stroke: '#000000',
+                        strokeThickness: 3
+                    }).setDepth(10).setVisible(false);                    
+                    this.add.tween({
+                        targets: npc.interactHint,
+                        y: npc.y - 35,
+                        duration: 1500,
+                        ease: 'Linear',
+                        yoyo: true,
+                        repeat: -1
+                    });
+                    this.add.tween({
+                        targets: npc.interactHint,
+                        alpha: 0,
+                        duration: 1000,
+                        ease: 'Linear',
+                        yoyo: true,
+                        repeat: -1
+                    });
+                }
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
                     this.distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
-                    if (this.distanceA <= 500) {
+                    if (this.distanceA <= 600) {
                         // Create NPC health bar
                         functions.createHealthBar(this, npc!);
-                    } else if (this.distanceA > 500) {
+                        npc.interactHint.setVisible(true); // Show the interact hint
+                    } else if (this.distanceA > 600) {
                         // Destroy NPC health bar
                         functions.destroyHealthBar(npc!);
+                        npc.interactHint.setVisible(false); // Hide the interact hint
                     }
                 }
             }
-        }
-        // Calculate distance between the active player and nearest Enemy
+        }        
+        // Setup Enemies
         if (this.enemies) {
             for (let enemy of this.enemies) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
                     this.distanceB = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, enemy.x, enemy.y);
-                    if (this.distanceB <= 500) {
+                    if (this.distanceB <= 600) {
                         // Create Enemy health bar
                         functions.createHealthBar(this, enemy!);
-                    } else if (this.distanceB > 500) {
+                    } else if (this.distanceB > 600) {
                         // Destroy Enemy health bar
                         functions.destroyHealthBar(enemy!);
                     }
@@ -412,32 +440,35 @@ export default class BaseScene extends Phaser.Scene {
         if (this.player2) functions.updateHealthBar(this, this.player2);
         if (this.player3) functions.updateHealthBar(this, this.player3);
 
-        // Calculate distance between the active player and nearest NPC
+        // Update NPCs
         if (this.npcs) {
             for (let npc of this.npcs) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
                     this.distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
-                    if (this.distanceA <= 500) {
+                    if (this.distanceA <= 600) {
                         // Create NPC health bar
-                        functions.createHealthBar(this, npc!);
-                    } else if (this.distanceA > 500) {
+                        functions.createHealthBar(this, npc);
+                        npc.interactHint!.setVisible(true); // Show the interact hint
+                        npc.interactHint!.x = npc.x - 30;
+                    } else if (this.distanceA > 600) {
                         // Destroy NPC health bar
                         functions.destroyHealthBar(npc!);
+                        npc.interactHint!.setVisible(false); // Hide the interact hint
                     }
                 }
             }
         }
-        // Calculate distance between the active player and nearest Enemy
+        // Update Enemies
         if (this.enemies) {
             for (let enemy of this.enemies) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
                     this.distanceB = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, enemy.x, enemy.y);
-                    if (this.distanceB <= 500) {
+                    if (this.distanceB <= 600) {
                         // Create Enemy health bar
                         functions.createHealthBar(this, enemy!);
-                    } else if (this.distanceB > 500) {
+                    } else if (this.distanceB > 600) {
                         // Destroy Enemy health bar
                         functions.destroyHealthBar(enemy!);
                     }

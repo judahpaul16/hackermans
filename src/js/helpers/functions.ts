@@ -313,7 +313,7 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
             scene.chatBubble.destroy();
         }
 
-        const newChatBubble = scene.add.sprite(scene.player2!.x - 123, scene.player2!.y - 130, 'chat_bubble').setScale(0.34);
+        const newChatBubble = scene.add.sprite(scene.player2!.x - 123, scene.player2!.y - 130, 'chat_bubble').setScale(0.34).setDepth(11);
         newChatBubble.flipX = true;
         newChatBubble.play('chat_bubble', true);
 
@@ -326,7 +326,7 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
             newChatBubble.y - (newChatBubble.height * 0.1 / 2) - 15,
             "",
             { font: "16px", color: "#000", align: "center" }
-        );
+        ).setDepth(12);
 
         let charIndex = 0;
 
