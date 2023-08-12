@@ -50,7 +50,7 @@ export default class BaseScene extends Phaser.Scene {
     public levelNumber: number = 1;
 
     create() {
-        // Base Scene Setup
+        // Basic Scene Setup
         
         // Pause Menu setup
         this.setupPauseMenu();
@@ -72,7 +72,7 @@ export default class BaseScene extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, this.width, 800);
         
         // Add Lv. # to the top right corner of the camera
-        this.level = this.add.text(this.cameras.main.width - 80, 20, `Lv. ${this.levelNumber}`, {
+        this.level = this.add.text(this.cameras.main.width - 70, 10, `Lv. ${this.levelNumber}`, {
             fontSize: 20,
             color: '#ffffff',
             align: 'center',
@@ -326,11 +326,11 @@ export default class BaseScene extends Phaser.Scene {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
                     let distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
-                    if (distanceA <= 400 && !this.npcHealthBarCreated) {
+                    if (distanceA <= 500 && !this.npcHealthBarCreated) {
                         // Create NPC health bar
                         functions.createHealthBar(this, npc!);
                         this.npcHealthBarCreated = true;
-                    } else if (distanceA > 400 && this.npcHealthBarCreated) {
+                    } else if (distanceA > 500 && this.npcHealthBarCreated) {
                         // Destroy NPC health bar
                         functions.destroyHealthBar(npc!);
                         this.npcHealthBarCreated = false;
@@ -344,11 +344,11 @@ export default class BaseScene extends Phaser.Scene {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
                     let distanceB = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, enemy.x, enemy.y);
-                    if (distanceB <= 400 && !this.enemyHealthBarCreated) {
+                    if (distanceB <= 500 && !this.enemyHealthBarCreated) {
                         // Create Enemy health bar
                         functions.createHealthBar(this, enemy!);
                         this.enemyHealthBarCreated = true;
-                    } else if (distanceB > 400 && this.enemyHealthBarCreated) {
+                    } else if (distanceB > 500 && this.enemyHealthBarCreated) {
                         // Destroy Enemy health bar
                         functions.destroyHealthBar(enemy!);
                         this.enemyHealthBarCreated = false;
@@ -429,17 +429,16 @@ export default class BaseScene extends Phaser.Scene {
         if (this.player3) functions.updateHealthBar(this, this.player3);
 
         // Calculate distance between the active player and nearest NPC
-        this.npcHealthBarCreated = false;
         if (this.npcs) {
             for (let npc of this.npcs) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
                     let distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
-                    if (distanceA <= 400 && !this.npcHealthBarCreated) {
+                    if (distanceA <= 500 && !this.npcHealthBarCreated) {
                         // Create NPC health bar
                         functions.createHealthBar(this, npc!);
                         this.npcHealthBarCreated = true;
-                    } else if (distanceA > 400 && this.npcHealthBarCreated) {
+                    } else if (distanceA > 500 && this.npcHealthBarCreated) {
                         // Destroy NPC health bar
                         functions.destroyHealthBar(npc!);
                         this.npcHealthBarCreated = false;
@@ -448,17 +447,16 @@ export default class BaseScene extends Phaser.Scene {
             }
         }
         // Calculate distance between the active player and nearest Enemy
-        this.enemyHealthBarCreated = false;
         if (this.enemies) {
             for (let enemy of this.enemies) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
                     let distanceB = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, enemy.x, enemy.y);
-                    if (distanceB <= 400 && !this.enemyHealthBarCreated) {
+                    if (distanceB <= 500 && !this.enemyHealthBarCreated) {
                         // Create Enemy health bar
                         functions.createHealthBar(this, enemy!);
                         this.enemyHealthBarCreated = true;
-                    } else if (distanceB > 400 && this.enemyHealthBarCreated) {
+                    } else if (distanceB > 500 && this.enemyHealthBarCreated) {
                         // Destroy Enemy health bar
                         functions.destroyHealthBar(enemy!);
                         this.enemyHealthBarCreated = false;

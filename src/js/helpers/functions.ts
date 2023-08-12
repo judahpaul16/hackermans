@@ -163,7 +163,7 @@ export function updateClouds(scene: any) {
     }
 }
 
-export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | Enemy) {
+export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy) {
     // Determine if the character is an Player2
     const isP2 = player instanceof Player2;
     const isP3 = player instanceof Player3;
@@ -212,11 +212,10 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
     } else if (isEnemy) {
         frameKey = 'health-bar-frame-enemy';
     }
-    if (isNPC || isEnemy) {
-        player.healthBarFrame = scene.add.image(player.avatar.x - avatarOffsetX, player.avatar.y - 35, frameKey).setOrigin(0);
-    } else {
+    (isNPC || isEnemy) ?
+        player.healthBarFrame = scene.add.image(player.avatar.x - avatarOffsetX, player.avatar.y - 35, frameKey).setOrigin(0)
+    :
         player.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, frameKey).setOrigin(0);
-    }
     
     // Scale the healthBarFrame to match the avatar's height
     const healthBarFrameScale = avatarHeight / player!.healthBarFrame.height;
@@ -243,11 +242,10 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
 
     // Add the player's name above the avatar
     let name = null;
-    if (isNPC || isEnemy) {
-        name = scene.add.text(player.avatar.x - 130, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' });
-    } else {
+    (isNPC || isEnemy) ?
+        name = scene.add.text(player.avatar.x - 130, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' })
+    :
         name = scene.add.text(player.avatar.x + 36, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' });
-    }
 
     // Check if the HUD elements are defined before creating the container
     if (player!.avatar && player!.healthBarFrame && player!.healthBarFill) {
@@ -258,10 +256,8 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
 
 export function updateHealthBar(scene: Phaser.Scene, player: Player) {
     // Update the HUD container's position to match the camera's scroll
-    if (player!.hudContainer && scene.cameras.main) {
+    if (player!.hudContainer && scene.cameras.main)
         player!.hudContainer.setPosition(scene.cameras.main.scrollX, scene.cameras.main.scrollY);
-    }
-
     // Update the width of the health bar fill
     let fillWidth = (player!.currentHealth / player!.maxHealth) * 265;
     if (player!.healthBarFill) {
@@ -271,7 +267,7 @@ export function updateHealthBar(scene: Phaser.Scene, player: Player) {
     return player!.healthBarFill;
 }
 
-export function destroyHealthBar(player: Player | Player2 | Enemy) {
+export function destroyHealthBar(player: Player | Player2 | Player3 | NPC | Enemy) {
     if (player.avatar && player.amask && player.healthBarFrame && player.healthBarFill && player.hudContainer) {
         player.avatar.destroy();
         player.amask.destroy();

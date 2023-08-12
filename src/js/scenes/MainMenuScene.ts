@@ -15,7 +15,6 @@ export default class MainMenuScene extends Phaser.Scene {
     }
 
     create() {
-
         this.clickCounter = 0;
 
         // Setup Animations
@@ -54,7 +53,7 @@ export default class MainMenuScene extends Phaser.Scene {
                 logo.play('logoAnimation');
             });
             // Set the Main Menu Text
-            this.time.delayedCall(4000, () => {
+            this.time.delayedCall(3000, () => {
                 this.mainMenuText = this.add.text(logo.x, logo.y + 65, 'Press any key to enter\nthe city...', {
                     fontSize: '20px',
                     color: '#333333',
