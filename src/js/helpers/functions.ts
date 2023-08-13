@@ -403,7 +403,8 @@ export function setupAnimations(scene: any) {
         { key: 'shootNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'shoot', start: 1, end: 12, zeroPad: 4  }), frameRate: 10, repeat: 0 },
         { key: 'meleeNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'melee', start: 1, end: 11, zeroPad: 4  }), frameRate: 10, repeat: 0 },
         { key: 'standingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'standing', start: 1, end: 12, zeroPad: 4  }), frameRate: 4, repeat: -1 },
-        { key: 'dyingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'jump', start: 3, end: 3, zeroPad: 4  }), frameRate: 1, repeat: 0 },
+        { key: 'dyingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'death', start: 1, end: 4, zeroPad: 4  }), frameRate: 1, repeat: 0 },
+        { key: 'hurtNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'death', start: 1, end: 1, zeroPad: 4  }), frameRate: 1, repeat: 0 },
         // Enemy 1
         { key: 'walkingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'walk', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
         { key: 'runningE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'run', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
@@ -411,7 +412,8 @@ export function setupAnimations(scene: any) {
         { key: 'shootE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'shoot', start: 1, end: 12, zeroPad: 4  }), frameRate: 10, repeat: 0 },
         { key: 'meleeE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'melee', start: 1, end: 11, zeroPad: 4  }), frameRate: 10, repeat: 0 },
         { key: 'standingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'standing', start: 1, end: 12, zeroPad: 4  }), frameRate: 4, repeat: -1 },
-        { key: 'dyingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'jump', start: 3, end: 3, zeroPad: 4  }), frameRate: 1, repeat: 0 },
+        { key: 'dyingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'death', start: 1, end: 4, zeroPad: 4  }), frameRate: 1, repeat: 0 },
+        { key: 'hurtE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'death', start: 1, end: 1, zeroPad: 4  }), frameRate: 1, repeat: 0 }
     ];
 
     // Create animations

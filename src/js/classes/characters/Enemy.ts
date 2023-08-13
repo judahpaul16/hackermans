@@ -18,6 +18,12 @@ export default class Enemy extends Player {
     public hudContainer!: Phaser.GameObjects.Container;
     public attackHint?: Phaser.GameObjects.Image | null = null;
     public type: string = 'basic';
+    public standKey: string = 'standingE1';
+    public walkKey: string = 'walkingE1';
+    public runKey: string = 'runningE1';
+    public jumpKey: string = 'jumpingE1';
+    public dyingKey: string = 'dyingE1';
+    public hurtKey: string = 'hurtE1';
     public meleeKey: string = 'meleeE1';
     public shootKey: string = 'shootE1';
     public isHunting: boolean = false;

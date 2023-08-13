@@ -14,6 +14,14 @@ export default class NPC extends Player {
     public amask!: Phaser.GameObjects.Graphics;
     public hudContainer!: Phaser.GameObjects.Container;
     public interactHint?: Phaser.GameObjects.Text | null = null;
+    public standKey: string = 'standingNPC1';
+    public walkKey: string = 'walkingNPC1';
+    public runKey: string = 'runningNPC1';
+    public jumpKey: string = 'jumpingNPC1';
+    public dyingKey: string = 'dyingNPC1';
+    public hurtKey: string = 'hurtNPC1';
+    public meleeKey: string = 'meleeNPC1';
+    public shootKey: string = 'shootNPC1';
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
