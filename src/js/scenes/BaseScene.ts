@@ -488,6 +488,7 @@ export default class BaseScene extends Phaser.Scene {
         let isRunning = this.inputManager.cursors.shift!.isDown;
         let isJumping = this.inputManager.cursors.up!.isDown || this.inputManager.jumpKey!.isDown;
         let isAttacking = this.inputManager.cursors.space!.isDown || this.inputManager.attackKey!.isDown;
+        let isSpecialAttacking = this.inputManager.specialAttackKey1!.isDown || this.inputManager.specialAttackKey2!.isDown;
         let isCrouching = this.inputManager.cursors.down!.isDown || this.inputManager.crouchKey!.isDown;
 
         if (player.getCurrentAnimation() === player.attackKey || player.getCurrentAnimation() === player.jumpKey) return;
@@ -522,9 +523,8 @@ export default class BaseScene extends Phaser.Scene {
             if (!isAttacking) player.play(player.standKey, true);
         }
         
-        if (isAttacking) {
-            player.attack();
-        }
+        if (isAttacking) player.attack();
+        if (isSpecialAttacking) player.specialAttack();
 
         // if player falls off the world, reset their position
         if (this.player!.y > this.height + 65) {
