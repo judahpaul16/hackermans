@@ -655,7 +655,7 @@ export default class BaseScene extends Phaser.Scene {
             // if player moves beyond the right edge of the world, start the next scene
             if (activePlayer!.x > this.width) {
                 if (this.dg) this.dg.destroy();
-                this.scale.off('resize', this.resizeCallback);
+                this.scale.off('resize');
                 this.game.registry.set('previousScene', this.scene.key);
                 this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) + 1).toString()));
             }
@@ -664,7 +664,7 @@ export default class BaseScene extends Phaser.Scene {
             if (this.scene.key !== 'GameScene1'){
                 if (activePlayer!.x < 0) {
                     if (this.dg) this.dg.destroy();
-                    this.scale.off('resize', this.resizeCallback);
+                    this.scale.off('resize');
                     this.game.registry.set('previousScene', this.scene.key);
                     this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) - 1).toString()));
                 }
