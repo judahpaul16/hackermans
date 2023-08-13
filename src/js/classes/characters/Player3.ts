@@ -56,7 +56,7 @@ export default class Player3 extends Player {
 
     public jump() {
         if (this && this.body!.touching.down) {
-            this.setVelocityY(-400);
+            this.setVelocityY(-300);
             this.play(this.jumpKey, true);
         }
     }

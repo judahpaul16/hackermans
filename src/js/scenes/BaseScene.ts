@@ -31,9 +31,9 @@ export default class BaseScene extends Phaser.Scene {
     protected sfactor3: number = 0.9;
     protected sfactor4: number = 0.9;
     // distance between active player and nearest NPC
-    protected distanceA: number = 100000;
+    protected distanceA: number = Infinity;
     // distance between active player and nearest Enemy
-    protected distanceB: number = 100000;
+    protected distanceB: number = Infinity;
     protected backgroundImages?: { [key: string]: Phaser.GameObjects.TileSprite } = {};
     protected clouds: Phaser.GameObjects.Sprite[] = [];
     protected platforms?: Phaser.Physics.Arcade.StaticGroup;
@@ -50,6 +50,7 @@ export default class BaseScene extends Phaser.Scene {
     protected previousSceneName?: string;
     public platformKey: string = 'street';
     public levelNumber: number = 1;
+    public players: Player[] = [];
 
     create() {
         // Basic Scene Setup
@@ -307,9 +308,12 @@ export default class BaseScene extends Phaser.Scene {
                 }
             }
         }
+        this.players = [this.player!, this.player2!, this.player3!];
+        this.game.registry.set('players', this.players);
         
         // Setup NPCs
         if (this.npcs) {
+            this.game.registry.set('npcs', this.npcs);
             for (let npc of this.npcs) {
                 // Create an interact hint only if it doesn't already exist
                 if (!npc.interactHint) {                    
@@ -354,6 +358,7 @@ export default class BaseScene extends Phaser.Scene {
         }        
         // Setup Enemies
         if (this.enemies) {
+            this.game.registry.set('enemies', this.enemies);
             for (let enemy of this.enemies) {
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
@@ -361,6 +366,7 @@ export default class BaseScene extends Phaser.Scene {
                     if (this.distanceB <= 600) {
                         // Create Enemy health bar
                         functions.createHealthBar(this, enemy!);
+                        enemy.hunt();
                     } else if (this.distanceB > 600) {
                         // Destroy Enemy health bar
                         functions.destroyHealthBar(enemy!);
@@ -468,6 +474,7 @@ export default class BaseScene extends Phaser.Scene {
                     if (this.distanceB <= 600) {
                         // Create Enemy health bar
                         functions.createHealthBar(this, enemy!);
+                        enemy.hunt();
                     } else if (this.distanceB > 600) {
                         // Destroy Enemy health bar
                         functions.destroyHealthBar(enemy!);

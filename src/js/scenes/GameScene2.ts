@@ -36,10 +36,10 @@ export default class GameScene2 extends BaseScene {
         
         // Enemy setup
         this.enemies = [
-            new Enemy(this, 1000, 600, 'enemy').setFlipX(true).play('standingE1', true),
-            new Enemy(this, 1500, 600, 'enemy').setFlipX(true).play('standingE1', true),
-            new Enemy(this, 2000, 600, 'enemy').setFlipX(true).play('standingE1', true),
-            new Enemy(this, 2500, 600, 'enemy').setFlipX(true).play('standingE1', true),
+            new Enemy(this, 1000, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
+            new Enemy(this, 1500, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
+            new Enemy(this, 2000, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
+            new Enemy(this, 2500, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
         ];
 
         // Super
