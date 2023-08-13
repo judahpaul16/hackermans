@@ -60,11 +60,8 @@ export default class Player2 extends Player {
     public attack() {
         if (this) {
             // if moving in x direction, play runShoot animation
-            if (this.body!.velocity.x !== 0) {
-                this.play(this.runShootKey, true);
-            } else {
-                this.play(this.attackKey, true);
-            }
+            if (this.body!.velocity.x !== 0) this.play(this.runShootKey, true);
+            else this.play(this.attackKey, true);
             if (!this.shootSound) {
                 this.shootSound = this.scene.sound.add(this.attackKey);
                 this.shootSound.on('complete', () => {
@@ -73,10 +70,7 @@ export default class Player2 extends Player {
                     this.shootSound = null;
                 });
             }
-    
-            if (!this.shootSound.isPlaying) {
-                this.shootSound.play({ volume: 0.5, loop: false });
-            }
+            if (!this.shootSound.isPlaying) this.shootSound.play({ volume: 0.5, loop: false });
         }
     }
 

@@ -27,6 +27,7 @@ export default class Enemy extends Player {
     public meleeKey: string = 'meleeE1';
     public shootKey: string = 'shootE1';
     public isHunting: boolean = false;
+    private shootSound: Phaser.Sound.BaseSound | null = null;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, type: string) {
         super(scene, x, y, texture);
@@ -74,7 +75,15 @@ export default class Enemy extends Player {
         if (nearestPlayer && !nearestPlayer.isDead) {
             if (this.type == 'ranged' && nearestDistance > 50 && nearestDistance <= 600) {
                 this.play(this.shootKey, true).on('animationcomplete', () => {
-                    this.emitProjectile();
+                    if (!this.shootSound) {
+                        this.shootSound = this.scene.sound.add(this.shootKey);
+                        this.shootSound.on('complete', () => {
+                            // Create projectile
+                            this.emitProjectile();
+                            this.shootSound = null;
+                        });
+                    }
+                    if (!this.shootSound.isPlaying) this.shootSound.play({ volume: 0.5, loop: false });
                     this.isHunting = false; // runs hunt() again on update();
                 });
             } else if (nearestDistance <= 50) {

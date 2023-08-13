@@ -71,6 +71,7 @@ import coinSound from '../../assets/audio/sfx/coin.mp3';
 import meleeSoundP1 from '../../assets/audio/sfx/p1_melee.mp3';
 import shootSoundP3 from '../../assets/audio/sfx/p3_shoot.mp3';
 // import shootSoundP2 from '../../assets/audio/sfx/p2_shoot.mp2';
+// import shootSoundEnemy from '../../assets/audio/sfx/enemy_shoot.mp3';
 
 import projectile1Img from '../../assets/sprites/effects/projectiles/1/projectile-1.png';
 import projectile1JSON from '../../assets/sprites/effects/projectiles/1/projectile-1.json';
@@ -116,6 +117,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.audio('meleeP1', meleeSoundP1);
         this.load.audio('shootP3', shootSoundP3);
         this.load.audio('shootP2', shootSoundP3);
+        this.load.audio('shootE1', shootSoundP3);
         this.load.audio('coinSound', coinSound);
         this.load.image('far-buildings', farBuildings);
         this.load.image('back-buildings', backBuildings);

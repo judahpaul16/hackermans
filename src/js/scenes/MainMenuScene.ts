@@ -9,12 +9,16 @@ export default class MainMenuScene extends Phaser.Scene {
     private mainMenuText!: Phaser.GameObjects.Text;
     private timerEvent: Phaser.Time.TimerEvent | null = null;
     private ready: boolean = false;
+    private logo!: Phaser.GameObjects.Sprite;
 
     constructor() {
         super({ key: 'MainMenuScene' });
     }
 
     create() {
+        this.scale.on('resize', (gameSize: Phaser.Structs.Size) => this.resizeCallback(gameSize));
+
+        // Initialize the click counter
         this.clickCounter = 0;
 
         // Setup Animations
@@ -41,24 +45,26 @@ export default class MainMenuScene extends Phaser.Scene {
             // If not already playing, play the main music
             if (!this.sound.get('mainMusic')) this.sound.play('mainMusic', { loop: true, volume: 0.2 });
             // Set Logo
-            const logo = this.add.sprite(280, window.innerHeight / 2 + 30, 'logo').setAlpha(0);
+            this.logo = this.add.sprite(330, window.innerHeight / 2 + 20, 'logo').setAlpha(0);
             this.time.delayedCall(1000, () => {
                 this.tweens.add({
-                    targets: logo,
+                    targets: this.logo,
                     alpha: { from: 0, to: 1 },
                     duration: 1000,
                     ease: 'Linear'
                 });
-                logo.setScale(0.75);
-                logo.play('logoAnimation');
+                this.logo.setScale(0.75);
+                this.logo.play('logoAnimation');
             });
             // Set the Main Menu Text
-            this.time.delayedCall(3000, () => {
-                this.mainMenuText = this.add.text(logo.x, logo.y + 65, 'Press any key to enter\nthe city...', {
+            this.time.delayedCall(2500, () => {
+                this.mainMenuText = this.add.text(this.logo.x, this.logo.y + 65, 'Press any key to enter\nthe city...', {
                     fontSize: '20px',
                     color: '#333333',
                     fontStyle: 'bold',
                     align: 'center',
+                    stroke: '#00ff00',
+                    strokeThickness: 2
                 }).setOrigin(0.5).setAlpha(0);
                 // Ellipses animation
                 let ellipses = '';
@@ -71,12 +77,14 @@ export default class MainMenuScene extends Phaser.Scene {
                     },
                     loop: true
                 });
-                // Fade in the text
+                // Fade in and out the text
                 this.tweens.add({
                     targets: this.mainMenuText,
-                    alpha: { from: 0, to: 1 },
+                    alpha: { from: 0, to: 0.75 },
                     duration: 1000,
-                    ease: 'Linear'
+                    ease: 'Linear',
+                    yoyo: true,
+                    repeat: -1,
                 });
                 this.ready = true;
             });
@@ -85,6 +93,7 @@ export default class MainMenuScene extends Phaser.Scene {
         // If the user clicks twice, start the game
         if (this.clickCounter >= 2) {
             // Start the next scene
+            this.scale.off('resize');
             this.scene.start('GameScene1');
             this.game.registry.set('previousScene', this.scene.key);
         }
@@ -114,20 +123,21 @@ export default class MainMenuScene extends Phaser.Scene {
         this.coin = this.add.sprite(this.cameras.main.centerX, this.cameras.main.centerY + 20, 'coin');
         this.coin.setScale(0.3);
         this.coin.play('coinAnimation');
+        
+        this.resizeCallback(this.scale.gameSize);
     }
 
     private createBackground() {
         this.mainMenuBG = this.add.video(this.cameras.main.centerX, this.cameras.main.centerY, 'mainMenuBG');
-        
-        // Calculate the scaling factors to fit the video to the game's width and height
-        const scaleX = this.cameras.main.width / this.mainMenuBG.width;
-        const scaleY = this.cameras.main.height / this.mainMenuBG.height;
+        const scaleX = this.cameras.main.width / window.innerWidth;
+        const scaleY = this.cameras.main.height / window.innerHeight;
+        console.log(scaleX, scaleY);
         
         // Choose the smaller of the two scaling factors to ensure the video fits within the game's bounds
-        const scale = Math.min(scaleX, scaleY);
+        const scale = Math.max(scaleX, scaleY);
         
-        this.mainMenuBG.setScale(scale / 3 + 0.075);
-    
+        this.mainMenuBG.setScale(scale);
+        
         // Set loop, depth, and mute properties
         this.mainMenuBG.setLoop(true);
         this.mainMenuBG.setDepth(-1);
@@ -144,4 +154,26 @@ export default class MainMenuScene extends Phaser.Scene {
             ease: 'Linear'
         });
     }
+
+    private resizeCallback(gameSize: Phaser.Structs.Size) {
+        if (this.mainMenuBG) {
+            // Scale to fit
+            const scaleX = gameSize.width / this.mainMenuBG.width;
+            const scaleY = gameSize.height / this.mainMenuBG.height;
+            console.log(scaleX, scaleY);
+
+            const scale = Math.max(scaleX, scaleY);
+            this.mainMenuBG.setScale(scale);
+            // Reposition
+            this.mainMenuBG.setPosition(gameSize.width / 2, gameSize.height / 2);
+            this.logo.setPosition(330, window.innerHeight / 2 + 20);
+            // Reposition the logo
+            if (this.mainMenuText) this.mainMenuText.setPosition(this.logo.x, this.logo.y + 65);
+        }
+    
+        // Reposition the coin
+        if (this.coin) this.coin.setPosition(gameSize.width / 2, gameSize.height / 2 + 20);
+        // Reposition the insert coin text
+        if (this.insertCoin) this.insertCoin.setPosition(gameSize.width / 2, gameSize.height / 2 - 50);
+    }    
 }
