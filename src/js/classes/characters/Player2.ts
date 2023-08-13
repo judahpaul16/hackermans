@@ -7,6 +7,7 @@ export default class Player2 extends Player {
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
+    public runSpeed: number = 400;
     public isDead: boolean = false;
     private shootSound: Phaser.Sound.BaseSound | null = null;
     public standKey: string = 'standingP2';

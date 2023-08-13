@@ -491,26 +491,25 @@ export default class BaseScene extends Phaser.Scene {
         let isCrouching = this.inputManager.cursors.down!.isDown || this.inputManager.crouchKey!.isDown;
 
         if (player.getCurrentAnimation() === player.attackKey || player.getCurrentAnimation() === player.jumpKey) return;
-        let isP2 = (player.number === 2) ? true : false;
         if (isMovingRight) {
             if (isRunning) {
-                (isP2) ? player.setVelocityX(400) : player.setVelocityX(300);
+                player.setVelocityX(player.runSpeed);
                 if (!isAttacking) player.play(player.runKey, true);
             } else if (isJumping) {
                 player.jump();
             } else {
-                player.setVelocityX(175);
+                player.setVelocityX(player.walkSpeed);
                 if (!isAttacking) player.play(player.walkKey, true);
             }
             player.flipX = false;
         } else if (isMovingLeft) {
             if (isRunning) {
-                (isP2) ? player.setVelocityX(-400) : player.setVelocityX(-300);
+                player.setVelocityX(-player.runSpeed);
                 if (!isAttacking) player.play(player.runKey, true);
             } else if (isJumping) {
                 player.jump();
             } else {
-                player.setVelocityX(-175);
+                player.setVelocityX(-player.walkSpeed);
                 if (!isAttacking) player.play(player.walkKey, true);
             }
             player.flipX = true;
