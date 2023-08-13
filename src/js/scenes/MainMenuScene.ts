@@ -131,7 +131,6 @@ export default class MainMenuScene extends Phaser.Scene {
         this.mainMenuBG = this.add.video(this.cameras.main.centerX, this.cameras.main.centerY, 'mainMenuBG');
         const scaleX = this.cameras.main.width / window.innerWidth;
         const scaleY = this.cameras.main.height / window.innerHeight;
-        console.log(scaleX, scaleY);
         
         // Choose the smaller of the two scaling factors to ensure the video fits within the game's bounds
         const scale = Math.max(scaleX, scaleY);
@@ -160,7 +159,6 @@ export default class MainMenuScene extends Phaser.Scene {
             // Scale to fit
             const scaleX = gameSize.width / this.mainMenuBG.width;
             const scaleY = gameSize.height / this.mainMenuBG.height;
-            console.log(scaleX, scaleY);
 
             const scale = Math.max(scaleX, scaleY);
             this.mainMenuBG.setScale(scale);
