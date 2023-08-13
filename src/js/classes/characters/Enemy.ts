@@ -42,7 +42,7 @@ export default class Enemy extends Player {
 
     public toggleAttackHint() {
         if (this.attackHint) {
-            if (this.attackHint.visible === false && !this.isHunting) {
+            if (this.attackHint.visible === false) {
                 this.attackHint.setVisible(true);
                 // Hide the attackHint after 2 seconds
                 setTimeout(() => {
@@ -66,7 +66,7 @@ export default class Enemy extends Player {
             }
         }
         if (nearestPlayer && !nearestPlayer.isDead) {
-            if (this.type == 'ranged' && nearestDistance > 50) {
+            if (this.type == 'ranged' && nearestDistance > 50 && nearestDistance <= 600) {
                 this.play(this.shootKey, true).on('animationcomplete', () => {
                     this.emitProjectile();
                     this.isHunting = false; // runs hunt() again on update();
