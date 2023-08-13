@@ -93,7 +93,7 @@ export default class MainMenuScene extends Phaser.Scene {
         // If the user clicks twice, start the game
         if (this.clickCounter >= 2) {
             // Start the next scene
-            this.scale.off('resize');
+            // this.scale.off('resize');
             this.scene.start('GameScene1');
             this.game.registry.set('previousScene', this.scene.key);
         }
