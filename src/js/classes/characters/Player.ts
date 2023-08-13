@@ -19,7 +19,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public healthBarFrame?: Phaser.GameObjects.Image;
     public avatar?: Phaser.GameObjects.Image;
     public amask?: Phaser.GameObjects.Graphics;
-    public hudContainer?: Phaser.GameObjects.Container;
+    public healthBar?: Phaser.GameObjects.Container;
     public isFollowing: boolean = true;
     public standKey: string = 'standingP1';
     public walkKey: string = 'walkingP1';

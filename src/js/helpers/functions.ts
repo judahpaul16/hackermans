@@ -164,7 +164,7 @@ export function updateClouds(scene: any) {
 }
 
 export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy) {
-    if (player && !player.avatar && !player.amask && !player.healthBarFrame && !player.healthBarFill && !player.hudContainer) {
+    if (player && !player.avatar && !player.amask && !player.healthBarFrame && !player.healthBarFill && !player.healthBar) {
         // Determine type of character
         const isP2 = player instanceof Player2;
         const isP3 = player instanceof Player3;
@@ -176,7 +176,7 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
         // Adjust the x-position of the health bar for P3 & Enemy
         let xOffset = isP2 ? 340 : 0;
         if (isEnemy || isNPC) xOffset = 1140;
-
+        
         // Adjust the y-position of the health bar for P2
         let yOffset = isP3 ? 100 : 0;
 
@@ -186,6 +186,7 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
         if (isNPC) someAvatar = 'npcAvatar';
         if (isEnemy) someAvatar = 'enemyAvatar';
         player.avatar = scene.add.image(100 + xOffset + avatarOffsetX, 100 + yOffset, someAvatar);
+        (isNPC || isEnemy) ? player.avatar.setFlipX(true) : player.avatar.setFlipX(false);
 
         // Creating a circular mask using a Graphics object
         player.amask = scene.make.graphics({});
@@ -250,17 +251,17 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
 
         // Check if the HUD elements are defined before creating the container
         if (player.avatar && player.healthBarFrame && player.healthBarFill) {
-            player.hudContainer = scene.add.container(0, 0, [player.healthBarFill, player.avatar, player.healthBarFrame, name]);
-            player.hudContainer.setDepth(2);        
+            player.healthBar = scene.add.container(0, 0, [player.healthBarFill, player.avatar, player.healthBarFrame, name]);
+            player.healthBar.setDepth(2);        
         }
     }
 }
 
 export function updateHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy) {
-    if (player && player.healthBarFill && player.healthBarFrame && player.hudContainer) {
+    if (player && player.healthBarFill && player.healthBarFrame && player.healthBar) {
         // Update the HUD container's position to match the camera's scroll
-        if (player.hudContainer && scene.cameras.main)
-            player.hudContainer.setPosition(scene.cameras.main.scrollX, scene.cameras.main.scrollY);
+        if (player.healthBar && scene.cameras.main)
+            player.healthBar.setPosition(scene.cameras.main.scrollX, scene.cameras.main.scrollY);
         // Update the width of the health bar fill
         let fillWidth = (player.currentHealth / player.maxHealth) * 265;
         if (player.healthBarFill) {
@@ -272,7 +273,7 @@ export function updateHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
 }
 
 export function destroyHealthBar(player: Player | Player2 | Player3 | NPC | Enemy) {
-    if (player.avatar && player.amask && player.healthBarFrame && player.healthBarFill && player.hudContainer) {
+    if (player.avatar && player.amask && player.healthBarFrame && player.healthBarFill && player.healthBar) {
         player.avatar.destroy();
         player.avatar = undefined;
         player.amask.destroy();
@@ -281,8 +282,8 @@ export function destroyHealthBar(player: Player | Player2 | Player3 | NPC | Enem
         player.healthBarFrame = undefined;
         player.healthBarFill.destroy();
         player.healthBarFill = undefined;
-        player.hudContainer.destroy();
-        player.hudContainer = undefined;
+        player.healthBar.destroy();
+        player.healthBar = undefined;
     }
 }
 

@@ -10,12 +10,6 @@ export default class Enemy extends Player {
     public scale = 1.8;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
-    public isDead: boolean = false;
-    public healthBarFill!: Phaser.GameObjects.Graphics;
-    public healthBarFrame!: Phaser.GameObjects.Image;
-    public avatar!: Phaser.GameObjects.Image;
-    public amask!: Phaser.GameObjects.Graphics;
-    public hudContainer!: Phaser.GameObjects.Container;
     public attackHint?: Phaser.GameObjects.Image | null = null;
     public type: string = 'basic';
     public standKey: string = 'standingE1';
