@@ -74,16 +74,17 @@ export default class Enemy extends Player {
         }
         if (nearestPlayer && !nearestPlayer.isDead) {
             if (this.type == 'ranged' && nearestDistance > 50 && nearestDistance <= 600) {
-                this.play(this.shootKey, true).on('animationcomplete', () => {
-                    if (!this.shootSound) {
-                        this.shootSound = this.scene.sound.add(this.shootKey);
-                        this.shootSound.on('complete', () => {
-                            // Create projectile
+                this.play(this.shootKey, true).on('animationupdate', () => {
+                    let frame = this.anims.currentFrame;
+                    if (frame) {
+                        if (frame.index === 3 && this.shootSound === null) { // Emit projectile on frame 3
                             this.emitProjectile();
-                            this.shootSound = null;
-                        });
+                            this.shootSound = this.scene.sound.add(this.shootKey);
+                            this.shootSound.play({ volume: 0.5, loop: false });
+                        }
                     }
-                    if (!this.shootSound.isPlaying) this.shootSound.play({ volume: 0.5, loop: false });
+                }).on('animationcomplete', () => {
+                    this.shootSound = null;
                     this.isHunting = false; // runs hunt() again on update();
                 });
             } else if (nearestDistance <= 50) {
