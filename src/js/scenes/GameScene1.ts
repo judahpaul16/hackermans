@@ -40,9 +40,7 @@ export default class GameScene1 extends BaseScene {
         
         // Drone setup
         this.drones = [
-            new Drone(this, 750, 500, 'drone').setFlipX(true).play('spin', true),
-            new Drone(this, 550, 500, 'drone').setFlipX(true).play('spin', true),
-            new Drone(this, 1050, 500, 'drone').setFlipX(true).play('spin', true),
+            new Drone(this, 2700, 500, 'drone').setFlipX(true).play('spin', true),
         ];
 
         // NPC setup

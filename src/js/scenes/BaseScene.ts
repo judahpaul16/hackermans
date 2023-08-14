@@ -440,7 +440,7 @@ export default class BaseScene extends Phaser.Scene {
                     let distance: number;
                     for (let player of this.players) {
                         distance = Phaser.Math.Distance.Between(player.x, player.y, drone.x, drone.y);
-                        if (distance <= 30 || player.currentAnimation === player.attackKey) {
+                        if (player.currentAnimation === player.attackKey) {
                             drone.play('explode', true).setScale(1.5).on('animationcomplete', () => {
                                 drone.destroy();
                             });
