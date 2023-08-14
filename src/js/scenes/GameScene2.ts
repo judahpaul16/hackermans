@@ -5,6 +5,7 @@ import Player2 from '../classes/characters/Player2';
 import Player3 from '../classes/characters/Player3';
 import NPC from '../classes/characters/NPC';
 import Enemy from '../classes/characters/Enemy';
+import Drone from '../classes/entities/Drone';
 import * as functions from '../helpers/functions';
 
 export default class GameScene2 extends BaseScene {
@@ -12,6 +13,7 @@ export default class GameScene2 extends BaseScene {
     public backgroundKey2: string = 'middle';
     public backgroundKey3: string = 'back-buildings';
     public backgroundKey4: string = 'far-buildings';
+    public width: number = 20000;
     public levelNumber: number = 2;
     public p1StartX: number = 75;
 
@@ -34,12 +36,25 @@ export default class GameScene2 extends BaseScene {
         // Cloud Setup
         functions.createClouds(this, 10);
         
+        // Drone setup
+        this.drones = [
+            new Drone(this, 2250, 500, 'drone').setFlipX(true).play('spin', true),
+            new Drone(this, 2750, 500, 'drone').setFlipX(true).play('spin', true),
+            new Drone(this, 3250, 500, 'drone').setFlipX(true).play('spin', true),
+            new Drone(this, 3750, 500, 'drone').setFlipX(true).play('spin', true),
+            new Drone(this, 4250, 500, 'drone').setFlipX(true).play('spin', true),
+            new Drone(this, 4750, 500, 'drone').setFlipX(true).play('spin', true),
+            new Drone(this, 5250, 500, 'drone').setFlipX(true).play('spin', true),
+            new Drone(this, 5750, 500, 'drone').setFlipX(true).play('spin', true),
+            new Drone(this, 6250, 500, 'drone').setFlipX(true).play('spin', true),
+        ];
+
         // Enemy setup
         this.enemies = [
-            new Enemy(this, 1000, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
-            new Enemy(this, 1500, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
-            new Enemy(this, 2000, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
             new Enemy(this, 2500, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
+            new Enemy(this, 3000, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
+            new Enemy(this, 3500, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
+            new Enemy(this, 4000, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
         ];
 
         // Super

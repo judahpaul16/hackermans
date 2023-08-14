@@ -16,8 +16,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public maxHealth: number = 100;
     public currentHealth: number = 100;
     public walkSpeed: number = 175;
-    public runSpeed: number = 300;
-    public jumpSpeed: number = 400;
+    public runSpeed: number = 350;
+    public jumpSpeed: number = 425;
     public isDead: boolean = false;
     public healthBarFill?: Phaser.GameObjects.Graphics;
     public healthBarFrame?: Phaser.GameObjects.Image;
@@ -229,7 +229,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             }
             if (nearestEnemy) {
                 // If player is within range (e.g., 600 pixels), attack
-                if (nearestDistance <= 600) {
+                if (nearestDistance <= 1000) {
                     // turn toward enemy
                     this.flipX = nearestEnemy.x < this.x;
                     this.attack();

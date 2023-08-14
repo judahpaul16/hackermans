@@ -5,6 +5,7 @@ import Player2 from '../classes/characters/Player2';
 import Player3 from '../classes/characters/Player3';
 import Enemy from '../classes/characters/Enemy';
 import NPC from '../classes/characters/NPC';
+import Drone from '../classes/entities/Drone';
 import * as functions from '../helpers/functions';
 
 export default class GameScene1 extends BaseScene {
@@ -36,17 +37,17 @@ export default class GameScene1 extends BaseScene {
 
         // Cloud Setup
         functions.createClouds(this, 10);
+        
+        // Drone setup
+        this.drones = [
+            new Drone(this, 750, 500, 'drone').setFlipX(true).play('spin', true),
+            new Drone(this, 550, 500, 'drone').setFlipX(true).play('spin', true),
+            new Drone(this, 1050, 500, 'drone').setFlipX(true).play('spin', true),
+        ];
 
         // NPC setup
         this.npcs = [
             new NPC(this, 2750, 600, 'npc').setFlipX(true).play('standingNPC1', true),
-        ];
-
-        // Drone setup
-        this.drones = [
-            this.add.sprite(1000, 500, 'drone').setFlipX(true).play('spin', true),
-            this.add.sprite(1500, 500, 'drone').setFlipX(true).play('spin', true),
-            this.add.sprite(2000, 500, 'drone').setFlipX(true).play('spin', true),
         ];
 
         // Super

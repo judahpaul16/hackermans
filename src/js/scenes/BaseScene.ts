@@ -431,6 +431,31 @@ export default class BaseScene extends Phaser.Scene {
                 });
             }
         }
+
+        // Add collider for drones
+        if (this.drones) {
+            for (let drone of this.drones) {
+                // Calculate distance between drone and nearest player
+                this.physics.add.collider(drone, this.players, (drone: any, player: any) => {
+                    let distance: number;
+                    for (let player of this.players) {
+                        distance = Phaser.Math.Distance.Between(player.x, player.y, drone.x, drone.y);
+                        if (distance <= 30 || player.currentAnimation === player.attackKey) {
+                            drone.play('explode', true).setScale(1.5).on('animationcomplete', () => {
+                                drone.destroy();
+                            });
+                            player.heal(30);
+                        }
+                    }
+                });
+                this.physics.add.collider(drone, friendlyProjectileGroup, (drone: any, projectile: any) => {
+                    projectile.destroy();
+                    drone.play('explode', true).setScale(1.5).on('animationcomplete', () => {
+                        drone.destroy();
+                    });
+                });
+            }
+        }
     }
 
     updatePlayer(player: Player | Player2 | Player3) {
