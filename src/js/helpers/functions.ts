@@ -163,7 +163,7 @@ export function updateClouds(scene: any) {
     }
 }
 
-export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy) {
+export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy, extraYoffset: number = 0) {
     if (player && !player.avatar && !player.amask && !player.healthBarFrame && !player.healthBarFill && !player.healthBar) {
         // Determine type of character
         const isP2 = player instanceof Player2;
@@ -175,10 +175,11 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
 
         // Adjust the x-position of the health bar for P3 & Enemy
         let xOffset = isP2 ? 340 : 0;
-        if (isEnemy || isNPC) xOffset = 1140;
+        if (isEnemy || isNPC) xOffset = scene.scale.width - 480;
         
         // Adjust the y-position of the health bar for P2
         let yOffset = isP3 ? 100 : 0;
+        yOffset += extraYoffset;
 
         // Adding the avatar image at the top left corner with xOffset
         let someAvatar = isP2 ? 'p2Avatar' : 'avatar';
@@ -259,9 +260,26 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
 
 export function updateHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy) {
     if (player && player.healthBarFill && player.healthBarFrame && player.healthBar) {
-        // Update the HUD container's position to match the camera's scroll
-        if (player.healthBar && scene.cameras.main)
-            player.healthBar.setPosition(scene.cameras.main.scrollX, scene.cameras.main.scrollY);
+        if (player instanceof NPC || player instanceof Enemy) {
+            let scollX = scene.cameras.main.scrollX + window.innerWidth - scene.scale.width;
+            let scrollY = (window.innerWidth < 1100) ? scene.cameras.main.scrollY + 100 : scene.cameras.main.scrollY;
+            player.healthBar.setPosition(scollX, scrollY);
+
+            // if (window.innerWidth < 1100 && player.healthBar.y < 100) {
+            //     console.log('before');
+            //     console.log(player.amask);
+            //     console.log(player.avatar);
+            //     destroyHealthBar(player);
+            //     console.log('after');
+            //     console.log(player.amask);
+            //     console.log(player.avatar);
+            //     createHealthBar(scene, player, 100);
+            // }
+        } else{ 
+            // Update the HUD container's position to match the camera's scroll
+            if (player.healthBar && scene.cameras.main)
+                player.healthBar.setPosition(scene.cameras.main.scrollX, scene.cameras.main.scrollY);
+        }
         // Update the width of the health bar fill
         let fillWidth = (player.currentHealth / player.maxHealth) * 265;
         if (player.healthBarFill) {
