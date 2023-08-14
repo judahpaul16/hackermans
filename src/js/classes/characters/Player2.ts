@@ -3,7 +3,7 @@ import Player from './Player';
 
 export default class Player2 extends Player {
     public number: number = 2;
-    public name: string = 'Anonymuse';
+    public name: string = 'Anonymiss';
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
