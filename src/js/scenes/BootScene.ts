@@ -25,6 +25,9 @@ import npcJSON from '../../assets/sprites/characters/npcs/npc_1/npc.json';
 import enemyImg from '../../assets/sprites/characters/enemies/enemy_1/enemy.png';
 import enemyJSON from '../../assets/sprites/characters/enemies/enemy_1/enemy.json';
 
+import droneImg from '../../assets/sprites/entities/drone/drone.png';
+import droneJSON from '../../assets/sprites/entities/drone/drone.json';
+
 import controlsImg from '../../assets/sprites/ui/controls.png';
 
 import avatarImg from '../../assets/sprites/ui/avatar.png';
@@ -100,6 +103,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.atlas('player3', player3Img, player3JSON);
         this.load.atlas('npc', npcImg, npcJSON);
         this.load.atlas('enemy', enemyImg, enemyJSON);
+        this.load.atlas('drone', droneImg, droneJSON);
         this.load.image('controls', controlsImg);
         this.load.image('avatar', avatarImg);
         this.load.image('avatarP2', p2AvatarImg);

@@ -416,7 +416,10 @@ export function setupAnimations(scene: any) {
         { key: 'meleeE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'melee', start: 1, end: 11, zeroPad: 4  }), frameRate: 10, repeat: 0 },
         { key: 'standingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'standing', start: 1, end: 12, zeroPad: 4  }), frameRate: 4, repeat: -1 },
         { key: 'dyingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'death', start: 1, end: 4, zeroPad: 4  }), frameRate: 1, repeat: 0 },
-        { key: 'hurtE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'death', start: 1, end: 1, zeroPad: 4  }), frameRate: 1, repeat: 0 }
+        { key: 'hurtE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'death', start: 1, end: 1, zeroPad: 4  }), frameRate: 1, repeat: 0 },
+        // Drone
+        { key: 'spin', frames: scene.anims.generateFrameNames('drone', { prefix: 'spin', start: 1, end: 4, zeroPad: 2  }), frameRate: 10, repeat: -1 },
+        { key: 'explode', frames: scene.anims.generateFrameNames('drone', { prefix: 'explode', start: 1, end: 4, zeroPad: 2  }), frameRate: 10, repeat: 0 },
     ];
 
     // Create animations

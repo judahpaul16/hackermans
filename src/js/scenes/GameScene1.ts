@@ -42,6 +42,13 @@ export default class GameScene1 extends BaseScene {
             new NPC(this, 2750, 600, 'npc').setFlipX(true).play('standingNPC1', true),
         ];
 
+        // Drone setup
+        this.drones = [
+            this.add.sprite(1000, 500, 'drone').setFlipX(true).play('spin', true),
+            this.add.sprite(1500, 500, 'drone').setFlipX(true).play('spin', true),
+            this.add.sprite(2000, 500, 'drone').setFlipX(true).play('spin', true),
+        ];
+
         // Super
         super.create();
     }

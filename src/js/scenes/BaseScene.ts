@@ -20,6 +20,7 @@ export default class BaseScene extends Phaser.Scene {
     protected p3StartY: number = this.p1StartY;
     protected enemies: Enemy[] = [];
     protected npcs: NPC[] = [];
+    protected drones: Phaser.GameObjects.Sprite[] = [];
     protected chatBubble?: Phaser.GameObjects.Sprite;
     protected dialogueText?: Phaser.GameObjects.Text;
     protected isInteracting: boolean = false;
