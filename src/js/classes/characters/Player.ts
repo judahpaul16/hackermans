@@ -178,7 +178,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         bufferZone: number = (isP2 ? 300 : 150),
         walkSpeed: number = 175) {
 
-        if (this.scene.registry.get('activePlayer') as Player === this) return;
+        if (this.scene.registry.get('activePlayer') as Player === this) {
+            this.isHunting = false;
+            return;
+        }
 
         if (this.body!.touching.down) {
             let distanceToPlayer = this.x - playerToBeFollowed.x;
