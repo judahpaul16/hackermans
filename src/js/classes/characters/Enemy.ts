@@ -23,7 +23,6 @@ export default class Enemy extends Player {
     public hurtKey: string = 'hurtE1';
     public meleeKey: string = 'meleeE1';
     public shootKey: string = 'shootE1';
-    public isHunting: boolean = false;
     private shootSound: Phaser.Sound.BaseSound | null = null;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, type: string) {
@@ -114,6 +113,8 @@ export default class Enemy extends Player {
             if (nearestPlayer) {
                 // If player is within range (e.g., 600 pixels), attack
                 if (nearestDistance <= 600) {
+                    // turn toward player
+                    this.flipX = nearestPlayer.x < this.x;
                     this.attack();
                 } else {
                     let angle = Phaser.Math.Angle.Between(this.x, this.y, nearestPlayer.x, nearestPlayer.y);

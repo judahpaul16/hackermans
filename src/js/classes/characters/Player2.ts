@@ -10,6 +10,7 @@ export default class Player2 extends Player {
     public runSpeed: number = 250;
     public jumpSpeed: number = 350;
     public isDead: boolean = false;
+    public type: string = 'ranged';
     private shootSound: Phaser.Sound.BaseSound | null = null;
     public textureKey: string = 'player2';
     public avatarKey: string = 'avatarP2';

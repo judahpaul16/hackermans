@@ -1,4 +1,7 @@
 import Phaser from 'phaser';
+import Player2 from './Player2';
+import Player3 from './Player3';
+import Enemy from './Enemy';
 import InputManager from '../utils/InputManager';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
@@ -37,6 +40,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public projectileGroup!: Phaser.Physics.Arcade.Group;
     public indicator!: Phaser.GameObjects.Image;
     private hitSpritePool: Phaser.GameObjects.Sprite[] = [];
+    public isHunting: boolean = false;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
@@ -201,6 +205,32 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                     this.setVelocityX(distanceToPlayer < 0 ? speed : -speed);
                     this.flipX = distanceToPlayer > 0;
                 }
+            }
+        }
+        this.hunt();
+    }
+
+    public hunt() {
+        if (!this.isHunting) {
+            this.isHunting = true;
+            // Find the nearest player
+            let nearestDistance: number = Infinity;
+            let nearestEnemy: Enemy | undefined;
+            let enemies = this.scene.game.registry.get('enemies');
+            for (let enemy of enemies) {
+                const tempDistance = Phaser.Math.Distance.Between(this.x, this.y, enemy.x, enemy.y);
+                if (tempDistance < nearestDistance) {
+                    nearestDistance = tempDistance;
+                    nearestEnemy = enemy;
+                }
+            }
+            if (nearestEnemy) {
+                // If player is within range (e.g., 600 pixels), attack
+                if (nearestDistance <= 600) {
+                    // turn toward enemy
+                    this.flipX = nearestEnemy.x < this.x;
+                    this.attack();
+                } else this.isHunting = false;
             }
         }
     }

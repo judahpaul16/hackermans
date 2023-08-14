@@ -14,6 +14,7 @@ export default class Player3 extends Player {
     public runSpeed: number = 250;
     public jumpSpeed: number = 350;
     public isDead: boolean = false;
+    public type: string = 'ranged';
     private shootSound: Phaser.Sound.BaseSound | null = null;
     public textureKey: string = 'player3';
     public hbFrameKey: string = 'health-bar-frame-3';
