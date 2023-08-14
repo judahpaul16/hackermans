@@ -261,20 +261,17 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
 export function updateHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy) {
     if (player && player.healthBarFill && player.healthBarFrame && player.healthBar) {
         if (player instanceof NPC || player instanceof Enemy) {
-            let scollX = scene.cameras.main.scrollX + window.innerWidth - scene.scale.width;
+            let scrollX = scene.cameras.main.scrollX + window.innerWidth - scene.scale.width;
             let scrollY = (window.innerWidth < 1100) ? scene.cameras.main.scrollY + 100 : scene.cameras.main.scrollY;
-            player.healthBar.setPosition(scollX, scrollY);
-
-            // if (window.innerWidth < 1100 && player.healthBar.y < 100) {
-            //     console.log('before');
-            //     console.log(player.amask);
-            //     console.log(player.avatar);
-            //     destroyHealthBar(player);
-            //     console.log('after');
-            //     console.log(player.amask);
-            //     console.log(player.avatar);
-            //     createHealthBar(scene, player, 100);
-            // }
+            
+            if (window.innerWidth < 1100 && player.avatar!.y != 200) {
+                destroyHealthBar(player);
+                createHealthBar(scene, player, 100);
+            } else if (window.innerWidth < 1100) {
+                player.healthBar.setPosition(scrollX, scrollY -= 100);
+            } else {
+                player.healthBar.setPosition(scrollX, scrollY);
+            }
         } else{ 
             // Update the HUD container's position to match the camera's scroll
             if (player.healthBar && scene.cameras.main)
