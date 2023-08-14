@@ -318,7 +318,7 @@ export default class BaseScene extends Phaser.Scene {
             for (let npc of this.npcs) {
                 // Create an interact hint only if it doesn't already exist
                 if (!npc.interactHint) {                    
-                    npc.interactHint = this.add.text(npc.x - 30, npc.y - 15, 'Press [F]', {
+                    npc.interactHint = this.add.text(npc.x - 45, npc.y, 'Press [F]', {
                         fontSize: 15,
                         color: '#ffffff',
                         align: 'center',
@@ -327,8 +327,8 @@ export default class BaseScene extends Phaser.Scene {
                     }).setDepth(10).setVisible(false);                    
                     this.add.tween({
                         targets: npc.interactHint,
-                        y: npc.y - 35,
-                        duration: 1500,
+                        y: npc.y - 25,
+                        duration: 1000,
                         ease: 'Linear',
                         yoyo: true,
                         repeat: -1
@@ -336,7 +336,7 @@ export default class BaseScene extends Phaser.Scene {
                     this.add.tween({
                         targets: npc.interactHint,
                         alpha: 0,
-                        duration: 1000,
+                        duration: 800,
                         ease: 'Linear',
                         yoyo: true,
                         repeat: -1
@@ -457,7 +457,7 @@ export default class BaseScene extends Phaser.Scene {
                         // Create NPC health bar
                         functions.createHealthBar(this, npc);
                         npc.interactHint!.setVisible(true); // Show the interact hint
-                        npc.interactHint!.x = npc.x - 30;
+                        npc.interactHint!.x = npc.x - 45;
                     } else if (this.distanceA > 600) {
                         // Destroy NPC health bar
                         functions.destroyHealthBar(npc!);
