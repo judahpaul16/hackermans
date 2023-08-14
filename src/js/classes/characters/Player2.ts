@@ -15,6 +15,7 @@ export default class Player2 extends Player {
     public avatarKey: string = 'avatarP2';
     public hbFrameKey: string = 'health-bar-frame-2';
     public standKey: string = 'standingP2';
+    public crouchKey: string = 'crouchingP2';
     public walkKey: string = 'walkingP2';
     public runKey: string = 'runningP2';
     public jumpKey: string = 'jumpingP2';

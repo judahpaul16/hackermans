@@ -404,6 +404,7 @@ export function setupAnimations(scene: any) {
         { key: 'jumpingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'jump', start: 1, end: 7, zeroPad: 4  }), frameRate: 7, repeat: 0 },
         { key: 'shootP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'shoot', start: 1, end: 12, zeroPad: 4  }), frameRate: 10, repeat: 0 },
         { key: 'meleeP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'melee', start: 1, end: 11, zeroPad: 4  }), frameRate: 10, repeat: 0 },
+        { key: 'crouchingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'jump', start: 0, end: 0, zeroPad: 4 }), frameRate: 4, repeat: 0 },
         { key: 'standingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'standing', start: 1, end: 12, zeroPad: 4  }), frameRate: 4, repeat: -1 },
         { key: 'dyingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'death', start: 1, end: 4, zeroPad: 4  }), frameRate: 1, repeat: 0 },
         { key: 'hurtP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'death', start: 1, end: 1, zeroPad: 4  }), frameRate: 1, repeat: 0 },

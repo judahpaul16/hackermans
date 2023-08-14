@@ -45,7 +45,7 @@ export default class MainMenuScene extends Phaser.Scene {
             // If not already playing, play the main music
             if (!this.sound.get('mainMusic')) this.sound.play('mainMusic', { loop: true, volume: 0.2 });
             // Set Logo
-            this.logo = this.add.sprite(330, window.innerHeight / 2 + 20, 'logo').setAlpha(0);
+            this.logo = this.add.sprite(310, window.innerHeight / 2 + 20, 'logo').setAlpha(0);
             this.time.delayedCall(1000, () => {
                 this.tweens.add({
                     targets: this.logo,
@@ -164,7 +164,7 @@ export default class MainMenuScene extends Phaser.Scene {
             this.mainMenuBG.setScale(scale);
             // Reposition
             this.mainMenuBG.setPosition(gameSize.width / 2, gameSize.height / 2);
-            this.logo.setPosition(330, window.innerHeight / 2 + 20);
+            this.logo.setPosition(310, window.innerHeight / 2 + 20);
             // Reposition the logo
             if (this.mainMenuText) this.mainMenuText.setPosition(this.logo.x, this.logo.y + 65);
         }
