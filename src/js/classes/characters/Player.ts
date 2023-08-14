@@ -14,6 +14,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public currentHealth: number = 100;
     public walkSpeed: number = 175;
     public runSpeed: number = 300;
+    public jumpSpeed: number = 400;
     public isDead: boolean = false;
     public healthBarFill?: Phaser.GameObjects.Graphics;
     public healthBarFrame?: Phaser.GameObjects.Image;
@@ -21,6 +22,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public amask?: Phaser.GameObjects.Graphics;
     public healthBar?: Phaser.GameObjects.Container;
     public isFollowing: boolean = true;
+    public textureKey: string = 'player';
+    public avatarKey: string = 'avatar';
+    public hbFrameKey: string = 'health-bar-frame';
     public standKey: string = 'standingP1';
     public walkKey: string = 'walkingP1';
     public runKey: string = 'runningP1';
@@ -148,7 +152,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     public jump() {
         if (this && this.body!.touching.down) {
-            this.setVelocityY(-400);
+            this.setVelocityY(-this.jumpSpeed);
             this.play(this.jumpKey, true);
         }
     }

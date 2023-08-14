@@ -3,22 +3,24 @@ import Player from './Player';
 
 export default class Player2 extends Player {
     public number: number = 2;
-    public name: string = 'Anonymiss';
+    public name: string = 'Anonymusk';
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
-    public runSpeed: number = 400;
+    public runSpeed: number = 250;
+    public jumpSpeed: number = 350;
     public isDead: boolean = false;
     private shootSound: Phaser.Sound.BaseSound | null = null;
+    public textureKey: string = 'player2';
+    public avatarKey: string = 'avatarP2';
+    public hbFrameKey: string = 'health-bar-frame-2';
     public standKey: string = 'standingP2';
     public walkKey: string = 'walkingP2';
     public runKey: string = 'runningP2';
-    public runShootKey: string = 'runShootP2';
     public jumpKey: string = 'jumpingP2';
     public hurtKey: string = 'hurtP2';
     public attackKey: string = 'shootP2';
     public dyingKey: string = 'dyingP2';
-    public crouchKey: string = 'crouchingP2';
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
@@ -53,16 +55,14 @@ export default class Player2 extends Player {
 
     public jump() {
         if (this && this.body!.touching.down) {
-            this.setVelocityY(-550);
+            this.setVelocityY(-this.jumpSpeed);
             this.play(this.jumpKey, true);
         }
     }
 
     public attack() {
         if (this) {
-            // if moving in x direction, play runShoot animation
-            if (this.body!.velocity.x !== 0) this.play(this.runShootKey, true);
-            else this.play(this.attackKey, true);
+            this.play(this.attackKey, true);
             if (!this.shootSound) {
                 this.shootSound = this.scene.sound.add(this.attackKey);
                 this.shootSound.on('complete', () => {

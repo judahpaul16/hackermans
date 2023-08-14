@@ -11,8 +11,13 @@ export default class Player3 extends Player {
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
+    public runSpeed: number = 250;
+    public jumpSpeed: number = 350;
     public isDead: boolean = false;
     private shootSound: Phaser.Sound.BaseSound | null = null;
+    public textureKey: string = 'player3';
+    public hbFrameKey: string = 'health-bar-frame-3';
+    public avatarKey: string = 'avatarP3';
     public standKey: string = 'standingP3';
     public walkKey: string = 'walkingP3';
     public runKey: string = 'runningP3';
@@ -56,7 +61,7 @@ export default class Player3 extends Player {
 
     public jump() {
         if (this && this.body!.touching.down) {
-            this.setVelocityY(-300);
+            this.setVelocityY(-this.jumpSpeed);
             this.play(this.jumpKey, true);
         }
     }

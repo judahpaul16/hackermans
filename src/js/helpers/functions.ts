@@ -182,11 +182,7 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
         yOffset += extraYoffset;
 
         // Adding the avatar image at the top left corner with xOffset
-        let someAvatar = isP2 ? 'p2Avatar' : 'avatar';
-        if (isP3) someAvatar = 'p3Avatar';
-        if (isNPC) someAvatar = 'npcAvatar';
-        if (isEnemy) someAvatar = 'enemyAvatar';
-        player.avatar = scene.add.image(100 + xOffset + avatarOffsetX, 100 + yOffset, someAvatar);
+        player.avatar = scene.add.image(100 + xOffset + avatarOffsetX, 100 + yOffset, player.avatarKey);
         (isNPC || isEnemy) ? player.avatar.setFlipX(true) : player.avatar.setFlipX(false);
 
         // Creating a circular mask using a Graphics object
@@ -205,20 +201,10 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
         const avatarHeight = player.avatar.height * avatarScale;
 
         // Background of the health bar (position it relative to avatar, with the possible offset for P2)
-        let frameKey = 'health-bar-frame';
-        if (isP2) {
-            frameKey = 'health-bar-frame-alt';
-        } else if (isP3) {
-            frameKey = 'health-bar-frame-alt-2';
-        } else if (isNPC) {
-            frameKey = 'health-bar-frame-npc';
-        } else if (isEnemy) {
-            frameKey = 'health-bar-frame-enemy';
-        }
         (isNPC || isEnemy) ?
-            player.healthBarFrame = scene.add.image(player.avatar.x - avatarOffsetX, player.avatar.y - 35, frameKey).setOrigin(0)
+            player.healthBarFrame = scene.add.image(player.avatar.x - avatarOffsetX, player.avatar.y - 35, player.hbFrameKey).setOrigin(0)
         :
-            player.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, frameKey).setOrigin(0);
+            player.healthBarFrame = scene.add.image(player.avatar.x - 36, player.avatar.y - 35, player.hbFrameKey).setOrigin(0);
         
         // Scale the healthBarFrame to match the avatar's height
         const healthBarFrameScale = avatarHeight / player.healthBarFrame.height;
@@ -398,29 +384,29 @@ export function setupAnimations(scene: any) {
         { key: 'dyingP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'death', start: 0, end: 4, zeroPad: 4 }), frameRate: 4, repeat: 0 },
         { key: 'hurtP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'run', start: 0, end: 0, zeroPad: 4 }), frameRate: 1, repeat: 0 },
         { key: 'crouchingP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'jump', start: 0, end: 0, zeroPad: 4 }), frameRate: 4, repeat: 0 },
-        // Player 2
-        { key: 'walkingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'walk-', start: 1, end: 16 }), frameRate: 10, repeat: -1 },
-        { key: 'runningP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'run-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },
-        { key: 'jumpingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'jump-', start: 1, end: 4 }), frameRate: 7, repeat: 0 },
-        { key: 'shootP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'shoot-', start: 1, end: 1 }), frameRate: 10, repeat: 0 },
-        { key: 'standingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'idle-', start: 1, end: 4 }), frameRate: 6, repeat: -1 },
-        { key: 'runShootP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'run-shoot-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },
-        { key: 'backJumpP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'back-jump-', start: 1, end: 7 }), frameRate: 7, repeat: 0 },
-        { key: 'climbP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'climb-', start: 1, end: 6 }), frameRate: 7, repeat: -1 },
-        { key: 'hurtP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'hurt-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
-        { key: 'dyingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'jump-', start: 3, end: 3 }), frameRate: 1, repeat: 0 },
-        { key: 'crouchingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'crouch-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
+        // NPC 1
+        { key: 'walkingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'walk-', start: 1, end: 16 }), frameRate: 10, repeat: -1 },
+        { key: 'runningNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'run-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },
+        { key: 'jumpingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'jump-', start: 1, end: 4 }), frameRate: 7, repeat: 0 },
+        { key: 'shootNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'shoot-', start: 1, end: 1 }), frameRate: 10, repeat: 0 },
+        { key: 'standingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'idle-', start: 1, end: 4 }), frameRate: 6, repeat: -1 },
+        { key: 'runShootNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'run-shoot-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },
+        { key: 'backJumpNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'back-jump-', start: 1, end: 7 }), frameRate: 7, repeat: 0 },
+        { key: 'climbNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'climb-', start: 1, end: 6 }), frameRate: 7, repeat: -1 },
+        { key: 'hurtNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'hurt-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
+        { key: 'dyingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'jump-', start: 3, end: 3 }), frameRate: 1, repeat: 0 },
+        { key: 'crouchingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'crouch-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
         { key: 'projectile-1', frames: scene.anims.generateFrameNames('projectile-1', { prefix: 'shot-', start: 1, end: 3 }), frameRate: 3, repeat: -1 },
         { key: 'hitSprite1', frames: scene.anims.generateFrameNames('hitSprite1', { prefix: 'hits-1-', start: 1, end: 5 }), frameRate: 10, repeat: 0 },
-        // NPC 1
-        { key: 'walkingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'walk', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
-        { key: 'runningNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'run', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
-        { key: 'jumpingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'jump', start: 1, end: 7, zeroPad: 4  }), frameRate: 7, repeat: 0 },
-        { key: 'shootNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'shoot', start: 1, end: 12, zeroPad: 4  }), frameRate: 10, repeat: 0 },
-        { key: 'meleeNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'melee', start: 1, end: 11, zeroPad: 4  }), frameRate: 10, repeat: 0 },
-        { key: 'standingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'standing', start: 1, end: 12, zeroPad: 4  }), frameRate: 4, repeat: -1 },
-        { key: 'dyingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'death', start: 1, end: 4, zeroPad: 4  }), frameRate: 1, repeat: 0 },
-        { key: 'hurtNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'death', start: 1, end: 1, zeroPad: 4  }), frameRate: 1, repeat: 0 },
+        // Player 2
+        { key: 'walkingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'walk', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
+        { key: 'runningP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'run', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
+        { key: 'jumpingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'jump', start: 1, end: 7, zeroPad: 4  }), frameRate: 7, repeat: 0 },
+        { key: 'shootP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'shoot', start: 1, end: 12, zeroPad: 4  }), frameRate: 10, repeat: 0 },
+        { key: 'meleeP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'melee', start: 1, end: 11, zeroPad: 4  }), frameRate: 10, repeat: 0 },
+        { key: 'standingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'standing', start: 1, end: 12, zeroPad: 4  }), frameRate: 4, repeat: -1 },
+        { key: 'dyingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'death', start: 1, end: 4, zeroPad: 4  }), frameRate: 1, repeat: 0 },
+        { key: 'hurtP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'death', start: 1, end: 1, zeroPad: 4  }), frameRate: 1, repeat: 0 },
         // Enemy 1
         { key: 'walkingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'walk', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
         { key: 'runningE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'run', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },

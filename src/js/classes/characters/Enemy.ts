@@ -12,6 +12,9 @@ export default class Enemy extends Player {
     public currentHealth: number = 100;
     public attackHint?: Phaser.GameObjects.Image | null = null;
     public type: string = 'basic';
+    public textureKey: string = 'enemy';
+    public avatarKey: string = 'avatarE1';
+    public hbFrameKey: string = 'health-bar-frame-enemy';
     public standKey: string = 'standingE1';
     public walkKey: string = 'walkingE1';
     public runKey: string = 'runningE1';
