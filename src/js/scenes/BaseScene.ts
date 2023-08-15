@@ -575,14 +575,14 @@ export default class BaseScene extends Phaser.Scene {
 
         // Set Follow
         if (this.player!.isActive()) {
-            this.player2!.follow(this.player!, true);
-            this.player3!.follow(this.player!, false);
+            this.player2!.follow(this.player!);
+            this.player3!.follow(this.player!);
         } else if (this.player2!.isActive()) {
-            this.player!.follow(this.player2!, false);
-            this.player3!.follow(this.player2!, false);
+            this.player!.follow(this.player2!);
+            this.player3!.follow(this.player2!);
         } else if (this.player3!.isActive()) {
-            this.player!.follow(this.player3!, false);
-            this.player2!.follow(this.player3!, true);
+            this.player!.follow(this.player3!);
+            this.player2!.follow(this.player3!);
         }
 
         // check scene transition

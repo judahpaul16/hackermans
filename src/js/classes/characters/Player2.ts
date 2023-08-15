@@ -7,7 +7,7 @@ export default class Player2 extends Player {
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
-    public runSpeed: number = 250;
+    public runSpeed: number = 275;
     public jumpSpeed: number = 350;
     public isDead: boolean = false;
     public type: string = 'ranged';
