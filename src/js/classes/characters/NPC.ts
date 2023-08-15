@@ -54,12 +54,13 @@ export default class NPC extends Player {
     }
 
     private emitProjectile() {
-        if (this.scene && this.scene.game && this.scene.game.registry   ) {
+        if (this.scene && this.scene.game && this.scene.game.registry) {
             // Create a projectile at player's position
             let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
-            let projectile = projectileGroup.create(this.x, this.y, 'projectile-1').setGravityY(0).setVelocityY(0).setScale(1.5);
+            let projectile = projectileGroup.create(this.x, this.y, 'projectile-1').setScale(1.5);
             projectile.flipX = this.flipX;
-            projectile.setVelocityX(this.flipX ? -2250 : 2250); // Set velocity based on player's direction
+            projectile.body.setAllowGravity(false);
+            projectile.setVelocityX(this.flipX ? -1000 : 1000); // Set velocity based on player's direction
         }
     }
 }
