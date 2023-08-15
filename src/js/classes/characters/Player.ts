@@ -195,7 +195,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 startFollowing = true;
                 this.isFollowing = true;
                 // If close to the player, stop moving
-                if (Math.abs(distanceToPlayer) < bufferZone) {
+                if (Math.abs(distanceToPlayer) <= bufferZone) {
+                    // if move to be exactly at bufferZone, then stop moving
+                    if (Math.abs(distanceToPlayer) < 50) {
+                        this.play(walkingKey, true);
+                        this.setVelocityX(distanceToPlayer < 0 ? walkSpeed : -walkSpeed);
+                    }
                     this.play(standingKey, true);
                     this.setVelocityX(0);
                 } else {
