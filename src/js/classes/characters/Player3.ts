@@ -3,7 +3,7 @@ import Player from './Player';
 
 export default class Player3 extends Player {
     public number: number = 3;
-    public name: string = 'Anonymoose';
+    public name: string = 'Anonymusk';
     public width: number = 83;
     public height: number = 186;
     public offsetX: number = -2;

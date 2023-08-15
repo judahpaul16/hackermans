@@ -3,7 +3,7 @@ import Player from './Player';
 
 export default class Player2 extends Player {
     public number: number = 2;
-    public name: string = 'Anonymusk';
+    public name: string = 'Anonymoose';
     public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
@@ -87,7 +87,7 @@ export default class Player2 extends Player {
             let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
             let projectile = projectileGroup.create(this.x, this.y, 'projectile-1').setGravityY(0).setVelocityY(0).setScale(1.5);
             projectile.flipX = this.flipX;
-            projectile.setVelocityX(this.flipX ? -2250 : 2250); // Set velocity based on player's direction
+            projectile.setVelocityX(this.flipX ? -1250 : 1250); // Set velocity based on player's direction
         }
     }
 }

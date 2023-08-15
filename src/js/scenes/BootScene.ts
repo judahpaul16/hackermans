@@ -31,8 +31,8 @@ import droneJSON from '../../assets/sprites/entities/drone/drone.json';
 import controlsImg from '../../assets/sprites/ui/controls.png';
 
 import avatarImg from '../../assets/sprites/ui/avatar.png';
-import p3AvatarImg from '../../assets/sprites/ui/player_2_avatar.png';
-import p2AvatarImg from '../../assets/sprites/ui/player_3_avatar.png';
+import p2AvatarImg from '../../assets/sprites/ui/player_2_avatar.png';
+import p3AvatarImg from '../../assets/sprites/ui/player_3_avatar.png';
 import npcAvatarImg from '../../assets/sprites/ui/npc_avatar.png';
 import enemyAvatarImg from '../../assets/sprites/ui/enemy_avatar.png';
 import healthBarFrameImg from '../../assets/sprites/ui/health_bar_bg.png';
