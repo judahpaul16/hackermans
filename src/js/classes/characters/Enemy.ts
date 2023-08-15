@@ -133,7 +133,7 @@ export default class Enemy extends Player {
             let y = (this.body!.velocity.x != 0) ? this.y : this.y - 42;
             let projectile = projectileGroup.create(this.x, y, 'projectile-1').setGravityY(0).setVelocityY(0).setScale(1.5);
             projectile.flipX = this.flipX;
-            projectile.setVelocityX(this.flipX ? -1250 : 1250); // Set velocity based on player's direction
+            projectile.setVelocityX(this.flipX ? -1500 : 1500); // Set velocity based on player's direction
         }
     }
 }

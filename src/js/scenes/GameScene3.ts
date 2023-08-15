@@ -5,6 +5,7 @@ import Player2 from '../classes/characters/Player2';
 import Player3 from '../classes/characters/Player3';
 import Enemy from '../classes/characters/Enemy';
 import NPC from '../classes/characters/NPC';
+import Drone from '../classes/entities/Drone';
 import * as functions from '../helpers/functions';
 
 export default class GameScene3 extends BaseScene {
@@ -39,6 +40,14 @@ export default class GameScene3 extends BaseScene {
         
         // Cloud Setup
         functions.createClouds(this, 3);
+
+        // Drone setup
+        // random positions xs and ys within the bounds of the scene no y greater than 600
+        for (let i = 0; i < 3; i++) {
+            let x = Phaser.Math.Between(0, this.width);
+            let y = Phaser.Math.Between(0, 600);
+            this.drones.push(new Drone(this, x, y, 'drone').setFlipX(true).play('spin', true));
+        }
         
         // Super
         super.create();

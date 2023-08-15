@@ -702,11 +702,11 @@ export default class BaseScene extends Phaser.Scene {
         this.pauseMenu = this.add.container(0, 0).setScrollFactor(0);
         this.pauseMenuSettings = this.add.container(
             this.cameras.main.width / 2, // x
-            this.cameras.main.height / 2 - 250 // y
+            this.cameras.main.height / 2 - 240 // y
         ).setScrollFactor(0);
         this.pauseMenuControls = this.add.image(
             this.cameras.main.width / 2, // x
-            this.cameras.main.height * 2 / 3 + 100, // y
+            this.cameras.main.height * 2 / 3 + 80, // y
             'controls' // texture
         ).setScrollFactor(0).setOrigin(0.5);
         this.pauseBackground = this.add.rectangle(
@@ -770,8 +770,8 @@ export default class BaseScene extends Phaser.Scene {
     public resizeCallback (gameSize: Phaser.Structs.Size) {
         // Update pause menu
         if (this.pauseMenu && this.pauseMenuSettings && this.pauseMenuControls && this.pauseBackground) {
-            this.pauseMenuSettings.setPosition(gameSize.width / 2, gameSize.height / 2 - 250);
-            this.pauseMenuControls.setPosition(gameSize.width / 2, gameSize.height * 2 / 3 + 100);
+            this.pauseMenuSettings.setPosition(gameSize.width / 2, gameSize.height / 2 - 240);
+            this.pauseMenuControls.setPosition(gameSize.width / 2, gameSize.height * 2 / 3 + 80);
             this.pauseBackground.setSize(gameSize.width, gameSize.height);
         }
     }

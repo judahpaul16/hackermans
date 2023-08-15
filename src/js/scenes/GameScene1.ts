@@ -39,9 +39,12 @@ export default class GameScene1 extends BaseScene {
         functions.createClouds(this, 10);
         
         // Drone setup
-        this.drones = [
-            new Drone(this, 2700, 500, 'drone').setFlipX(true).play('spin', true),
-        ];
+        // random positions xs and ys within the bounds of the scene no y greater than 600
+        for (let i = 0; i < 20; i++) {
+            let x = Phaser.Math.Between(0, this.width);
+            let y = Phaser.Math.Between(0, 600);
+            this.drones.push(new Drone(this, x, y, 'drone').setFlipX(true).play('spin', true));
+        }
 
         // NPC setup
         this.npcs = [
