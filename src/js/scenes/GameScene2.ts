@@ -38,7 +38,7 @@ export default class GameScene2 extends BaseScene {
         
         // Drone setup
         // random positions xs and ys within the bounds of the scene no y greater than 600
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 50; i++) {
             let x = Phaser.Math.Between(0, this.width);
             let y = Phaser.Math.Between(0, 600);
             this.drones.push(new Drone(this, x, y, 'drone').setFlipX(true).play('spin', true));
