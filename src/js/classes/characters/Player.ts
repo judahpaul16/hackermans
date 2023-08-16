@@ -17,7 +17,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public currentHealth: number = 100;
     public walkSpeed: number = 175;
     public runSpeed: number = 350;
-    public jumpSpeed: number = 425;
+    public jumpSpeed: number = 550;
     public isDead: boolean = false;
     public healthBarFill?: Phaser.GameObjects.Graphics;
     public healthBarFrame?: Phaser.GameObjects.Image;

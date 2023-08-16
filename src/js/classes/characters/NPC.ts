@@ -4,7 +4,7 @@ import Player from './Player';
 export default class NPC extends Player {
     public name: string = 'Anonymiss';
     public currentAnimation?: string;
-    public scale = 1.8;
+    public scale = 2;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
     public interactHint?: Phaser.GameObjects.Text | null = null;

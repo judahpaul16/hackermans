@@ -63,30 +63,43 @@ export function initializeDebugGUI(scene: any) {
         
         // Add a debug folder for altering the player's hitbox
         const characterFolder = scene.dg.addFolder('Characters');
-        const enemyFolder = characterFolder.addFolder('Enemies');
-        const player1Folder = characterFolder.addFolder('Player 1');
-        player1Folder.add(scene.player!, 'scale', 0.1, 2).name('Sprite Scale').listen();    
+        const playerFolder = characterFolder.addFolder('Players');
+        const player1Folder = playerFolder.addFolder('Player 1');
+        player1Folder.add(scene.player!, 'scale', 0.1, 5).name('Sprite Scale').listen();    
         player1Folder.add(scene.player!.body!, 'width', 0, 200).name('Hitbox Width').listen();
         player1Folder.add(scene.player!.body!, 'height', 0, 200).name('Hitbox Height').listen();
         player1Folder.add(scene.player!.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
         player1Folder.add(scene.player!.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
-        const player2Folder = characterFolder.addFolder('Player 2');
-        player2Folder.add(scene.player2!, 'scale', 0.1, 2).name('Sprite Scale').listen();
+        const player2Folder = playerFolder.addFolder('Player 2');
+        player2Folder.add(scene.player2!, 'scale', 0.1, 5).name('Sprite Scale').listen();
         player2Folder.add(scene.player2!.body!, 'width', 0, 200).name('Hitbox Width').listen();
         player2Folder.add(scene.player2!.body!, 'height', 0, 200).name('Hitbox Height').listen();
         player2Folder.add(scene.player2!.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
         player2Folder.add(scene.player2!.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
-        const player3Folder = characterFolder.addFolder('Player 3');
-        player3Folder.add(scene.player3!, 'scale', 0.1, 2).name('Sprite Scale').listen();
+        const player3Folder = playerFolder.addFolder('Player 3');
+        player3Folder.add(scene.player3!, 'scale', 0.1, 5).name('Sprite Scale').listen();
         player3Folder.add(scene.player3!.body!, 'width', 0, 200).name('Hitbox Width').listen();
         player3Folder.add(scene.player3!.body!, 'height', 0, 200).name('Hitbox Height').listen();
         player3Folder.add(scene.player3!.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
         player3Folder.add(scene.player3!.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
+        const npcFolder = characterFolder.addFolder('NPCs');
+        const enemyFolder = characterFolder.addFolder('Enemies');
+        if (scene.npcs) {
+            for (let i = 0; i < scene.npcs!.length; i++) {
+                let npc = scene.npcs![i];
+                let npcFolderN = npcFolder.addFolder('NPC ' + (i + 1));
+                npcFolderN.add(npc, 'scale', 0.1, 5).name('Sprite Scale').listen();
+                npcFolderN.add(npc.body!, 'width', 0, 200).name('Hitbox Width').listen();
+                npcFolderN.add(npc.body!, 'height', 0, 200).name('Hitbox Height').listen();
+                npcFolderN.add(npc.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
+                npcFolderN.add(npc.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
+            }
+        }
         if (scene.enemies) {
             for (let i = 0; i < scene.enemies!.length; i++) {
                 let enemy = scene.enemies![i];
-                let enemyFolderN = enemyFolder.addFolder('Enemy ' + i);
-                enemyFolderN.add(enemy, 'scale', 0.1, 2).name('Sprite Scale').listen();
+                let enemyFolderN = enemyFolder.addFolder('Enemy ' + (i + 1));
+                enemyFolderN.add(enemy, 'scale', 0.1, 5).name('Sprite Scale').listen();
                 enemyFolderN.add(enemy.body!, 'width', 0, 200).name('Hitbox Width').listen();
                 enemyFolderN.add(enemy.body!, 'height', 0, 200).name('Hitbox Height').listen();
                 enemyFolderN.add(enemy.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
