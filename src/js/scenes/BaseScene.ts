@@ -267,6 +267,25 @@ export default class BaseScene extends Phaser.Scene {
         this.player2!.play('standingP2', true);
         this.player2!.flipX = true;
 
+        // Create a reload hint only if it doesn't already exist and not reloading
+        if (!this.player2.reloadText) {                    
+            this.player2.reloadText = this.add.text(this.player2.x - 45, this.player2.y - 85, 'Reloading...', {
+                fontSize: 15,
+                color: '#ffffff',
+                align: 'center',
+                stroke: '#000000',
+                strokeThickness: 3
+            }).setDepth(10).setVisible(false);
+            this.add.tween({
+                targets: this.player2.reloadText,
+                alpha: 0,
+                duration: 800,
+                ease: 'Linear',
+                yoyo: true,
+                repeat: -1
+            });
+        }
+
         // Player 3 setup
         // onlt start at the end if the previous scene ends in a number 1 greater than this scene
         // Check if the previous scene number is exactly 1 less than the current scene number
@@ -285,6 +304,25 @@ export default class BaseScene extends Phaser.Scene {
 
         this.player3!.play('standingP3', true);
         this.player3!.flipX = true;
+
+        // Create a reload hint only if it doesn't already exist and not reloading
+        if (!this.player3.reloadText) {                    
+            this.player3.reloadText = this.add.text(this.player3.x - 45, this.player3.y - 65, 'Reloading...', {
+                fontSize: 15,
+                color: '#ffffff',
+                align: 'center',
+                stroke: '#000000',
+                strokeThickness: 3
+            }).setDepth(10).setVisible(false);
+            this.add.tween({
+                targets: this.player3.reloadText,
+                alpha: 0,
+                duration: 800,
+                ease: 'Linear',
+                yoyo: true,
+                repeat: -1
+            });
+        }
 
         if (this.npcs)
             for (let npc of this.npcs)
@@ -584,6 +622,14 @@ export default class BaseScene extends Phaser.Scene {
             this.player!.follow(this.player3!);
             this.player2!.follow(this.player3!);
         }
+
+        // Update Reload Text Position
+        if (this.player2!.reloadText) this.player2!.reloadText.setPosition(this.player2!.x - 45, this.player2!.y - 85);
+        if (this.player3!.reloadText) this.player3!.reloadText.setPosition(this.player3!.x - 45, this.player3!.y - 85);
+
+        // Check Reload
+        this.player2!.checkReload();
+        this.player3!.checkReload();
 
         // check scene transition
         this.checkSceneTransition();

@@ -9,7 +9,11 @@ export default class Player2 extends Player {
     public currentHealth: number = 100;
     public runSpeed: number = 275;
     public jumpSpeed: number = 500;
+    public magazine: number = 6;
+    public magazineSize: number = 6;
     public isDead: boolean = false;
+    public isReloading: boolean = false;
+    public reloadText?: Phaser.GameObjects.Text;
     public type: string = 'ranged';
     private shootSound: Phaser.Sound.BaseSound | null = null;
     public textureKey: string = 'player2';
@@ -63,6 +67,10 @@ export default class Player2 extends Player {
     }
 
     public attack() {
+        if (this.isReloading) {
+            this.reloadText?.setVisible(true);
+            return;
+        }
         if (this) {
             this.play(this.attackKey, true);
             if (!this.shootSound) {
@@ -82,13 +90,35 @@ export default class Player2 extends Player {
     }
 
     private emitProjectile() {
-        if (this.scene && this.scene.game && this.scene.game.registry) {
+        if (this.scene && this.scene.game && this.scene.game.registry && !this.isReloading) {
             // Create a projectile at player's position
             let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
             let projectile = projectileGroup.create(this.x, this.y, 'projectile-1').setScale(1.5);
             projectile.flipX = this.flipX;
             projectile.body.setAllowGravity(false);
             projectile.setVelocityX(this.flipX ? -750 : 750); // Set velocity based on player's direction
+            this.magazine--;
+        } else if (this.isReloading) {
+            this.reloadText?.setVisible(true);
+        }
+    }
+
+    public checkReload() {
+        if (this.magazine <= 0) {
+            this.isReloading = true;
+            // start 10 second timer
+            // when timer is up, set magazine to magazineSize
+            this.scene.time.addEvent({
+                delay: 10000,
+                callback: () => {
+                    this.magazine = this.magazineSize;
+                    this.isReloading = false;
+                },
+                callbackScope: this,
+                loop: false
+            });
+        } else {
+            this.isReloading = false;
         }
     }
 }
