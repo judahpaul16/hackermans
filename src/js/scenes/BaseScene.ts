@@ -269,7 +269,7 @@ export default class BaseScene extends Phaser.Scene {
 
         // Create a reload hint only if it doesn't already exist and not reloading
         if (!this.player2.reloadText) {                    
-            this.player2.reloadText = this.add.text(this.player2.x - 45, this.player2.y - 85, 'Reloading...', {
+            this.player2.reloadText = this.add.text(this.player2.x - 45, this.player2.y - 95, 'Reloading...', {
                 fontSize: 15,
                 color: '#ffffff',
                 align: 'center',
@@ -624,8 +624,8 @@ export default class BaseScene extends Phaser.Scene {
         }
 
         // Update Reload Text Position
-        if (this.player2!.reloadText) this.player2!.reloadText.setPosition(this.player2!.x - 45, this.player2!.y - 85);
-        if (this.player3!.reloadText) this.player3!.reloadText.setPosition(this.player3!.x - 45, this.player3!.y - 85);
+        if (this.player2!.reloadText) this.player2!.reloadText.setPosition(this.player2!.x - 45, this.player2!.y - 95);
+        if (this.player3!.reloadText) this.player3!.reloadText.setPosition(this.player3!.x - 45, this.player3!.y - 95);
 
         // Check Reload
         this.player2!.checkReload();
