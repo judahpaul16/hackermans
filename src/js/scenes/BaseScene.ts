@@ -547,6 +547,14 @@ export default class BaseScene extends Phaser.Scene {
             }
         }
 
+        // Update Reload Text Position
+        if (this.player2!.reloadText) this.player2!.reloadText.setPosition(this.player2!.x - 45, this.player2!.y - 95);
+        if (this.player3!.reloadText) this.player3!.reloadText.setPosition(this.player3!.x - 45, this.player3!.y - 95);
+
+        // Check Reload
+        this.player2!.checkReload();
+        this.player3!.checkReload();
+
         let isMovingLeft = this.inputManager.cursors.left!.isDown || this.inputManager.moveLeftKey.isDown;
         let isMovingRight = this.inputManager.cursors.right!.isDown || this.inputManager.moveRightKey!.isDown;
         let isRunning = this.inputManager.cursors.shift!.isDown;
@@ -622,14 +630,6 @@ export default class BaseScene extends Phaser.Scene {
             this.player!.follow(this.player3!);
             this.player2!.follow(this.player3!);
         }
-
-        // Update Reload Text Position
-        if (this.player2!.reloadText) this.player2!.reloadText.setPosition(this.player2!.x - 45, this.player2!.y - 95);
-        if (this.player3!.reloadText) this.player3!.reloadText.setPosition(this.player3!.x - 45, this.player3!.y - 95);
-
-        // Check Reload
-        this.player2!.checkReload();
-        this.player3!.checkReload();
 
         // check scene transition
         this.checkSceneTransition();
