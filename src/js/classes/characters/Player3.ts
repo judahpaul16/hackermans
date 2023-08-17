@@ -73,7 +73,6 @@ export default class Player3 extends Player {
 
     public attack() {
         if (this.isReloading) {
-            this.anims.stop();
             this.reloadText?.setVisible(true);
             return;
         }
@@ -109,7 +108,6 @@ export default class Player3 extends Player {
             projectile.setVelocityX(this.flipX ? -1500 : 1500); // Set velocity based on player's direction
             this.magazine--;
         } else if (this.isReloading) {
-            this.anims.stop();
             this.reloadText?.setVisible(true);
         }
     }

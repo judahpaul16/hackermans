@@ -119,6 +119,7 @@ export default class Player2 extends Player {
             });
         } else {
             this.isReloading = false;
+            this.reloadText?.setVisible(false);
         }
     }
 }
