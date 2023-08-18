@@ -89,6 +89,7 @@ export default class Player3 extends Player {
                     this.shootSound = null;
                 });
             }
+            // if shoot sound not playing play it
             if (!this.shootSound.isPlaying) this.shootSound.play({ volume: 0.5, loop: false });
         }
     }
