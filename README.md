@@ -1,5 +1,5 @@
 # Hackermans &copy;
-A platformer game made with Phaser.JS and TypeScript for the lulz. Maybe I'll make it a story. ¯\_(ツ)_/¯
+A platformer game made with Phaser.JS and TypeScript for the lulz. Maybe I'll make it a story. ¯\\_(ツ)_/¯
 
 ## Prerequisites
 
