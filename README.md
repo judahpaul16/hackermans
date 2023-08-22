@@ -1,6 +1,5 @@
-# Untitled Game
-
-This is the repository for "Untitled," a Phaser-based game. Follow the instructions below to get the game up and running on your local machine.
+# Hackermans &copy;
+A platformer game made with Phaser.JS and TypeScript for the lulz. Maybe I'll make it a story. ¯\_(ツ)_/¯
 
 ## Prerequisites
 
