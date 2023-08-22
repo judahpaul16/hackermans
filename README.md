@@ -9,10 +9,10 @@ A platformer game made with Phaser.JS and TypeScript for the lulz. Maybe I'll ma
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/untitled.git
+   git clone https://github.com/your-username/hackermans.git
 2. Navigate to the Project directory
    ```bash
-   cd untitled
+   cd hackermans
 3. Install the required dependencies:
    ```bash
    npm install
