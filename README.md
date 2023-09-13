@@ -1,4 +1,4 @@
-# Hackermans &copy;
+# :video_game: Hackermans &copy;
 A platformer game made with Phaser.JS and TypeScript for the lulz. Maybe I'll make it a story. ¯\\_(ツ)_/¯
 
 ## Prerequisites
@@ -22,8 +22,9 @@ A platformer game made with Phaser.JS and TypeScript for the lulz. Maybe I'll ma
 1. Start the development server by running the following command:
     ```bash
     npm start
-    
-### Screenshot:
+
+---
+
 ![Screenshot](screenshot.png)
 
 ## Special Thanks
