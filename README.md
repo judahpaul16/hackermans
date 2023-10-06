@@ -25,7 +25,12 @@ A platformer game made with Phaser.JS and TypeScript for the lulz. Maybe I'll ma
 
 ---
 
-![Screenshot](screenshot.png)
+![Screenshot 1](screenshots/1.png)
+---
+![Screenshot 2](screenshots/2.png)
 
 ## Special Thanks
 Game Assets (sprites, music, pixel art) - Asimuz (https://ansimuz.itch.io/)
+
+## License
+This project is licensed under the [GNU GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.en.html) License - see the [LICENSE](LICENSE) file for details.
