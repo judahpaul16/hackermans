@@ -1,6 +1,4 @@
 import Phaser from 'phaser';
-import Player2 from './Player2';
-import Player3 from './Player3';
 import Enemy from './Enemy';
 import InputManager from '../utils/InputManager';
 

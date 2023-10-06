@@ -1,9 +1,5 @@
 import Phaser from 'phaser';
 import BaseScene from './BaseScene';
-import Player from '../classes/characters/Player';
-import Player2 from '../classes/characters/Player2';
-import Player3 from '../classes/characters/Player3';
-import Enemy from '../classes/characters/Enemy';
 import NPC from '../classes/characters/NPC';
 import Drone from '../classes/entities/Drone';
 import * as functions from '../helpers/functions';
