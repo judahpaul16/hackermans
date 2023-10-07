@@ -13,6 +13,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public scale!: number;
     public currentAnimation?: string;
     public maxHealth: number = 100;
+    public healthText?: Phaser.GameObjects.Text;
     public currentHealth: number = 100;
     public walkSpeed: number = 175;
     public runSpeed: number = 350;

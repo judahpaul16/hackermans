@@ -273,7 +273,7 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
 
         // Foreground/fill of the health bar (same position as background)
         // Create a Graphics object
-        player.healthBarFill = scene.add.graphics({ fillStyle: { color: 0x00ff00 } });
+        player.healthBarFill = scene.add.graphics({ fillStyle: { color: 0x00ad48 } });
         player.healthBarFill.x += fillOffsetX;
 
         // Determine the width based on the current health percentage
@@ -297,9 +297,16 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
         :
             name = scene.add.text(player.avatar.x + 36, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' });
 
-        // Check if the HUD elements are defined before creating the container
+        // Add the player's health value in the center of the health bar
+        let healthString = `${player.currentHealth}/${player.maxHealth}`;
+        player.healthText = scene.add.text(player.healthBarFrame.x + 210, player.healthBarFrame.y + 28,
+                                        healthString, 
+                                        { fontSize: 15, color: '#ffffff', align: 'center' });
+        (isNPC || isEnemy) ? player.healthText.setX(player.healthBarFrame.x + 20) : player.healthText.setX(player.healthBarFrame.x + 210);
+        player.healthText.setDepth(3);
+
         if (player.avatar && player.healthBarFrame && player.healthBarFill) {
-            player.healthBar = scene.add.container(0, 0, [player.healthBarFill, player.avatar, player.healthBarFrame, name]);
+            player.healthBar = scene.add.container(0, 0, [player.healthBarFill, player.avatar, player.healthBarFrame, name, player.healthText]);
             player.healthBar.setDepth(2);        
         }
     }
@@ -331,6 +338,12 @@ export function updateHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
             player.healthBarFill.fillRect(player.healthBarFrame.x + 20, player.healthBarFrame.y + 20, fillWidth, 30);
         }
     }
+    // Update the text of the healthText
+    if (player.healthText) {
+        let healthString = `${player.currentHealth}/${player.maxHealth}`;
+        player.healthText.setText(healthString);
+    }
+
     return player.healthBarFill;
 }
 
@@ -346,6 +359,10 @@ export function destroyHealthBar(player: Player | Player2 | Player3 | NPC | Enem
         player.healthBarFill = undefined;
         player.healthBar.destroy();
         player.healthBar = undefined;
+    }
+    if (player.healthText) {
+        player.healthText.destroy();
+        player.healthText = undefined;
     }
 }
 
