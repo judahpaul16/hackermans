@@ -1,7 +1,6 @@
 import Phaser from 'phaser';
 import Enemy from './Enemy';
 import InputManager from '../utils/InputManager';
-import e from 'express';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     public number: number = 1;
