@@ -4,6 +4,7 @@ import Player2 from '../classes/characters/Player2';
 import Player3 from '../classes/characters/Player3';
 import NPC from '../classes/characters/NPC';
 import Enemy from '../classes/characters/Enemy';
+import Drone from '../classes/entities/Drone';
 import InputManager from '../classes/utils/InputManager';
 import * as functions from '../helpers/functions';
 
@@ -20,7 +21,7 @@ export default class BaseScene extends Phaser.Scene {
     protected p3StartY: number = this.p1StartY;
     protected enemies: Enemy[] = [];
     protected npcs: NPC[] = [];
-    protected drones: Phaser.GameObjects.Sprite[] = [];
+    protected drones: Drone[] = [];
     protected chatBubble?: Phaser.GameObjects.Sprite;
     protected dialogueText?: Phaser.GameObjects.Text;
     protected isInteracting: boolean = false;
@@ -48,6 +49,7 @@ export default class BaseScene extends Phaser.Scene {
     protected volumeHandle?: Phaser.GameObjects.Rectangle;
     protected volumeValue: number = 0.5;
     protected level?: Phaser.GameObjects.Text;
+    public animationInfoText?: Phaser.GameObjects.Text;
     protected previousSceneName?: string;
     public platformKey: string = 'street';
     public levelNumber: number = 1;
@@ -510,9 +512,15 @@ export default class BaseScene extends Phaser.Scene {
         if (this.player2) functions.updateHealthBar(this, this.player2);
         if (this.player3) functions.updateHealthBar(this, this.player3);
 
+        // Update Animation Info Text
+        if (this.player) this.player.updateAnimationInfo();
+        if (this.player2) this.player2.updateAnimationInfo();
+        if (this.player3) this.player3.updateAnimationInfo();
+
         // Update NPCs
         if (this.npcs) {
             for (let npc of this.npcs) {
+                npc.updateAnimationInfo();
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
                     this.distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
@@ -532,6 +540,7 @@ export default class BaseScene extends Phaser.Scene {
         // Update Enemies
         if (this.enemies) {
             for (let enemy of this.enemies) {
+                enemy.updateAnimationInfo();
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 if (activePlayer) {
                     this.distanceB = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, enemy.x, enemy.y);
@@ -544,6 +553,13 @@ export default class BaseScene extends Phaser.Scene {
                         functions.destroyHealthBar(enemy!);
                     }
                 }
+            }
+        }
+
+        // Update Drones
+        if (this.drones) {
+            for (let drone of this.drones) {
+                drone.updateAnimationInfo();
             }
         }
 

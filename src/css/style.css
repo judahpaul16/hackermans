@@ -5,3 +5,12 @@ html, body, canvas {
     padding: 0;
     overflow: hidden;
 }
+
+.dg .c {
+    float: right !important;
+    width: auto !important;
+}
+
+.dg .property-name {
+    width: auto !important;
+}

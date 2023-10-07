@@ -27,10 +27,15 @@ export function initializeDebugGUI(scene: any) {
     scene.registry.set('debugGUI', dg);
     scene.dg = dg;
 
-    // Add toggle for physics arcade debug to display sprite bounds
+    // Add toggle for physics arcade debug to display sprite bounds and animation info
     const debugGraphic = scene.physics.world.createDebugGraphic();
     debugGraphic.setVisible(false);
     scene.dg.add(debugGraphic, 'visible').name('Show Bounds').listen();
+    scene.showAnimationsInfo = false;
+    scene.dg.add(scene, 'showAnimationsInfo').name('Show Animations Info').onChange((value : boolean) => {
+        // When the switch is toggled, update all sprites' animation info visibility
+        toggleAllAnimationInfo(scene, value);
+    });
     if (scene.dg) {
         const cameraFolder = scene.dg?.addFolder('Camera');
         if (cameraFolder) {
@@ -105,6 +110,49 @@ export function initializeDebugGUI(scene: any) {
                 enemyFolderN.add(enemy.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
                 enemyFolderN.add(enemy.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
             }
+        }
+    }
+}
+
+function toggleAllAnimationInfo(scene: any, value: boolean) {
+    // Update animation info for all players
+    if (scene.player) {
+        scene.player.showAnimationInfo = value;
+        scene.player.updateAnimationInfo();
+    }
+    if (scene.player2) {
+        scene.player2.showAnimationInfo = value;
+        scene.player2.updateAnimationInfo();
+    }
+    if (scene.player3) {
+        scene.player3.showAnimationInfo = value;
+        scene.player3.updateAnimationInfo();
+    }
+
+    // Update animation info for all NPCs
+    if (scene.npcs) {
+        for (let i = 0; i < scene.npcs.length; i++) {
+            let npc = scene.npcs[i];
+            npc.showAnimationInfo = value;
+            npc.updateAnimationInfo();
+        }
+    }
+
+    // Update animation info for all enemies
+    if (scene.enemies) {
+        for (let i = 0; i < scene.enemies.length; i++) {
+            let enemy = scene.enemies[i];
+            enemy.showAnimationInfo = value;
+            enemy.updateAnimationInfo();
+        }
+    }
+
+    // Update animation info for all drones
+    if (scene.drones) {
+        for (let i = 0; i < scene.drones.length; i++) {
+            let drone = scene.drones[i];
+            drone.showAnimationInfo = value;
+            drone.updateAnimationInfo();
         }
     }
 }

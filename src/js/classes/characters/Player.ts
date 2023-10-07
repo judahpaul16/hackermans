@@ -37,6 +37,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public inputManager: InputManager = new InputManager(this.scene);
     public projectileGroup!: Phaser.Physics.Arcade.Group;
     public indicator!: Phaser.GameObjects.Image;
+    public showAnimationInfo: boolean = false;
+    public animationInfoText!: Phaser.GameObjects.Text;
     private hitSpritePool: Phaser.GameObjects.Sprite[] = [];
     public isHunting: boolean = false;
 
@@ -57,6 +59,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                     this.indicator = scene.add.image(this.x, this.y - 75, 'player-indicator');
                     this.indicator.setDepth(10).setVisible(false);              
                 }
+                this.animationInfoText = scene.add.text(this.x - 100, this.y - 100, '', { fontSize: '16px', color: '#fff' }).setDepth(10).setVisible(false);
             }
         }
         this.setDepth(4);
@@ -101,6 +104,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         return this.currentAnimation;
     }
 
+    public updateAnimationInfo() {
+        if (this.showAnimationInfo && this.animationInfoText) {
+            // Retrieve the frame number of the current animation
+            const frameNumber = this.anims.currentFrame ? this.anims.currentFrame.index : 'N/A';
+            this.animationInfoText.setText(`Animation: ${this.currentAnimation}\nFrame: ${frameNumber}`);
+            this.animationInfoText.setPosition(this.x - 100, this.y - 100);
+            this.animationInfoText.setVisible(true);
+        } else if (this.animationInfoText) {
+            this.animationInfoText.setVisible(false);
+        }
+    }
+    
     public isActive() {
         return (this.scene.game.registry.get('activePlayer').name === this.name);
     }

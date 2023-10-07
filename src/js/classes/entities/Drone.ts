@@ -1,11 +1,9 @@
 import Phaser from 'phaser';
-import Player from '../characters/Player';
-import Player2 from '../characters/Player2';
-import Player3 from '../characters/Player3';
-import NPC from '../characters/NPC';
 
 export default class Drone extends Phaser.GameObjects.Sprite {
     public currentAnimation?: string;
+    public showAnimationInfo: boolean = false;
+    public animationInfoText?: Phaser.GameObjects.Text;
     public textureKey: string = 'drone';
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
@@ -20,6 +18,7 @@ export default class Drone extends Phaser.GameObjects.Sprite {
                 let body = (this.body as Phaser.Physics.Arcade.Body)
                 body.setGravityY(0);
                 body.setAllowGravity(false);
+                this.animationInfoText = scene.add.text(this.x - 100, this.y - 100, '', { fontSize: '16px', color: '#fff' }).setVisible(false);
             }
         }
 
@@ -41,4 +40,17 @@ export default class Drone extends Phaser.GameObjects.Sprite {
     public getCurrentAnimation() {
         return this.currentAnimation;
     }
+
+    public updateAnimationInfo() {
+        if (this.showAnimationInfo && this.animationInfoText) {
+            // Retrieve the frame number of the current animation
+            const frameNumber = this.anims.currentFrame ? this.anims.currentFrame.index : 'N/A';
+            this.animationInfoText.setText(`Animation: ${this.currentAnimation}\nFrame: ${frameNumber}`);
+            this.animationInfoText.setPosition(this.x - 100, this.y - 100);
+            this.animationInfoText.setVisible(true);
+        } else if (this.animationInfoText) {
+            this.animationInfoText.setVisible(false);
+        }
+    }
+    
 }
