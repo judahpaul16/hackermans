@@ -60,7 +60,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                     this.indicator = scene.add.image(this.x, this.y - 75, 'player-indicator');
                     this.indicator.setDepth(10).setVisible(false);              
                 }
-                this.animationInfoText = scene.add.text(this.x - 100, this.y - 100, '', { fontSize: '16px', color: '#fff' }).setDepth(10).setVisible(false);
+                this.animationInfoText =
+                    scene.add.text(
+                        this.x - 100, this.y - 100, '',
+                        { fontSize: '16px', color: '#fff' }
+                    ).setDepth(10).setVisible(false);
             }
         }
         this.setDepth(4);
@@ -73,11 +77,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.on('animationcomplete', this.handleAnimationComplete, this);
     }
     
-    protected handleAnimationStart(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+    protected handleAnimationStart(
+        animation: Phaser.Animations.Animation,
+        frame: Phaser.Animations.AnimationFrame
+    ) {
         this.currentAnimation = animation.key;
     }
 
-    protected handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+    protected handleAnimationComplete(
+        animation: Phaser.Animations.Animation,
+        frame: Phaser.Animations.AnimationFrame
+    ) {
         if (animation.key === this.dyingKey) {
             this.isDead = true;
         }

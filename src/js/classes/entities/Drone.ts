@@ -18,7 +18,11 @@ export default class Drone extends Phaser.GameObjects.Sprite {
                 let body = (this.body as Phaser.Physics.Arcade.Body)
                 body.setGravityY(0);
                 body.setAllowGravity(false);
-                this.animationInfoText = scene.add.text(this.x - 100, this.y - 100, '', { fontSize: '16px', color: '#fff' }).setVisible(false);
+                this.animationInfoText =
+                    scene.add.text(
+                        this.x - 100, this.y - 100, '',
+                        { fontSize: '16px', color: '#fff' }
+                    ).setDepth(10).setVisible(false);
             }
         }
 
@@ -27,11 +31,17 @@ export default class Drone extends Phaser.GameObjects.Sprite {
         this.on('animationcomplete', this.handleAnimationComplete, this);
     }
     
-    protected handleAnimationStart(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+    protected handleAnimationStart(
+        animation: Phaser.Animations.Animation,
+        frame: Phaser.Animations.AnimationFrame
+    ) {
         this.currentAnimation = animation.key;
     }
 
-    protected handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+    protected handleAnimationComplete(
+        animation: Phaser.Animations.Animation,
+        frame: Phaser.Animations.AnimationFrame
+    ) {
         if (this.currentAnimation === animation.key) {
             this.currentAnimation = undefined;
         }

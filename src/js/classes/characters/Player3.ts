@@ -46,11 +46,17 @@ export default class Player3 extends Player {
         this.setDepth(3);
     }
 
-    protected handleAnimationStart(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+    protected handleAnimationStart(
+        animation: Phaser.Animations.Animation,
+        frame: Phaser.Animations.AnimationFrame
+    ) {
         super.handleAnimationStart(animation, frame);
     }
 
-    protected handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+    protected handleAnimationComplete(
+        animation: Phaser.Animations.Animation,
+        frame: Phaser.Animations.AnimationFrame
+    ) {
         if (animation.key === this.dyingKey) {
             this.isDead = true;
         }
