@@ -42,7 +42,7 @@ export default class Drone extends Phaser.GameObjects.Sprite {
     }
 
     public updateAnimationInfo() {
-        if (this.showAnimationInfo && this.animationInfoText) {
+        if (this && this.anims && this.showAnimationInfo && this.animationInfoText && this.anims.currentFrame) {
             // Retrieve the frame number of the current animation
             const frameNumber = this.anims.currentFrame ? this.anims.currentFrame.index : 'N/A';
             this.animationInfoText.setText(`Animation: ${this.currentAnimation}\nFrame: ${frameNumber}`);
