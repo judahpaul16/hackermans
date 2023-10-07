@@ -6,11 +6,11 @@ html, body, canvas {
     overflow: hidden;
 }
 
-.dg .c {
+.dg .boolean .c {
     float: right !important;
     width: auto !important;
 }
 
-.dg .property-name {
+.dg .boolean .property-name {
     width: auto !important;
 }
