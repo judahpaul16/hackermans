@@ -472,7 +472,7 @@ export function setupAnimations(scene: any) {
         generateAnimationProps('hurtNPC1', 'npc', 'hurt-', 1, 1, 1, 0),
         generateAnimationProps('dyingNPC1', 'npc', 'jump-', 3, 3, 1, 0),
         generateAnimationProps('crouchingNPC1', 'npc', 'crouch-', 1, 1, 1, 0),
-        generateAnimationProps('projectile-1', 'projectile-1', 'shot-', 1, 3, 3, -1),
+        generateAnimationProps('projectile-1', 'projectile-1', 'shot-', 0, 12, 30, -1),
         generateAnimationProps('hitSprite1', 'hitSprite1', 'hits-1-', 1, 5, 10, 0),
         generateAnimationProps('walkingP2', 'player2', 'walk', 1, 8, 10, -1, 4),
         generateAnimationProps('runningP2', 'player2', 'run', 1, 8, 10, -1, 4),
