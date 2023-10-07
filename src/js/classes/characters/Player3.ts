@@ -13,8 +13,8 @@ export default class Player3 extends Player {
     public currentHealth: number = 100;
     public runSpeed: number = 225;
     public jumpSpeed: number = 500;
-    public magazine: number = 20;
     public magazineSize: number = 20;
+    public magazine: number = this.magazineSize;
     public isDead: boolean = false;
     public isReloading: boolean = false;
     public reloadText?: Phaser.GameObjects.Text;
