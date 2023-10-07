@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import Enemy from './Enemy';
 import InputManager from '../utils/InputManager';
+import e from 'express';
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     public number: number = 1;
@@ -183,16 +184,31 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public specialAttack() {
         return;
     }
-    
+
+    private computeBufferZone(followingPlayerNumber: number, activePlayerNumber: number): number {
+        if (followingPlayerNumber === 2 && activePlayerNumber === 1) {
+            return 600;
+        } else if (followingPlayerNumber === 3 && activePlayerNumber === 1) {
+            return 300;
+        } else if (followingPlayerNumber === 1 && activePlayerNumber === 2) {
+            return 600;
+        } else if (followingPlayerNumber === 3 && activePlayerNumber === 2) {
+            return 300;
+        } else if (followingPlayerNumber === 1 && activePlayerNumber === 3) {
+            return 300;
+        }
+        return 600;
+    }
+
     public follow(
         playerToBeFollowed: any,
         followSpeed: number = playerToBeFollowed.runSpeed,
         walkSpeed: number = playerToBeFollowed.walkSpeed,) {
+        const activePlayer: Player = this.scene.game.registry.get('activePlayer');
 
-        let bufferZone = (this.number == 3) ? 300 : 150;
-        if (this.number == 2) bufferZone = 450;
+        let bufferZone = this.computeBufferZone(this.number, activePlayer.number);
 
-        if (this.scene.registry.get('activePlayer') as Player === this) {
+        if (activePlayer === this) {
             this.isHunting = false;
             return;
         }
