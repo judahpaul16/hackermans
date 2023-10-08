@@ -39,11 +39,11 @@ export default class MainMenuScene extends Phaser.Scene {
         if (this.timerEvent) this.timerEvent.destroy(); // Stop the ellipses animation
         if (this.clickCounter === 1) {
             // Play the coin sound
-            this.sound.play('coinSound', { volume: 0.5 });
+            this.sound.play('coinSound', { volume: 0.1 });
             // Set the Main Menu Background
             this.createBackground();
             // If not already playing, play the main music
-            if (!this.sound.get('mainMusic')) this.sound.play('mainMusic', { loop: true, volume: 0.2 });
+            if (!this.sound.get('mainMusic')) this.sound.play('mainMusic', { loop: true, volume: 0.5 });
             // Set Logo
             this.logo = this.add.sprite(310, window.innerHeight / 2 + 20, 'logo').setAlpha(0);
             this.time.delayedCall(1000, () => {
@@ -92,6 +92,11 @@ export default class MainMenuScene extends Phaser.Scene {
         if (!this.ready) return;
         // If the user clicks twice, start the game
         if (this.clickCounter >= 2) {
+            // Lower Main Music volume
+            const mainMusic = this.sound.get('mainMusic');
+            if (mainMusic instanceof Phaser.Sound.WebAudioSound || mainMusic instanceof Phaser.Sound.HTML5AudioSound) {
+                mainMusic.setVolume(0.2);
+            }
             // Start the next scene
             // this.scale.off('resize');
             this.scene.start('GameScene1');
