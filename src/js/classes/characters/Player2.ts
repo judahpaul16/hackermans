@@ -13,6 +13,7 @@ export default class Player2 extends Player {
     public isDead: boolean = false;
     public isReloading: boolean = false;
     public reloadText?: Phaser.GameObjects.Text;
+    public manualReload: boolean = false;
     public shotgunPumpSound?: Phaser.Sound.BaseSound | null = null;
     public type: string = 'ranged';
     public textureKey: string = 'player2';
@@ -92,9 +93,10 @@ export default class Player2 extends Player {
     }
 
     public checkReload() {
-        if (this.magazine <= 0) {
+        if (this.magazine <= 0 || this.manualReload) {
             if (!this.isReloading) {
                 this.isReloading = true;
+                if (this.reloadText) this.reloadText.setVisible(true);
                 
                 setTimeout(() => {
                     if (!this.shotgunPumpSound)
@@ -109,6 +111,7 @@ export default class Player2 extends Player {
                     callback: () => {
                         this.magazine = this.magazineSize;
                         this.isReloading = false;
+                        this.manualReload = false;
                     },
                     callbackScope: this,
                     loop: false
@@ -116,7 +119,12 @@ export default class Player2 extends Player {
             }
         } else {
             this.isReloading = false;
-            this.reloadText?.setVisible(false);
+            if (this.reloadText) this.reloadText.setVisible(false);
         }
-    }    
+    }
+
+    public reload() {
+        this.manualReload = true;
+        this.checkReload();
+    }
 }

@@ -16,6 +16,7 @@ class InputManager {
     public attackKey!: Phaser.Input.Keyboard.Key;
     public specialAttackKey1!: Phaser.Input.Keyboard.Key;
     public specialAttackKey2!: Phaser.Input.Keyboard.Key;
+    public reloadKey!: Phaser.Input.Keyboard.Key;
 
     public keysDisabled: boolean = false;
 
@@ -26,7 +27,8 @@ class InputManager {
     private initializeKeys(scene: Phaser.Scene) {
         this.cursors = scene.input.keyboard!.createCursorKeys();
         this.debugKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
-        this.resetKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+        this.resetKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.ZERO);
+        this.reloadKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         this.interactKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         this.moveLeftKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.crouchKey = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.S);

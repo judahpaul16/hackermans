@@ -12,6 +12,7 @@ export default class Enemy extends Player {
     public magazine: number = 6;
     public magazineSize: number = 6;
     public isReloading: boolean = false;
+    public manualReload: boolean = false;
     public attackHint?: Phaser.GameObjects.Image | null = null;
     public shotgunPumpSound?: Phaser.Sound.BaseSound | null = null;
     public reloadText?: Phaser.GameObjects.Text;
@@ -149,9 +150,10 @@ export default class Enemy extends Player {
     }
 
     public checkReload() {
-        if (this.magazine <= 0) {
+        if (this.magazine <= 0 || this.manualReload) {
             if (!this.isReloading) {
                 this.isReloading = true;
+                if (this.reloadText) this.reloadText.setVisible(true);
                 
                 setTimeout(() => {
                     if (!this.shotgunPumpSound)
@@ -166,6 +168,7 @@ export default class Enemy extends Player {
                     callback: () => {
                         this.magazine = this.magazineSize;
                         this.isReloading = false;
+                        this.manualReload = false;
                     },
                     callbackScope: this,
                     loop: false
@@ -173,7 +176,12 @@ export default class Enemy extends Player {
             }
         } else {
             this.isReloading = false;
-            this.reloadText?.setVisible(false);
+            if (this.reloadText) this.reloadText.setVisible(false);
         }
-    }    
+    }
+
+    public reload() {
+        this.manualReload = true;
+        this.checkReload();
+    }
 }

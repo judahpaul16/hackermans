@@ -123,8 +123,25 @@ export default class BaseScene extends Phaser.Scene {
         });
         
         this.inputManager.resetKey.on('down', () => {
-            // Reset player position if 'R' key is pressed
+            // Reset player position if '0' key is pressed
             this.resetPlayers();
+        });
+
+        this.inputManager.reloadKey.on('down', () => {
+            // Reload if 'R' key is pressed and type ranged
+            [this.player2, this.player3].forEach(player => {
+                let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
+                if (player && player.type === 'ranged' && player.number === activePlayer.number) {
+                    player.reload();
+                }
+            });
+            if (this.enemies) {
+                for (let enemy of this.enemies) {
+                    if (enemy.type === 'ranged') {
+                        enemy.reload();
+                    }
+                }
+            }
         });
 
         this.inputManager.debugKey.on('down', () => {
