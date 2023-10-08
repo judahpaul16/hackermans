@@ -20,6 +20,13 @@ export default class NPC extends Player {
     public shootKey: string = 'shootNPC1';
     public runShootKey: string = 'runShootNPC1';
     public crouchKey: string = 'crouchingNPC1';
+    public dialogue: { [key: string]: string } = {
+        'anonymissDialogue1': "There you are! I was starting to think you weren't\n" +
+                        "gonna show. Anyways, I saw some androids lurking\n" +
+                        "around down there so be careful.\n" +
+                        "I'm gonna hang back here and keep an eye out.\n" +
+                        "Meet me back here when you find the keycard.",
+    };
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);

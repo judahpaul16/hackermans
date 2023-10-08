@@ -68,7 +68,8 @@ import industrialFarBuildings from '../../assets/sprites/backgrounds/industrial-
 
 import mainMusicSrc from '../../assets/audio/music/main.mp3';
 
-import p3Dialogue1 from '../../assets/audio/dialogue/player3_1.mp3';
+import anonymuskDialogue1 from '../../assets/audio/dialogue/anonymusk_1.mp3';
+import anonymissDialogue1 from '../../assets/audio/dialogue/anonymiss_1.mp3';
 
 import coinSound from '../../assets/audio/sfx/coin.mp3';
 import meleeSoundP1 from '../../assets/audio/sfx/p1_melee.mp3';
@@ -117,7 +118,8 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('health-bar-frame-enemy', healthBarFrameEnemyImg);
         this.load.atlas('chat_bubble', chatBubbleImg, chatBubbleJSON);
         this.load.audio('mainMusic', mainMusicSrc);
-        this.load.audio('p3Dialogue1', p3Dialogue1);
+        this.load.audio('anonymuskDialogue1', anonymuskDialogue1);
+        this.load.audio('anonymissDialogue1', anonymissDialogue1);
         this.load.audio('meleeP1', meleeSoundP1);
         this.load.audio('shootP3', shootSoundP3);
         this.load.audio('shootP2', shootSoundP2);
