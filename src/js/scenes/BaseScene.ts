@@ -161,6 +161,7 @@ export default class BaseScene extends Phaser.Scene {
         // Debugging
         functions.initializeDebugGUI(this);
     }
+    // CREATE END
 
     update() {
         // Parallax scrolling
@@ -234,10 +235,8 @@ export default class BaseScene extends Phaser.Scene {
                 });
             }, [], this);            
         }
-
-        // any other functions update logic...
-
     }
+    // UPDATE END
 
     protected setupPlayers() {
         // Projectile setup
@@ -834,7 +833,4 @@ export default class BaseScene extends Phaser.Scene {
             this.pauseBackground.setSize(gameSize.width, gameSize.height);
         }
     }
-
-    // other functions methods...
-
 }
