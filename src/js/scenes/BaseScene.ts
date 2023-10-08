@@ -171,7 +171,15 @@ export default class BaseScene extends Phaser.Scene {
 
         // Handle Interactions
         if (this.player && this.player3)
-            functions.handleInteract(this, this.player, this.player3, this.inputManager.interactKey!);
+            functions.handleInteract(
+                this,
+                this.player3,
+                "Things haven't been the same since the 7/11 attacks.\n" +
+                "But, if you follow my lead, you might just\n" +
+                "make it out of here alive.",
+                "p3Dialogue1", // key for dialogue sound
+                this.inputManager.interactKey!
+            );
         
         // if Lv. # not in camera top right corner, move it there
         if (this.level!.x != this.cameras.main.width - 80 || this.level!.y != 20)

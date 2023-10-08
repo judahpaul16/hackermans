@@ -366,14 +366,20 @@ export function destroyHealthBar(player: Player | Player2 | Player3 | NPC | Enem
     }
 }
 
-export function handleInteract(scene: any, player: Player, player2: Player2, interactKey: Phaser.Input.Keyboard.Key) {
+export function handleInteract(
+    scene: any,
+    player: Player | Player2 | Player3 | NPC | Enemy,
+    dialogue: string,
+    dialogueSoundKey: string,
+    interactKey: Phaser.Input.Keyboard.Key
+) {
     if (scene.isInteracting) return; // Exit if interaction is already in progress
 
     if (Phaser.Input.Keyboard.JustDown(interactKey)) {
         scene.isInteracting = true; // Set the lock
         
-        scene.sound.stopByKey('p3Dialogue1');
-        scene.sound.play('p3Dialogue1', { volume: 1 });
+        scene.sound.stopByKey(dialogueSoundKey);
+        scene.sound.play(dialogueSoundKey, { volume: 1 });
 
         if (scene.chatBubble && scene.chatBubble.anims && scene.chatBubble.anims.isPlaying) {
             if (scene.timerEvent) {
@@ -393,11 +399,11 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
             scene.chatBubble.destroy();
         }
 
-        const newChatBubble = scene.add.sprite(scene.player2!.x - 123, scene.player2!.y - 130, 'chat_bubble').setScale(0.34).setDepth(11);
+        const newChatBubble = scene.add.sprite(player!.x - 123, player!.y - 130, 'chat_bubble').setScale(0.34).setDepth(11);
         newChatBubble.flipX = true;
         newChatBubble.play('chat_bubble', true);
 
-        const dialogue = "Things haven't been the same since the 7/11 attacks.\nBut, if you follow my lead, you might just\nmake it out of here alive.";
+        const dialogueMsg = dialogue;
         let textContent = "";
         const textSpeed = 55;
 
@@ -459,7 +465,7 @@ export function setupAnimations(scene: any) {
         generateAnimationProps('logoAnimation', 'logo', 'logo_', 1, 29, 15, -1, 4),
         generateAnimationProps('cloud', 'cloud', 'cloud', 1, 4, 7, -1, 4),
         generateAnimationProps('chat_bubble', 'chat_bubble', 'chat', 0, 3, 7, 0, 2),
-        generateAnimationProps('chat_bubble_reverse', 'chat_bubble', 'chat', 1, 3, 7, 0, 2),
+        generateAnimationProps('chat_bubble_reverse', 'chat_bubble', 'chat', 3, 0, 7, 0, 2),
         generateAnimationProps('standingP1', 'player', 'standing', 1, 11, 3, -1, 4),
         generateAnimationProps('walkingP1', 'player', 'walk', 1, 7, 10, -1, 4),
         generateAnimationProps('runningP1', 'player', 'run', 1, 8, 10, -1, 4),
