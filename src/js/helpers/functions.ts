@@ -3,7 +3,7 @@ import Player from '../classes/characters/Player';
 import Player2 from '../classes/characters/Player3';
 import Player3 from '../classes/characters/Player2';
 import NPC from '../classes/characters/NPC';
-import Enemy from '../classes/characters/Enemy';
+import EnemyAI from '../classes/characters/EnemyAI';
 import * as dat from 'dat.gui';
 
 export function createBackground(scene: any, key: string, width: number, height: number): Phaser.GameObjects.TileSprite {
@@ -27,10 +27,21 @@ export function initializeDebugGUI(scene: any) {
     scene.registry.set('debugGUI', dg);
     scene.dg = dg;
 
-    // Add toggle for physics arcade debug to display sprite bounds
+    // Add toggle for physics arcade debug to display sprite bounds and animation info
     const debugGraphic = scene.physics.world.createDebugGraphic();
     debugGraphic.setVisible(false);
     scene.dg.add(debugGraphic, 'visible').name('Show Bounds').listen();
+    scene.showAnimationsInfo = false;
+    scene.dg.add(scene, 'showAnimationsInfo').name('Show Animations Info').onChange((value : boolean) => {
+        // When the switch is toggled, update all sprites' animation info visibility
+        toggleAllAnimationInfo(scene, value);
+    });
+    scene.showXY = false;
+    scene.dg.add(scene, 'showXY').name('Show X, Y Coords').onChange((value : boolean) => {
+        // When the switch is toggled, update all sprites' X-Y coords visibility
+        toggleXYCoords(scene, value);
+    });
+
     if (scene.dg) {
         const cameraFolder = scene.dg?.addFolder('Camera');
         if (cameraFolder) {
@@ -98,13 +109,99 @@ export function initializeDebugGUI(scene: any) {
         if (scene.enemies) {
             for (let i = 0; i < scene.enemies!.length; i++) {
                 let enemy = scene.enemies![i];
-                let enemyFolderN = enemyFolder.addFolder('Enemy ' + (i + 1));
+                let enemyFolderN = enemyFolder.addFolder(`${enemy.name} ` + (i + 1));
                 enemyFolderN.add(enemy, 'scale', 0.1, 5).name('Sprite Scale').listen();
                 enemyFolderN.add(enemy.body!, 'width', 0, 200).name('Hitbox Width').listen();
                 enemyFolderN.add(enemy.body!, 'height', 0, 200).name('Hitbox Height').listen();
                 enemyFolderN.add(enemy.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
                 enemyFolderN.add(enemy.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
             }
+        }
+    }
+}
+
+export function toggleXYCoords(scene: any, value: boolean) {
+    // Update XY coords for all players
+    if (scene.player) {
+        scene.player.showXY = value;
+        scene.player.updateDebugInfo();
+    }
+    if (scene.player2) {
+        scene.player2.showXY = value;
+        scene.player2.updateDebugInfo();
+    }
+    if (scene.player3) {
+        scene.player3.showXY = value;
+        scene.player3.updateDebugInfo();
+    }
+
+    // Update XY coords for all NPCs
+    if (scene.npcs) {
+        for (let i = 0; i < scene.npcs.length; i++) {
+            let npc = scene.npcs[i];
+            npc.showXY = value;
+            npc.updateDebugInfo();
+        }
+    }
+
+    // Update XY coords for all enemies
+    if (scene.enemies) {
+        for (let i = 0; i < scene.enemies.length; i++) {
+            let enemy = scene.enemies[i];
+            enemy.showXY = value;
+            enemy.updateDebugInfo();
+        }
+    }
+
+    // Update XY coords for all drones
+    if (scene.drones) {
+        for (let i = 0; i < scene.drones.length; i++) {
+            let drone = scene.drones[i];
+            drone.showXY = value;
+            drone.updateDebugInfo();
+        }
+    }
+}
+
+function toggleAllAnimationInfo(scene: any, value: boolean) {
+    // Update animation info for all players
+    if (scene.player) {
+        scene.player.showAnimationInfo = value;
+        scene.player.updateDebugInfo();
+    }
+    if (scene.player2) {
+        scene.player2.showAnimationInfo = value;
+        scene.player2.updateDebugInfo();
+    }
+    if (scene.player3) {
+        scene.player3.showAnimationInfo = value;
+        scene.player3.updateDebugInfo();
+    }
+
+    // Update animation info for all NPCs
+    if (scene.npcs) {
+        for (let i = 0; i < scene.npcs.length; i++) {
+            let npc = scene.npcs[i];
+            npc.showAnimationInfo = value;
+            npc.updateDebugInfo();
+        }
+    }
+
+    // Update animation info for all enemies
+    if (scene.enemies) {
+        for (let i = 0; i < scene.enemies.length; i++) {
+            let enemy = scene.enemies[i];
+            enemy.showAnimationInfo = value;
+            enemy.updateDebugInfo();
+        }
+    }
+
+    // Update animation info for all drones
+    if (scene.drones) {
+        for (let i = 0; i < scene.drones.length; i++) {
+            let drone = scene.drones[i];
+            drone.showAnimationInfo = value;
+            drone.updateDebugInfo();
         }
     }
 }
@@ -176,13 +273,13 @@ export function updateClouds(scene: any) {
     }
 }
 
-export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy, extraYoffset: number = 0) {
+export function createHealthBar(scene: Phaser.Scene, player: any, extraYoffset: number = 0) {
     if (player && !player.avatar && !player.amask && !player.healthBarFrame && !player.healthBarFill && !player.healthBar) {
         // Determine type of character
         const isP2 = player instanceof Player2;
         const isP3 = player instanceof Player3;
         const isNPC = player instanceof NPC;
-        const isEnemy = player instanceof Enemy;
+        const isEnemy = player.name.includes('Enemy');
         const avatarOffsetX = isNPC || isEnemy ? 255 : 0;
         const fillOffsetX = isNPC || isEnemy ? -15 : 0;
 
@@ -225,7 +322,7 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
 
         // Foreground/fill of the health bar (same position as background)
         // Create a Graphics object
-        player.healthBarFill = scene.add.graphics({ fillStyle: { color: 0x00ff00 } });
+        player.healthBarFill = scene.add.graphics({ fillStyle: { color: 0x00ad48 } });
         player.healthBarFill.x += fillOffsetX;
 
         // Determine the width based on the current health percentage
@@ -249,17 +346,24 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
         :
             name = scene.add.text(player.avatar.x + 36, player.avatar.y - 33, player.name, { fontSize: 15, color: '#ffffff' });
 
-        // Check if the HUD elements are defined before creating the container
+        // Add the player's health value in the center of the health bar
+        let healthString = `${player.currentHealth}/${player.maxHealth}`;
+        player.healthText = scene.add.text(player.healthBarFrame.x + 210, player.healthBarFrame.y + 28,
+                                        healthString, 
+                                        { fontSize: 15, color: '#ffffff', align: 'center' });
+        (isNPC || isEnemy) ? player.healthText.setX(player.healthBarFrame.x + 20) : player.healthText.setX(player.healthBarFrame.x + 210);
+        player.healthText.setDepth(3);
+
         if (player.avatar && player.healthBarFrame && player.healthBarFill) {
-            player.healthBar = scene.add.container(0, 0, [player.healthBarFill, player.avatar, player.healthBarFrame, name]);
+            player.healthBar = scene.add.container(0, 0, [player.healthBarFill, player.avatar, player.healthBarFrame, name, player.healthText]);
             player.healthBar.setDepth(2);        
         }
     }
 }
 
-export function updateHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy) {
+export function updateHealthBar(scene: Phaser.Scene, player: any) {
     if (player && player.healthBarFill && player.healthBarFrame && player.healthBar) {
-        if (player instanceof NPC || player instanceof Enemy) {
+        if (player instanceof NPC || player.type === 'enemy') {
             let scrollX = scene.cameras.main.scrollX + window.innerWidth - scene.scale.width;
             let scrollY = (window.innerWidth < 1100) ? scene.cameras.main.scrollY + 100 : scene.cameras.main.scrollY;
             
@@ -283,10 +387,16 @@ export function updateHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
             player.healthBarFill.fillRect(player.healthBarFrame.x + 20, player.healthBarFrame.y + 20, fillWidth, 30);
         }
     }
+    // Update the text of the healthText
+    if (player.healthText) {
+        let healthString = `${player.currentHealth}/${player.maxHealth}`;
+        player.healthText.setText(healthString);
+    }
+
     return player.healthBarFill;
 }
 
-export function destroyHealthBar(player: Player | Player2 | Player3 | NPC | Enemy) {
+export function destroyHealthBar(player: any) {
     if (player.avatar && player.amask && player.healthBarFrame && player.healthBarFill && player.healthBar) {
         player.avatar.destroy();
         player.avatar = undefined;
@@ -299,16 +409,31 @@ export function destroyHealthBar(player: Player | Player2 | Player3 | NPC | Enem
         player.healthBar.destroy();
         player.healthBar = undefined;
     }
+    if (player.healthText) {
+        player.healthText.destroy();
+        player.healthText = undefined;
+    }
 }
 
-export function handleInteract(scene: any, player: Player, player2: Player2, interactKey: Phaser.Input.Keyboard.Key) {
+export function handleInteract(
+    scene: any,
+    player: any,
+    dialogue: string,
+    dialogueSoundKey: string,
+    interactKey: Phaser.Input.Keyboard.Key
+) {
     if (scene.isInteracting) return; // Exit if interaction is already in progress
 
     if (Phaser.Input.Keyboard.JustDown(interactKey)) {
         scene.isInteracting = true; // Set the lock
+
+        // Lower Main Music Volume
+        const mainMusic = scene.sound.get('mainMusic');
+        if (mainMusic instanceof Phaser.Sound.WebAudioSound || mainMusic instanceof Phaser.Sound.HTML5AudioSound)
+            mainMusic.setVolume(0.15);
         
-        scene.sound.stopByKey('p3Dialogue1');
-        scene.sound.play('p3Dialogue1', { volume: 1 });
+        scene.sound.stopByKey(dialogueSoundKey);
+        scene.sound.play(dialogueSoundKey, { volume: 1 });
 
         if (scene.chatBubble && scene.chatBubble.anims && scene.chatBubble.anims.isPlaying) {
             if (scene.timerEvent) {
@@ -320,6 +445,9 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
                 scene.dialogueText.destroy();
                 scene.chatBubble.destroy();
             });
+            // Raise Main Music Volume
+            if (mainMusic instanceof Phaser.Sound.WebAudioSound || mainMusic instanceof Phaser.Sound.HTML5AudioSound)
+                mainMusic.setVolume(0.35);
             return;
         }
 
@@ -328,11 +456,10 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
             scene.chatBubble.destroy();
         }
 
-        const newChatBubble = scene.add.sprite(scene.player2!.x - 123, scene.player2!.y - 130, 'chat_bubble').setScale(0.34).setDepth(11);
+        const newChatBubble = scene.add.sprite(player!.x - 123, player!.y - 130, 'chat_bubble').setScale(0.34).setDepth(11);
         newChatBubble.flipX = true;
         newChatBubble.play('chat_bubble', true);
 
-        const dialogue = "Things haven't been the same since the 7/11 attacks.\nBut, if you follow my lead, you might just\nmake it out of here alive.";
         let textContent = "";
         const textSpeed = 55;
 
@@ -362,83 +489,12 @@ export function handleInteract(scene: any, player: Player, player2: Player2, int
             scene.time.delayedCall(500, () => {
                 newChatBubble.destroy();
                 scene.isInteracting = false; // Release the lock
+                // Raise Main Music Volume
+                if (mainMusic instanceof Phaser.Sound.WebAudioSound || mainMusic instanceof Phaser.Sound.HTML5AudioSound)
+                    mainMusic.setVolume(0.35);
             });
         });
 
         scene.chatBubble = newChatBubble;
     }
-}
-
-export function setupAnimations(scene: any) {
-    // Define animations
-    const animations = [
-        { key: 'coinAnimation', frames: scene.anims.generateFrameNames('coin', { prefix: 'coin', start: 1, end: 8, zeroPad: 2 }), frameRate: 15, repeat: -1 },
-        { key: 'logoAnimation', frames: scene.anims.generateFrameNames('logo', { prefix: 'logo_', start: 1, end: 29, zeroPad: 4 }), frameRate: 15, repeat: -1 },
-        { key: 'cloud', frames: scene.anims.generateFrameNames('cloud', { prefix: 'cloud', start: 1, end: 4, zeroPad: 4 }), frameRate: 7, repeat: -1 },
-        { key: 'chat_bubble', frames: scene.anims.generateFrameNames('chat_bubble', { prefix: 'chat', start: 0, end: 3, zeroPad: 2 }), frameRate: 7, repeat: 0 },
-        { key: 'chat_bubble_reverse', frames: scene.anims.generateFrameNames('chat_bubble', { prefix: 'chat', start: 1, end: 3, zeroPad: 2 }).reverse(), frameRate: 7, repeat: 0 },
-        // Player 1
-        { key: 'standingP1', frames: scene.anims.generateFrameNames('player', { prefix: 'standing', start: 1, end: 11, zeroPad: 4 }), frameRate: 3, repeat: -1 },
-        { key: 'walkingP1', frames: scene.anims.generateFrameNames('player', { prefix: 'walk', start: 1, end: 7, zeroPad: 4 }), frameRate: 10, repeat: -1 },
-        { key: 'runningP1', frames: scene.anims.generateFrameNames('player', { prefix: 'run', start: 1, end: 8, zeroPad: 4 }), frameRate: 10, repeat: -1 },
-        { key: 'jumpingP1', frames: scene.anims.generateFrameNames('player', { prefix: 'jump', start: 1, end: 8, zeroPad: 4 }), frameRate: 7, repeat: 0 },
-        { key: 'crouchingP1', frames: scene.anims.generateFrameNames('player', { prefix: 'jump', start: 2, end: 2, zeroPad: 4 }), frameRate: 7, repeat: 0 },
-        { key: 'meleeP1', frames: scene.anims.generateFrameNames('player', { prefix: 'melee', start: 1, end: 13, zeroPad: 4 }), frameRate: 10, repeat: 0 },
-        { key: 'dyingP1', frames: scene.anims.generateFrameNames('player', { prefix: 'death', start: 1, end: 4, zeroPad: 4 }), frameRate: 4, repeat: 0 },
-        { key: 'hurtP1', frames: scene.anims.generateFrameNames('player', { prefix: 'death', start: 1, end: 1, zeroPad: 4 }), frameRate: 1, repeat: 0 },
-        // Player 3
-        { key: 'standingP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'standing', start: 0, end: 22, zeroPad: 4 }), frameRate: 2.5, repeat: -1 },
-        { key: 'walkingP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'walk', start: 0, end: 6, zeroPad: 4 }), frameRate: 10, repeat: -1 },
-        { key: 'runningP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'run', start: 0, end: 7, zeroPad: 4 }), frameRate: 10, repeat: -1 },
-        { key: 'jumpingP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'jump', start: 0, end: 6, zeroPad: 4 }), frameRate: 7, repeat: 0 },
-        { key: 'meleeP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'melee', start: 0, end: 3, zeroPad: 4 }), frameRate: 10, repeat: 0 },
-        { key: 'runShootP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'runShoot', start: 0, end: 3, zeroPad: 4 }), frameRate: 10, repeat: -1 },
-        { key: 'shootP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'shoot', start: 0, end: 3, zeroPad: 4 }), frameRate: 30, repeat: 0 },
-        { key: 'dyingP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'death', start: 0, end: 4, zeroPad: 4 }), frameRate: 4, repeat: 0 },
-        { key: 'hurtP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'run', start: 0, end: 0, zeroPad: 4 }), frameRate: 1, repeat: 0 },
-        { key: 'crouchingP3', frames: scene.anims.generateFrameNames('player3', { prefix: 'jump', start: 0, end: 0, zeroPad: 4 }), frameRate: 4, repeat: 0 },
-        // NPC 1
-        { key: 'walkingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'walk-', start: 1, end: 16 }), frameRate: 10, repeat: -1 },
-        { key: 'runningNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'run-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },
-        { key: 'jumpingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'jump-', start: 1, end: 4 }), frameRate: 7, repeat: 0 },
-        { key: 'shootNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'shoot-', start: 1, end: 1 }), frameRate: 10, repeat: 0 },
-        { key: 'standingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'idle-', start: 1, end: 4 }), frameRate: 6, repeat: -1 },
-        { key: 'runShootNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'run-shoot-', start: 1, end: 8 }), frameRate: 10, repeat: -1 },
-        { key: 'backJumpNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'back-jump-', start: 1, end: 7 }), frameRate: 7, repeat: 0 },
-        { key: 'climbNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'climb-', start: 1, end: 6 }), frameRate: 7, repeat: -1 },
-        { key: 'hurtNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'hurt-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
-        { key: 'dyingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'jump-', start: 3, end: 3 }), frameRate: 1, repeat: 0 },
-        { key: 'crouchingNPC1', frames: scene.anims.generateFrameNames('npc', { prefix: 'crouch-', start: 1, end: 1 }), frameRate: 1, repeat: 0 },
-        { key: 'projectile-1', frames: scene.anims.generateFrameNames('projectile-1', { prefix: 'shot-', start: 1, end: 3 }), frameRate: 3, repeat: -1 },
-        { key: 'hitSprite1', frames: scene.anims.generateFrameNames('hitSprite1', { prefix: 'hits-1-', start: 1, end: 5 }), frameRate: 10, repeat: 0 },
-        // Player 2
-        { key: 'walkingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'walk', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
-        { key: 'runningP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'run', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
-        { key: 'jumpingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'jump', start: 1, end: 7, zeroPad: 4  }), frameRate: 7, repeat: 0 },
-        { key: 'shootP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'shoot', start: 1, end: 12, zeroPad: 4  }), frameRate: 10, repeat: 0 },
-        { key: 'meleeP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'melee', start: 1, end: 11, zeroPad: 4  }), frameRate: 10, repeat: 0 },
-        { key: 'crouchingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'jump', start: 1, end: 1, zeroPad: 4 }), frameRate: 4, repeat: 0 },
-        { key: 'standingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'standing', start: 1, end: 12, zeroPad: 4  }), frameRate: 4, repeat: -1 },
-        { key: 'dyingP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'death', start: 1, end: 4, zeroPad: 4  }), frameRate: 1, repeat: 0 },
-        { key: 'hurtP2', frames: scene.anims.generateFrameNames('player2', { prefix: 'death', start: 1, end: 1, zeroPad: 4  }), frameRate: 1, repeat: 0 },
-        // Enemy 1
-        { key: 'walkingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'walk', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
-        { key: 'runningE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'run', start: 1, end: 8, zeroPad: 4  }), frameRate: 10, repeat: -1 },
-        { key: 'jumpingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'jump', start: 1, end: 7, zeroPad: 4  }), frameRate: 7, repeat: 0 },
-        { key: 'shootE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'shoot', start: 1, end: 12, zeroPad: 4  }), frameRate: 10, repeat: 0 },
-        { key: 'meleeE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'melee', start: 1, end: 11, zeroPad: 4  }), frameRate: 10, repeat: 0 },
-        { key: 'standingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'standing', start: 1, end: 12, zeroPad: 4  }), frameRate: 4, repeat: -1 },
-        { key: 'dyingE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'death', start: 1, end: 4, zeroPad: 4  }), frameRate: 1, repeat: 0 },
-        { key: 'hurtE1', frames: scene.anims.generateFrameNames('enemy', { prefix: 'death', start: 1, end: 1, zeroPad: 4  }), frameRate: 1, repeat: 0 },
-        // Drone
-        { key: 'spin', frames: scene.anims.generateFrameNames('drone', { prefix: 'spin', start: 1, end: 4, zeroPad: 2  }), frameRate: 10, repeat: -1 },
-        { key: 'explode', frames: scene.anims.generateFrameNames('drone', { prefix: 'explode', start: 1, end: 4, zeroPad: 2  }), frameRate: 10, repeat: 0 },
-    ];
-
-    // Create animations
-    animations.forEach(animation => {
-        if (!scene.anims.exists(animation.key)) {
-            scene.anims.create(animation);
-        }
-    });
 }

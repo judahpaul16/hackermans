@@ -22,8 +22,8 @@ import player3JSON from '../../assets/sprites/characters/players/player_3/player
 import npcImg from '../../assets/sprites/characters/npcs/npc_1/npc.png';
 import npcJSON from '../../assets/sprites/characters/npcs/npc_1/npc.json';
 
-import enemyImg from '../../assets/sprites/characters/enemies/enemy_1/enemy.png';
-import enemyJSON from '../../assets/sprites/characters/enemies/enemy_1/enemy.json';
+import enemyAIImg from '../../assets/sprites/characters/enemies/enemy_ai/enemy.png';
+import enemyAIJSON from '../../assets/sprites/characters/enemies/enemy_ai/enemy.json';
 
 import droneImg from '../../assets/sprites/entities/drone/drone.png';
 import droneJSON from '../../assets/sprites/entities/drone/drone.json';
@@ -34,7 +34,7 @@ import avatarImg from '../../assets/sprites/ui/avatar.png';
 import p2AvatarImg from '../../assets/sprites/ui/player_2_avatar.png';
 import p3AvatarImg from '../../assets/sprites/ui/player_3_avatar.png';
 import npcAvatarImg from '../../assets/sprites/ui/npc_avatar.png';
-import enemyAvatarImg from '../../assets/sprites/ui/enemy_avatar.png';
+import enemyAIAvatarImg from '../../assets/sprites/ui/enemyai_avatar.png';
 import healthBarFrameImg from '../../assets/sprites/ui/health_bar_bg.png';
 import healthBarFrame2Img from '../../assets/sprites/ui/health_bar_bg_2.png';
 import healthBarFrame3Img from '../../assets/sprites/ui/health_bar_bg_3.png';
@@ -72,9 +72,9 @@ import p3Dialogue1 from '../../assets/audio/dialogue/player3_1.mp3';
 
 import coinSound from '../../assets/audio/sfx/coin.mp3';
 import meleeSoundP1 from '../../assets/audio/sfx/p1_melee.mp3';
+import shootSoundP2 from '../../assets/audio/sfx/p2_shoot.mp3';
 import shootSoundP3 from '../../assets/audio/sfx/p3_shoot.mp3';
-// import shootSoundP2 from '../../assets/audio/sfx/p2_shoot.mp2';
-// import shootSoundEnemy from '../../assets/audio/sfx/enemy_shoot.mp3';
+import shotgunPumpSound from '../../assets/audio/sfx/shotgun_pump.mp3';
 
 import projectile1Img from '../../assets/sprites/effects/projectiles/1/projectile-1.png';
 import projectile1JSON from '../../assets/sprites/effects/projectiles/1/projectile-1.json';
@@ -102,14 +102,14 @@ export default class BootScene extends Phaser.Scene {
         this.load.atlas('player2', player2Img, player2JSON);
         this.load.atlas('player3', player3Img, player3JSON);
         this.load.atlas('npc', npcImg, npcJSON);
-        this.load.atlas('enemy', enemyImg, enemyJSON);
+        this.load.atlas('enemyAI', enemyAIImg, enemyAIJSON);
         this.load.atlas('drone', droneImg, droneJSON);
         this.load.image('controls', controlsImg);
         this.load.image('avatar', avatarImg);
         this.load.image('avatarP2', p2AvatarImg);
         this.load.image('avatarP3', p3AvatarImg);
         this.load.image('avatarNPC1', npcAvatarImg);
-        this.load.image('avatarE1', enemyAvatarImg);
+        this.load.image('avatarEAI', enemyAIAvatarImg);
         this.load.image('health-bar-frame', healthBarFrameImg);
         this.load.image('health-bar-frame-2', healthBarFrame2Img);
         this.load.image('health-bar-frame-3', healthBarFrame3Img);
@@ -120,8 +120,9 @@ export default class BootScene extends Phaser.Scene {
         this.load.audio('p3Dialogue1', p3Dialogue1);
         this.load.audio('meleeP1', meleeSoundP1);
         this.load.audio('shootP3', shootSoundP3);
-        this.load.audio('shootP2', shootSoundP3);
-        this.load.audio('shootE1', shootSoundP3);
+        this.load.audio('shootP2', shootSoundP2);
+        this.load.audio('shotgunPumpSound', shotgunPumpSound);
+        this.load.audio('shootEAI', shootSoundP2);
         this.load.audio('coinSound', coinSound);
         this.load.image('far-buildings', farBuildings);
         this.load.image('back-buildings', backBuildings);

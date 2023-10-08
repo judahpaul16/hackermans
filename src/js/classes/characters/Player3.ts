@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import Player from './Player';
+import Player, { PlayerState } from './Player';
 
 export default class Player3 extends Player {
     public number: number = 3;
@@ -7,19 +7,19 @@ export default class Player3 extends Player {
     public width: number = 83;
     public height: number = 186;
     public offsetX: number = -2;
-    public offsetY: number = -38.4;
-    public currentAnimation?: string;
+    public offsetY: number = -13;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
     public runSpeed: number = 225;
     public jumpSpeed: number = 500;
-    public magazine: number = 20;
     public magazineSize: number = 20;
+    public magazine: number = this.magazineSize;
     public isDead: boolean = false;
     public isReloading: boolean = false;
     public reloadText?: Phaser.GameObjects.Text;
+    public manualReload: boolean = false;
+    public shotgunPumpSound?: Phaser.Sound.BaseSound | null = null;
     public type: string = 'ranged';
-    private shootSound: Phaser.Sound.BaseSound | null = null;
     public textureKey: string = 'player3';
     public hbFrameKey: string = 'health-bar-frame-3';
     public avatarKey: string = 'avatarP3';
@@ -46,29 +46,30 @@ export default class Player3 extends Player {
         this.setDepth(3);
     }
 
-    protected handleAnimationStart(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
+    protected handleAnimationStart(
+        animation: Phaser.Animations.Animation,
+        frame: Phaser.Animations.AnimationFrame
+    ) {
         super.handleAnimationStart(animation, frame);
+
+        // Tweak the hitbox for the crouching animation
+        if (animation.key === this.crouchKey) {
+            this.setOffset(this.offsetX, this.offsetY);
+        }
     }
 
-    protected handleAnimationComplete(animation: Phaser.Animations.Animation, frame: Phaser.Animations.AnimationFrame) {
-        if (animation.key === this.dyingKey) {
-            this.isDead = true;
+    protected handleAnimationComplete(
+        animation: Phaser.Animations.Animation,
+        frame: Phaser.Animations.AnimationFrame
+    ) {
+        if (animation.key === this.crouchKey) {
+            this.setOffset(this.offsetX, this.offsetY);
         }
 
-        if (animation.key === this.attackKey) {
+        if (animation.key === this.attackKey)
             if (this.y > 670) this.y -= 10;
-        }
-
-        if (this.currentAnimation === animation.key) {
-            this.currentAnimation = undefined;
-        }
-    }
-
-    public jump() {
-        if (this && this.body!.touching.down) {
-            this.setVelocityY(-this.jumpSpeed);
-            this.play(this.jumpKey, true);
-        }
+        
+        super.handleAnimationComplete(animation, frame);
     }
 
     public attack() {
@@ -77,20 +78,8 @@ export default class Player3 extends Player {
             return;
         }
         if (this) {
-            // play animation if not already playing
             if (this.body!.velocity.x !== 0) this.play(this.runShootKey, true);
             else this.play(this.attackKey, true);
-            // Create projectile
-            if (!this.shootSound) {
-                this.shootSound = this.scene.sound.add(this.attackKey);
-                this.shootSound.on('complete', () => {
-                    // Create projectile
-                    this.emitProjectile();
-                    this.shootSound = null;
-                });
-            }
-            // if shoot sound not playing play it
-            if (!this.shootSound.isPlaying) this.shootSound.play({ volume: 0.5, loop: false });
         }
     }
 
@@ -98,38 +87,58 @@ export default class Player3 extends Player {
         return;
     }
 
-    private emitProjectile() {
+    public emitProjectile() {
         if (this.scene && this.scene.game && this.scene.game.registry && !this.isReloading) {
+            if (!this.attackSound) this.attackSound = this.scene.sound.add(this.attackKey);
+            if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: true });
             // Create a projectile at player's position
             let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
-            let y = (this.body!.velocity.x != 0) ? this.y : this.y - 42;
-            let projectile = projectileGroup.create(this.x, y, 'projectile-1').setScale(1.5);
+            let y = (this.body!.velocity.x != 0) ? this.y : this.y - 40;
+            let projectile = projectileGroup.create(this.x, y, 'projectile-1').setScale(0.5);
             projectile.flipX = this.flipX;
             projectile.body.setAllowGravity(false);
             projectile.setVelocityX(this.flipX ? -1500 : 1500); // Set velocity based on player's direction
             this.magazine--;
+            if (this.magazine <= 0) this.checkReload();
         } else if (this.isReloading) {
+            this.attackSound?.stop();
             this.reloadText?.setVisible(true);
         }
     }
 
     public checkReload() {
-        if (this.magazine <= 0) {
-            this.isReloading = true;
-            // start 10 second timer
-            // when timer is up, set magazine to magazineSize
-            this.scene.time.addEvent({
-                delay: 10000,
-                callback: () => {
-                    this.magazine = this.magazineSize;
-                    this.isReloading = false;
-                },
-                callbackScope: this,
-                loop: false
-            });
+        if (this.magazine <= 0 || this.manualReload) {
+            if (!this.isReloading) {
+                this.isReloading = true;
+                if (this.reloadText) this.reloadText.setVisible(true);
+                
+                setTimeout(() => {
+                    if (!this.shotgunPumpSound)
+                        this.shotgunPumpSound = this.scene.sound.add('shotgunPumpSound');
+                    if (!this.shotgunPumpSound.isPlaying)
+                        this.shotgunPumpSound.play({ volume: 0.5, loop: false });
+                }, 450);
+    
+                // start 10 second timer
+                this.scene.time.addEvent({
+                    delay: 10000,
+                    callback: () => {
+                        this.magazine = this.magazineSize;
+                        this.isReloading = false;
+                        this.manualReload = false;
+                    },
+                    callbackScope: this,
+                    loop: false
+                });
+            }
         } else {
             this.isReloading = false;
-            this.reloadText?.setVisible(false);
+            if (this.reloadText) this.reloadText.setVisible(false);
         }
+    }
+
+    public reload() {
+        this.manualReload = true;
+        this.checkReload();
     }
 }

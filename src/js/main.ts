@@ -11,7 +11,15 @@ const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
     width: window.innerWidth,
     height: window.innerHeight,
-    scene: [BootScene, MainMenuScene, GameScene1, GameScene2, GameScene3, GameOverScene, CreditsScene],
+    scene: [
+        BootScene,
+        MainMenuScene,
+        GameScene1,
+        GameScene2,
+        GameScene3,
+        GameOverScene,
+        CreditsScene
+    ],
     scale: {
         mode: Phaser.Scale.RESIZE,
         autoCenter: Phaser.Scale.CENTER_BOTH  // Center the game canvas
