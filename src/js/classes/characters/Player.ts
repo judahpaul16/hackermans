@@ -131,6 +131,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         if (animation.key === this.dyingKey) {
             this.isDead = true;
+            this.showAnimationInfo = false;
+            this.showXY = false;
+            this.animationInfoText.destroy();
+            this.xyText.destroy();
         }
 
         // Tweak the hitbox for the dying animation

@@ -50,7 +50,6 @@ export default class BaseScene extends Phaser.Scene {
     protected volumeValue: number = 0.5;
     protected level?: Phaser.GameObjects.Text;
     protected previousSceneName?: string;
-    public animationInfoText?: Phaser.GameObjects.Text;
     public platformKey: string = 'street';
     public levelNumber: number = 1;
     public players: Player[] = [];
@@ -506,6 +505,10 @@ export default class BaseScene extends Phaser.Scene {
                         distance = Phaser.Math.Distance.Between(player.x, player.y, drone.x, drone.y);
                         if (player.currentAnimation === player.attackKey) {
                             drone.play('explode', true).setScale(1.5).on('animationcomplete', () => {
+                                drone.showAnimationInfo = false;
+                                drone.showXY = false;
+                                drone.animationInfoText.destroy();
+                                drone.xyText.destroy();
                                 drone.destroy();
                             });
                             player.heal(30);
@@ -515,6 +518,10 @@ export default class BaseScene extends Phaser.Scene {
                 this.physics.add.collider(drone, friendlyProjectileGroup, (drone: any, projectile: any) => {
                     projectile.destroy();
                     drone.play('explode', true).setScale(1.5).on('animationcomplete', () => {
+                        drone.showAnimationInfo = false;
+                        drone.showXY = false;
+                        drone.animationInfoText.destroy();
+                        drone.xyText.destroy();
                         drone.destroy();
                     });
                 });

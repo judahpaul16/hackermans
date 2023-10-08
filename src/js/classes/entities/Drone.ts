@@ -49,9 +49,8 @@ export default class Drone extends Phaser.GameObjects.Sprite {
         animation: Phaser.Animations.Animation,
         frame: Phaser.Animations.AnimationFrame
     ) {
-        if (this.currentAnimation === animation.key) {
+        if (this.currentAnimation === animation.key)
             this.currentAnimation = undefined;
-        }
     }
     
     public getCurrentAnimation() {
