@@ -160,8 +160,6 @@ export default class BaseScene extends Phaser.Scene {
 
         // Debugging
         functions.initializeDebugGUI(this);
-
-        // any other functions setup...
     }
 
     update() {
