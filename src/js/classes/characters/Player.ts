@@ -171,7 +171,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public updateXYCoords() {
         if (this && this.xyText && this.showXY) {
             this.xyText.setText(`x: ${this.x}\ny: ${this.y}`);
-            this.xyText.setPosition(this.x - 100, this.y - 100);
+            this.xyText.setPosition(this.x + 50, this.y - 30);
             this.xyText.setVisible(true);
         } else if (this.xyText) {
             this.xyText.setVisible(false);
