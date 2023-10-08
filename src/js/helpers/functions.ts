@@ -36,6 +36,12 @@ export function initializeDebugGUI(scene: any) {
         // When the switch is toggled, update all sprites' animation info visibility
         toggleAllAnimationInfo(scene, value);
     });
+    scene.showXY = false;
+    scene.dg.add(scene, 'showXY').name('Show X, Y Coords').onChange((value : boolean) => {
+        // When the switch is toggled, update all sprites' X-Y coords visibility
+        toggleXYCoords(scene, value);
+    });
+
     if (scene.dg) {
         const cameraFolder = scene.dg?.addFolder('Camera');
         if (cameraFolder) {
@@ -110,6 +116,49 @@ export function initializeDebugGUI(scene: any) {
                 enemyFolderN.add(enemy.body!.offset, 'x', -200, 200).name('Hitbox X Offset').listen();
                 enemyFolderN.add(enemy.body!.offset, 'y', -200, 200).name('Hitbox Y Offset').listen();
             }
+        }
+    }
+}
+
+export function toggleXYCoords(scene: any, value: boolean) {
+    // Update XY coords for all players
+    if (scene.player) {
+        scene.player.showXY = value;
+        scene.player.updateXYCoords();
+    }
+    if (scene.player2) {
+        scene.player2.showXY = value;
+        scene.player2.updateXYCoords();
+    }
+    if (scene.player3) {
+        scene.player3.showXY = value;
+        scene.player3.updateXYCoords();
+    }
+
+    // Update XY coords for all NPCs
+    if (scene.npcs) {
+        for (let i = 0; i < scene.npcs.length; i++) {
+            let npc = scene.npcs[i];
+            npc.showXY = value;
+            npc.updateXYCoords();
+        }
+    }
+
+    // Update XY coords for all enemies
+    if (scene.enemies) {
+        for (let i = 0; i < scene.enemies.length; i++) {
+            let enemy = scene.enemies[i];
+            enemy.showXY = value;
+            enemy.updateXYCoords();
+        }
+    }
+
+    // Update XY coords for all drones
+    if (scene.drones) {
+        for (let i = 0; i < scene.drones.length; i++) {
+            let drone = scene.drones[i];
+            drone.showXY = value;
+            drone.updateXYCoords();
         }
     }
 }

@@ -4,6 +4,8 @@ export default class Drone extends Phaser.GameObjects.Sprite {
     public currentAnimation?: string;
     public showAnimationInfo: boolean = false;
     public animationInfoText?: Phaser.GameObjects.Text;
+    public showXY: boolean = false;
+    public xyText!: Phaser.GameObjects.Text;
     public textureKey: string = 'drone';
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
@@ -19,6 +21,11 @@ export default class Drone extends Phaser.GameObjects.Sprite {
                 body.setGravityY(0);
                 body.setAllowGravity(false);
                 this.animationInfoText =
+                    scene.add.text(
+                        this.x - 100, this.y - 100, '',
+                        { fontSize: '16px', color: '#fff' }
+                    ).setDepth(10).setVisible(false);
+                this.xyText =
                     scene.add.text(
                         this.x - 100, this.y - 100, '',
                         { fontSize: '16px', color: '#fff' }
@@ -62,5 +69,13 @@ export default class Drone extends Phaser.GameObjects.Sprite {
             this.animationInfoText.setVisible(false);
         }
     }
-    
+    public updateXYCoords() {
+        if (this && this.xyText && this.showXY) {
+            this.xyText.setText(`x: ${this.x}\ny: ${this.y}`);
+            this.xyText.setPosition(this.x - 100, this.y - 100);
+            this.xyText.setVisible(true);
+        } else if (this.xyText) {
+            this.xyText.setVisible(false);
+        }
+    }
 }

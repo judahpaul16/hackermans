@@ -49,8 +49,8 @@ export default class BaseScene extends Phaser.Scene {
     protected volumeHandle?: Phaser.GameObjects.Rectangle;
     protected volumeValue: number = 0.5;
     protected level?: Phaser.GameObjects.Text;
-    public animationInfoText?: Phaser.GameObjects.Text;
     protected previousSceneName?: string;
+    public animationInfoText?: Phaser.GameObjects.Text;
     public platformKey: string = 'street';
     public levelNumber: number = 1;
     public players: Player[] = [];
@@ -531,11 +531,13 @@ export default class BaseScene extends Phaser.Scene {
             if (p && p.indicator) p.updateIndicatorPosition();
             if (p) functions.updateHealthBar(this, p);
             if (p) p.updateAnimationInfo();
+            if (p) p.updateXYCoords();
         });
     
         if (this.npcs) {
             for (let npc of this.npcs) {
                 npc.updateAnimationInfo();
+                npc.updateXYCoords();
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 this.updateCharacterDistance(this.distanceA, activePlayer, npc, 600);
             }
@@ -544,6 +546,7 @@ export default class BaseScene extends Phaser.Scene {
         if (this.enemies) {
             for (let enemy of this.enemies) {
                 enemy.updateAnimationInfo();
+                enemy.updateXYCoords();
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 this.updateCharacterDistance(this.distanceB, activePlayer, enemy, 600);
             }
@@ -552,6 +555,7 @@ export default class BaseScene extends Phaser.Scene {
         if (this.drones) {
             for (let drone of this.drones) {
                 drone.updateAnimationInfo();
+                drone.updateXYCoords();
             }
         }
     
