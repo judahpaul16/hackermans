@@ -87,15 +87,19 @@ export default class Player3 extends Player {
 
     public emitProjectile() {
         if (this.scene && this.scene.game && this.scene.game.registry && !this.isReloading) {
+            if (!this.attackSound) this.attackSound = this.scene.sound.add(this.attackKey);
+            if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: true });
             // Create a projectile at player's position
             let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
-            let y = (this.body!.velocity.x != 0) ? this.y : this.y - 42;
+            let y = (this.body!.velocity.x != 0) ? this.y : this.y - 40;
             let projectile = projectileGroup.create(this.x, y, 'projectile-1').setScale(0.5);
             projectile.flipX = this.flipX;
             projectile.body.setAllowGravity(false);
             projectile.setVelocityX(this.flipX ? -1500 : 1500); // Set velocity based on player's direction
             this.magazine--;
+            if (this.magazine <= 0) this.checkReload();
         } else if (this.isReloading) {
+            this.attackSound?.stop();
             this.reloadText?.setVisible(true);
         }
     }
@@ -103,6 +107,7 @@ export default class Player3 extends Player {
     public checkReload() {
         if (this.magazine <= 0) {
             this.isReloading = true;
+            if (this.attackSound) this.attackSound.stop();
             // start 10 second timer
             // when timer is up, set magazine to magazineSize
             this.scene.time.addEvent({

@@ -104,8 +104,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             (animation.key === this.attackKey || animation.key === this.runShootKey)
         ) {
             this.emitProjectile();
-            if (!this.attackSound) this.attackSound = this.scene.sound.add(this.attackKey);
-            if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: false });
         }
 
         // Disable gravity and adjust offset for crouching animation

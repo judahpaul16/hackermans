@@ -13,6 +13,7 @@ export default class Enemy extends Player {
     public magazineSize: number = 6;
     public isReloading: boolean = false;
     public attackHint?: Phaser.GameObjects.Image | null = null;
+    public shotgunPumpSound?: Phaser.Sound.BaseSound | null = null;
     public reloadText?: Phaser.GameObjects.Text;
     public type: string = 'basic';
     public textureKey: string = 'enemy';
@@ -132,16 +133,48 @@ export default class Enemy extends Player {
         if (this.scene && this.scene.game && this.scene.game.registry && !this.isReloading) {
             // Create a projectile at player's position
             setTimeout(() => {
+                if (!this.attackSound) this.attackSound = this.scene.sound.add(this.attackKey);
+                if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: false });
                 let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
                 let projectile = projectileGroup.create(this.x, this.y - 15, 'projectile-1').setScale(1.5);
                 projectile.flipX = this.flipX;
                 projectile.body.setAllowGravity(false);
                 projectile.setVelocityX(this.flipX ? -750 : 750); // Set velocity based on player's direction
                 this.magazine--;
-            }
-            , 150);
+                if (this.magazine <= 0) this.checkReload();
+            }, 150);
         } else if (this.isReloading) {
+            this.attackSound?.stop();
             this.reloadText?.setVisible(true);
+        }
+    }
+
+    public checkReload() {
+        if (this.magazine <= 0) {
+            this.isReloading = true;
+            // start 10 second timer
+            // when timer is up, set magazine to magazineSize
+            this.scene.time.addEvent({
+                delay: 10000,
+                callback: () => {
+                // play shotgun pump sound
+                if (!this.shotgunPumpSound) {
+                    this.shotgunPumpSound = this.scene.sound.add('shotgunPumpSound');
+                    this.shotgunPumpSound.on('complete', () => {
+                        this.shotgunPumpSound = null;
+                    });
+                    if (!this.shotgunPumpSound.isPlaying)
+                        this.shotgunPumpSound.play({ volume: 0.5, loop: false });
+                }
+                    this.magazine = this.magazineSize;
+                    this.isReloading = false;
+                },
+                callbackScope: this,
+                loop: false
+            });
+        } else {
+            this.isReloading = false;
+            this.reloadText?.setVisible(false);
         }
     }
 }

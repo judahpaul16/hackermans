@@ -570,23 +570,33 @@ export default class BaseScene extends Phaser.Scene {
     
         if (isMovingRight || isMovingLeft) {
             if (isRunning) {
-                if (!isAttacking)
+                if (!isAttacking) {
+                    if (player.attackSound) player.attackSound.stop();
                     player.transitionTo(PlayerState.RUNNING, isMovingLeft);
+                }
             } else if (isJumping) {
                 player.transitionTo(PlayerState.JUMPING, isMovingLeft);
             } else {
-                if (!isAttacking)
+                if (!isAttacking) {
+                    if (player.attackSound) player.attackSound.stop();
                     player.transitionTo(PlayerState.WALKING, isMovingLeft);
+                }
             }
         } else if (isJumping) {
-            if (!isAttacking)
+            if (!isAttacking) {
+                if (player.attackSound) player.attackSound.stop();
                 player.transitionTo(PlayerState.JUMPING, player.flipX);
+            }
         } else if (isCrouching) {
-            if (!isAttacking)
+            if (!isAttacking) {
+                if (player.attackSound) player.attackSound.stop();
                 player.transitionTo(PlayerState.CROUCHING, player.flipX);
+            }
         } else {
-            if (!isAttacking && player.body!.touching.down)
+            if (!isAttacking && player.body!.touching.down) {
+                if (player.attackSound) player.attackSound.stop();
                 player.transitionTo(PlayerState.STANDING, player.flipX);
+            }
         }
     
         if (isAttacking) player.transitionTo(PlayerState.ATTACKING, player.flipX);
