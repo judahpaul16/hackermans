@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import Player from '../classes/characters/Player';
+import Player, { PlayerState } from '../classes/characters/Player';
 import Player2 from '../classes/characters/Player2';
 import Player3 from '../classes/characters/Player3';
 import NPC from '../classes/characters/NPC';
@@ -501,141 +501,99 @@ export default class BaseScene extends Phaser.Scene {
     updatePlayer(player: Player | Player2 | Player3) {
         if (player.isDead) return;
         if (this.inputManager.isInputDisabled()) return;
-
-        // Update Indicator position
-        if (this.player) if (this.player.indicator) this.player.updateIndicatorPosition();
-        if (this.player2) if (this.player2.indicator) this.player2.updateIndicatorPosition();
-        if (this.player3) if (this.player3.indicator) this.player3.updateIndicatorPosition();
-
-        // Update health bars
-        if (this.player) functions.updateHealthBar(this, this.player);
-        if (this.player2) functions.updateHealthBar(this, this.player2);
-        if (this.player3) functions.updateHealthBar(this, this.player3);
-
-        // Update Animation Info Text
-        if (this.player) this.player.updateAnimationInfo();
-        if (this.player2) this.player2.updateAnimationInfo();
-        if (this.player3) this.player3.updateAnimationInfo();
-
-        // Update NPCs
+    
+        // Generic update functions
+        [this.player, this.player2, this.player3].forEach(p => {
+            if (p && p.indicator) p.updateIndicatorPosition();
+            if (p) functions.updateHealthBar(this, p);
+            if (p) p.updateAnimationInfo();
+        });
+    
         if (this.npcs) {
             for (let npc of this.npcs) {
                 npc.updateAnimationInfo();
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
-                if (activePlayer) {
-                    this.distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
-                    if (this.distanceA <= 600) {
-                        // Create NPC health bar
-                        functions.createHealthBar(this, npc);
-                        npc.interactHint!.setVisible(true); // Show the interact hint
-                        npc.interactHint!.x = npc.x - 45;
-                    } else if (this.distanceA > 600) {
-                        // Destroy NPC health bar
-                        functions.destroyHealthBar(npc!);
-                        npc.interactHint!.setVisible(false); // Hide the interact hint
-                    }
-                }
+                this.updateCharacterDistance(this.distanceA, activePlayer, npc, 600);
             }
         }
-        // Update Enemies
+    
         if (this.enemies) {
             for (let enemy of this.enemies) {
                 enemy.updateAnimationInfo();
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
-                if (activePlayer) {
-                    this.distanceB = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, enemy.x, enemy.y);
-                    if (this.distanceB <= 600) {
-                        // Create Enemy health bar
-                        functions.createHealthBar(this, enemy!);
-                        enemy.hunt();
-                    } else if (this.distanceB > 600) {
-                        // Destroy Enemy health bar
-                        functions.destroyHealthBar(enemy!);
-                    }
-                }
+                this.updateCharacterDistance(this.distanceB, activePlayer, enemy, 600);
             }
         }
-
-        // Update Drones
+    
         if (this.drones) {
             for (let drone of this.drones) {
                 drone.updateAnimationInfo();
             }
         }
-
+    
         // Update Reload Text Position
-        if (this.player2!.reloadText) this.player2!.reloadText.setPosition(this.player2!.x - 45, this.player2!.y - 95);
-        if (this.player3!.reloadText) this.player3!.reloadText.setPosition(this.player3!.x - 45, this.player3!.y - 95);
+        [this.player2, this.player3].forEach(p => {
+            if (p && p.reloadText) p.reloadText.setPosition(p.x - 45, p.y - 95);
+            if (p) p.checkReload();
+        });
+    
+        this.handleInput(player);
+    
+        // Reset characters' position if they fall off the world
+        [this.player, this.player2, this.player3, ...this.npcs, ...this.enemies].forEach(entity => {
+            if (entity!.y > this.height + 65) entity!.y = 660;
+        });
+    
+        this.handleFollowLogic();
+    
+        this.checkSceneTransition();
+    }
 
-        // Check Reload
-        this.player2!.checkReload();
-        this.player3!.checkReload();
-
-        let isMovingLeft = this.inputManager.cursors.left!.isDown || this.inputManager.moveLeftKey.isDown;
-        let isMovingRight = this.inputManager.cursors.right!.isDown || this.inputManager.moveRightKey!.isDown;
-        let isRunning = this.inputManager.cursors.shift!.isDown;
-        let isJumping = this.inputManager.cursors.up!.isDown || this.inputManager.jumpKey!.isDown;
-        let isAttacking = this.inputManager.cursors.space!.isDown || this.inputManager.attackKey!.isDown;
-        let isSpecialAttacking = this.inputManager.specialAttackKey1!.isDown || this.inputManager.specialAttackKey2!.isDown;
-        let isCrouching = this.inputManager.cursors.down!.isDown || this.inputManager.crouchKey!.isDown;
-
-        if (player.getCurrentAnimation() === player.attackKey || player.getCurrentAnimation() === player.jumpKey) return;
-        if (isMovingRight) {
+    private handleInput(player: Player | Player2 | Player3) {
+        const isMovingLeft = this.inputManager.cursors.left!.isDown || this.inputManager.moveLeftKey.isDown;
+        const isMovingRight = this.inputManager.cursors.right!.isDown || this.inputManager.moveRightKey!.isDown;
+        const isRunning = this.inputManager.cursors.shift!.isDown;
+        const isJumping = this.inputManager.cursors.up!.isDown || this.inputManager.jumpKey!.isDown;
+        const isAttacking = this.inputManager.cursors.space!.isDown || this.inputManager.attackKey!.isDown;
+        const isSpecialAttacking = this.inputManager.specialAttackKey1!.isDown || this.inputManager.specialAttackKey2!.isDown;
+        const isCrouching = this.inputManager.cursors.down!.isDown || this.inputManager.crouchKey!.isDown;
+    
+        if (isMovingRight || isMovingLeft) {
             if (isRunning) {
-                player.setVelocityX(player.runSpeed);
-                if (!isAttacking) player.play(player.runKey, true);
+                if (!isAttacking)
+                    player.transitionTo(PlayerState.RUNNING, isMovingLeft);
             } else if (isJumping) {
-                player.jump();
+                player.transitionTo(PlayerState.JUMPING, isMovingLeft);
             } else {
-                player.setVelocityX(player.walkSpeed);
-                if (!isAttacking) player.play(player.walkKey, true);
+                if (!isAttacking)
+                    player.transitionTo(PlayerState.WALKING, isMovingLeft);
             }
-            player.flipX = false;
-        } else if (isMovingLeft) {
-            if (isRunning) {
-                player.setVelocityX(-player.runSpeed);
-                if (!isAttacking) player.play(player.runKey, true);
-            } else if (isJumping) {
-                player.jump();
-            } else {
-                player.setVelocityX(-player.walkSpeed);
-                if (!isAttacking) player.play(player.walkKey, true);
-            }
-            player.flipX = true;
         } else if (isJumping) {
-            player.jump();
+            player.transitionTo(PlayerState.JUMPING, player.flipX);
         } else if (isCrouching) {
-            player.play(player.crouchKey, true); 
+            player.transitionTo(PlayerState.CROUCHING, player.flipX);
         } else {
-            player.setVelocityX(0);
-            if (!isAttacking) player.play(player.standKey, true);
+            if (!isAttacking)
+                player.transitionTo(PlayerState.STANDING, player.flipX);
         }
-        
-        if (isAttacking) player.attack();
+    
+        if (isAttacking) player.transitionTo(PlayerState.ATTACKING, player.flipX);
         if (isSpecialAttacking) player.specialAttack();
-
-        // if player falls off the world, reset their position
-        if (this.player!.y > this.height + 65) {
-            this.player!.y = 660;
+    }
+    
+    private updateCharacterDistance(distance: number, activePlayer: Player | Player2 | Player3, character: any, range: number) {
+        distance = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, character.x, character.y);
+        if (distance <= range) {
+            functions.createHealthBar(this, character);
+            character.interactHint!.setVisible(true);
+            character.interactHint!.x = character.x - 45;
+        } else {
+            functions.destroyHealthBar(character!);
+            character.interactHint!.setVisible(false);
         }
-
-        // if player2 falls off the world, reset their position
-        if (this.player2!.y > this.height + 65) {
-            this.player2!.y = 660;
-        }
-
-        // if player3 falls off the world, reset their position
-        if (this.player3!.y > this.height + 65) {
-            this.player3!.y = 660;
-        }
-
-        // if an npc falls off the world, reset their position
-        if (this.npcs) for (let npc of this.npcs) if (npc.y > this.height + 65) npc.y = 660;
-
-        // if an enemy falls off the world, reset their position
-        if (this.enemies) for (let enemy of this.enemies) if (enemy.y > this.height + 65) enemy.y = 660;
-
-        // Set Follow
+    }
+    
+    private handleFollowLogic() {
         if (this.player!.isActive()) {
             this.player2!.follow(this.player!);
             this.player3!.follow(this.player!);
@@ -646,10 +604,7 @@ export default class BaseScene extends Phaser.Scene {
             this.player!.follow(this.player3!);
             this.player2!.follow(this.player3!);
         }
-
-        // check scene transition
-        this.checkSceneTransition();
-    }
+    }    
 
     protected resetPlayers() {
         if (this.player) this.player.setPosition(200, 650);

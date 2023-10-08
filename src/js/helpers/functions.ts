@@ -473,7 +473,7 @@ export function setupAnimations(scene: any) {
         generateAnimationProps('runningP3', 'player3', 'run', 0, 7, 10, -1, 4),
         generateAnimationProps('jumpingP3', 'player3', 'jump', 0, 6, 7, 0, 4),
         generateAnimationProps('meleeP3', 'player3', 'melee', 0, 3, 10, 0, 4),
-        generateAnimationProps('runShootP3', 'player3', 'runShoot', 0, 3, 10, -1, 4),
+        generateAnimationProps('runShootP3', 'player3', 'runShoot', 0, 3, 10, 0, 4),
         generateAnimationProps('shootP3', 'player3', 'shoot', 0, 3, 30, 0, 4),
         generateAnimationProps('dyingP3', 'player3', 'death', 0, 4, 4, 0, 4),
         generateAnimationProps('hurtP3', 'player3', 'run', 0, 0, 1, 0, 4),

@@ -8,7 +8,7 @@ export default class NPC extends Player {
     public maxHealth: number = 100;
     public currentHealth: number = 100;
     public interactHint?: Phaser.GameObjects.Text | null = null;
-    private shootSound: Phaser.Sound.BaseSound | null = null;
+    public attackSound: Phaser.Sound.BaseSound | null = null;
     public textureKey: string = 'npc';
     public avatarKey: string = 'avatarNPC1';
     public hbFrameKey: string = 'health-bar-frame-npc';
@@ -41,19 +41,19 @@ export default class NPC extends Player {
             // if moving in x direction, play runShoot animation
             if (this.body!.velocity.x !== 0) this.play(this.runShootKey, true);
             else this.play(this.attackKey, true);
-            if (!this.shootSound) {
-                this.shootSound = this.scene.sound.add(this.attackKey);
-                this.shootSound.on('complete', () => {
+            if (!this.attackSound) {
+                this.attackSound = this.scene.sound.add(this.attackKey);
+                this.attackSound.on('complete', () => {
                     // Create projectile
                     this.emitProjectile();
-                    this.shootSound = null;
+                    this.attackSound = null;
                 });
             }
-            if (!this.shootSound.isPlaying) this.shootSound.play({ volume: 0.5, loop: false });
+            if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: false });
         }
     }
 
-    private emitProjectile() {
+    public emitProjectile() {
         if (this.scene && this.scene.game && this.scene.game.registry) {
             // Create a projectile at player's position
             let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;

@@ -1,6 +1,19 @@
-import Phaser from 'phaser';
+import Phaser, { NONE } from 'phaser';
 import Enemy from './Enemy';
 import InputManager from '../utils/InputManager';
+
+export enum PlayerState {
+    STANDING,
+    WALKING,
+    RUNNING,
+    JUMPING,
+    ATTACKING,
+    HURT,
+    DYING,
+    CROUCHING,
+    FOLLOWING,
+    HUNTING
+}
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
     public number: number = 1;
@@ -23,8 +36,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public avatar?: Phaser.GameObjects.Image;
     public amask?: Phaser.GameObjects.Graphics;
     public healthBar?: Phaser.GameObjects.Container;
-    public isFollowing: boolean = true;
     public textureKey: string = 'player';
+    public type: string = 'melee';
     public avatarKey: string = 'avatar';
     public hbFrameKey: string = 'health-bar-frame';
     public standKey: string = 'standingP1';
@@ -35,13 +48,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public dyingKey: string = 'dyingP1';
     public hurtKey: string = 'hurtP1';
     public crouchKey: string = 'crouchingP1';
+    public runShootKey: string | undefined;
+    public attackSound: Phaser.Sound.BaseSound | null = null;
     public inputManager: InputManager = new InputManager(this.scene);
     public projectileGroup!: Phaser.Physics.Arcade.Group;
     public indicator!: Phaser.GameObjects.Image;
     public showAnimationInfo: boolean = false;
     public animationInfoText!: Phaser.GameObjects.Text;
     private hitSpritePool: Phaser.GameObjects.Sprite[] = [];
-    public isHunting: boolean = false;
+    public currentState: PlayerState = PlayerState.STANDING;
+
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);
@@ -82,8 +98,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         frame: Phaser.Animations.AnimationFrame
     ) {
         this.currentAnimation = animation.key;
+    
+        if (
+            this.type === 'ranged' &&
+            (animation.key === this.attackKey || animation.key === this.runShootKey)
+        ) {
+            this.emitProjectile();
+            if (!this.attackSound) this.attackSound = this.scene.sound.add(this.attackKey);
+            if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: false });
+        }
     }
-
+    
     protected handleAnimationComplete(
         animation: Phaser.Animations.Animation,
         frame: Phaser.Animations.AnimationFrame
@@ -186,9 +211,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     public attack() {
-        if (this)
-            this.play(this.attackKey, true)
-            this.scene.sound.play(this.attackKey, { volume: 0.5, loop: false });
+        if (this) {
+            this.play(this.attackKey, true);
+            // if not playing, play the attack sound
+            if (!this.attackSound) this.attackSound = this.scene.sound.add(this.attackKey);
+            if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: false });
+        }
+    }
+
+    public emitProjectile() {
+        return;
     }
 
     public specialAttack() {
@@ -210,57 +242,40 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         return 600;
     }
 
-    public follow(
-        playerToBeFollowed: any,
-        followSpeed: number = playerToBeFollowed.runSpeed,
-        walkSpeed: number = playerToBeFollowed.walkSpeed,) {
+    public follow(playerToBeFollowed: any) {
         const activePlayer: Player = this.scene.game.registry.get('activePlayer');
-
         let bufferZone = this.computeBufferZone(this.number, activePlayer.number);
-
+        
         if (activePlayer === this) {
-            this.isHunting = false;
+            this.transitionTo(PlayerState.STANDING, false);
             return;
         }
-
-        if (this.body!.touching.down) {
-            let distanceToPlayer = this.x - playerToBeFollowed.x;
-            let startFollowing = false;
-            let standingKey: string = this.standKey;
-            let walkingKey: string = this.walkKey;
-            let runningKey: string = this.runKey;
-
-            if (distanceToPlayer <= 400 || startFollowing || this.isFollowing) {
-                startFollowing = true;
-                this.isFollowing = true;
-                // If close to the player, stop moving
-                if (Math.abs(distanceToPlayer) <= bufferZone) {
-                    // if move to be exactly at bufferZone, then stop moving
-                    if (Math.abs(distanceToPlayer) < 50) {
-                        this.play(walkingKey, true);
-                        this.setVelocityX(distanceToPlayer < 0 ? walkSpeed : -walkSpeed);
-                    }
-                    this.play(standingKey, true);
-                    this.setVelocityX(0);
-                } else {
-                    let isCloser = Math.abs(distanceToPlayer) < walkSpeed;
-                    let animation = isCloser ? walkingKey : runningKey;
-                    let speed = isCloser ? walkSpeed : followSpeed;
-
-                    this.y -= 10;
-                    this.setOffset(0, -12);
-                    this.play(animation, true);
-                    this.setVelocityX(distanceToPlayer < 0 ? speed : -speed);
-                    this.flipX = distanceToPlayer > 0;
-                }
-            }
+    
+        let distanceToPlayer = this.x - playerToBeFollowed.x;
+    
+        // If outside the buffer zone, match the speed of the active player
+        if (Math.abs(distanceToPlayer) > bufferZone) {
+            let speed = Math.abs(activePlayer.body!.velocity.x);
+            // If 25 pixels outside the buffer zone, catch up
+            if (Math.abs(distanceToPlayer) > bufferZone + 25)
+                speed += 25;
+            this.setVelocityX(distanceToPlayer > 0 ? -speed : speed);
+            this.flipX = distanceToPlayer > 0;
+            if (speed >= activePlayer.runSpeed)
+                this.transitionTo(PlayerState.RUNNING, distanceToPlayer > 0, speed);
+            else if (speed >= activePlayer.walkSpeed)
+                this.transitionTo(PlayerState.WALKING, distanceToPlayer > 0, speed);
+            else
+                this.transitionTo(PlayerState.STANDING, distanceToPlayer > 0);
+        } else {
+            this.setVelocityX(0);
+            this.transitionTo(PlayerState.STANDING, distanceToPlayer > 0);
         }
-        this.hunt();
     }
-
+    
     public hunt() {
-        if (!this.isHunting) {
-            this.isHunting = true;
+        if (this.currentState !== PlayerState.HUNTING) {
+            this.currentState = PlayerState.HUNTING
             // Find the nearest player
             let nearestDistance: number = Infinity;
             let nearestEnemy: Enemy | undefined;
@@ -278,8 +293,69 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                     // turn toward enemy
                     this.flipX = nearestEnemy.x < this.x;
                     this.attack();
-                } else this.isHunting = false;
+                } else this.currentState = PlayerState.HUNTING
             }
         }
     }
+
+    public transitionTo(
+        state: PlayerState,
+        left: boolean,
+        speed: number = (state === PlayerState.RUNNING) ? this.runSpeed : this.walkSpeed
+    ): void {
+        this.currentState = state;
+    
+        if (this.body instanceof Phaser.Physics.Arcade.Body) {
+            this.body.setAllowGravity(true); // By default, enable gravity
+        }
+    
+        switch(state) {
+            case PlayerState.STANDING:
+                if (this.body instanceof Phaser.Physics.Arcade.Body)
+                    this.body.setAllowGravity(false);
+                this.setVelocityX(0);
+                this.play(this.standKey, true);
+                break;
+    
+            case PlayerState.WALKING:
+            case PlayerState.RUNNING:
+                this.setVelocityX(left ? -speed : speed);
+                this.play((state === PlayerState.RUNNING) ? this.runKey : this.walkKey, true);
+                this.flipX = left;
+                break;
+    
+            case PlayerState.JUMPING:
+                this.jump();
+                break;
+    
+            case PlayerState.ATTACKING:
+                this.attack();
+                break;
+    
+            case PlayerState.HURT:
+                this.play(this.hurtKey, true);
+                break;
+    
+            case PlayerState.DYING:
+                this.play(this.dyingKey, true);
+                break;
+    
+            case PlayerState.CROUCHING:
+                if (this.body instanceof Phaser.Physics.Arcade.Body)
+                    this.body.setAllowGravity(false);
+                this.play(this.crouchKey, true);
+                break;
+    
+            case PlayerState.FOLLOWING:
+                this.follow(this.scene.game.registry.get('activePlayer'));
+                break;
+    
+            case PlayerState.HUNTING:
+                this.hunt();
+                break;
+    
+            default:
+                break;
+        }
+    }    
 }

@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import Player from './Player';
+import Player, {PlayerState} from './Player';
 import Player2 from './Player2';
 import Player3 from './Player3';
 import NPC from './NPC';
@@ -23,7 +23,7 @@ export default class Enemy extends Player {
     public hurtKey: string = 'hurtE1';
     public meleeKey: string = 'meleeE1';
     public shootKey: string = 'shootE1';
-    private shootSound: Phaser.Sound.BaseSound | null = null;
+    public attackSound: Phaser.Sound.BaseSound | null = null;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, type: string) {
         super(scene, x, y, texture);
@@ -73,19 +73,19 @@ export default class Enemy extends Player {
                 this.play(this.shootKey, true).on('animationupdate', () => {
                     let frame = this.anims.currentFrame;
                     if (frame) {
-                        if (frame.index === 3 && this.shootSound === null) { // Emit projectile on frame 3
+                        if (frame.index === 3 && this.attackSound === null) { // Emit projectile on frame 3
                             this.emitProjectile();
-                            this.shootSound = this.scene.sound.add(this.shootKey);
-                            this.shootSound.play({ volume: 0.5, loop: false });
+                            this.attackSound = this.scene.sound.add(this.shootKey);
+                            this.attackSound.play({ volume: 0.5, loop: false });
                         }
                     }
                 }).on('animationcomplete', () => {
-                    this.shootSound = null;
-                    this.isHunting = false; // runs hunt() again on update();
+                    this.attackSound = null;
+                    this.currentState = PlayerState.HUNTING; // runs hunt() again on update();
                 });
             } else if (nearestDistance <= 50) {
                 this.play(this.meleeKey, true).on('animationcomplete', () => {
-                    this.isHunting = false; // runs hunt() again on update();
+                    this.currentState = PlayerState.HUNTING; // runs hunt() again on update();
                 });
             } else {
                 let angle = Phaser.Math.Angle.Between(this.x, this.y, nearestPlayer.x, nearestPlayer.y);
@@ -96,8 +96,8 @@ export default class Enemy extends Player {
     }
     
     public hunt() {
-        if (!this.isHunting) {
-            this.isHunting = true;
+        if (this.currentState !== PlayerState.HUNTING) {
+            this.currentState = PlayerState.HUNTING
             this.toggleAttackHint();
             // Find the nearest player
             let nearestDistance: number = Infinity;
@@ -121,12 +121,12 @@ export default class Enemy extends Player {
                     this.setVelocityX(Math.cos(angle) * 100);
                     if (this.type == 'flying') this.setVelocityY(Math.sin(angle) * 100);
                 }
-                if (nearestDistance > 3000) this.isHunting = false;
+                if (nearestDistance > 3000) this.currentState = PlayerState.HUNTING;
             }
         }
     }    
 
-    private emitProjectile() {
+    public emitProjectile() {
         if (this.scene && this.scene.game && this.scene.game.registry) {
             // Create a projectile at player's position
             let projectileGroup = this.scene.game.registry.get('enemyProjectileGroup') as Phaser.Physics.Arcade.Group;

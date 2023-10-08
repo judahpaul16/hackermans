@@ -19,7 +19,7 @@ export default class Player3 extends Player {
     public isReloading: boolean = false;
     public reloadText?: Phaser.GameObjects.Text;
     public type: string = 'ranged';
-    private shootSound: Phaser.Sound.BaseSound | null = null;
+    public shootSound: Phaser.Sound.BaseSound | null = null;
     public textureKey: string = 'player3';
     public hbFrameKey: string = 'health-bar-frame-3';
     public avatarKey: string = 'avatarP3';
@@ -70,33 +70,14 @@ export default class Player3 extends Player {
         }
     }
 
-    public jump() {
-        if (this && this.body!.touching.down) {
-            this.setVelocityY(-this.jumpSpeed);
-            this.play(this.jumpKey, true);
-        }
-    }
-
     public attack() {
         if (this.isReloading) {
             this.reloadText?.setVisible(true);
             return;
         }
         if (this) {
-            // play animation if not already playing
             if (this.body!.velocity.x !== 0) this.play(this.runShootKey, true);
             else this.play(this.attackKey, true);
-            // Create projectile
-            if (!this.shootSound) {
-                this.shootSound = this.scene.sound.add(this.attackKey);
-                this.shootSound.on('complete', () => {
-                    // Create projectile
-                    this.emitProjectile();
-                    this.shootSound = null;
-                });
-            }
-            // if shoot sound not playing play it
-            if (!this.shootSound.isPlaying) this.shootSound.play({ volume: 0.5, loop: false });
         }
     }
 
@@ -104,7 +85,7 @@ export default class Player3 extends Player {
         return;
     }
 
-    private emitProjectile() {
+    public emitProjectile() {
         if (this.scene && this.scene.game && this.scene.game.registry && !this.isReloading) {
             // Create a projectile at player's position
             let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
