@@ -13,6 +13,7 @@ export default class Player2 extends Player {
     public isDead: boolean = false;
     public isReloading: boolean = false;
     public reloadText?: Phaser.GameObjects.Text;
+    public shotgunPumpSound?: Phaser.Sound.BaseSound | null = null;
     public type: string = 'ranged';
     public textureKey: string = 'player2';
     public avatarKey: string = 'avatarP2';
@@ -75,36 +76,47 @@ export default class Player2 extends Player {
         if (this.scene && this.scene.game && this.scene.game.registry && !this.isReloading) {
             // Create a projectile at player's position
             setTimeout(() => {
+                if (!this.attackSound) this.attackSound = this.scene.sound.add(this.attackKey);
+                if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: false });
                 let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
                 let projectile = projectileGroup.create(this.x, this.y - 15, 'projectile-1').setScale(1.5);
                 projectile.flipX = this.flipX;
                 projectile.body.setAllowGravity(false);
                 projectile.setVelocityX(this.flipX ? -750 : 750); // Set velocity based on player's direction
                 this.magazine--;
-            }
-            , 150);
+            }, 150);
         } else if (this.isReloading) {
+            this.attackSound?.stop();
             this.reloadText?.setVisible(true);
         }
     }
 
     public checkReload() {
         if (this.magazine <= 0) {
-            this.isReloading = true;
-            // start 10 second timer
-            // when timer is up, set magazine to magazineSize
-            this.scene.time.addEvent({
-                delay: 10000,
-                callback: () => {
-                    this.magazine = this.magazineSize;
-                    this.isReloading = false;
-                },
-                callbackScope: this,
-                loop: false
-            });
+            if (!this.isReloading) {
+                this.isReloading = true;
+                
+                setTimeout(() => {
+                    if (!this.shotgunPumpSound)
+                        this.shotgunPumpSound = this.scene.sound.add('shotgunPumpSound');
+                    if (!this.shotgunPumpSound.isPlaying)
+                        this.shotgunPumpSound.play({ volume: 0.5, loop: false });
+                }, 450);
+    
+                // start 10 second timer
+                this.scene.time.addEvent({
+                    delay: 10000,
+                    callback: () => {
+                        this.magazine = this.magazineSize;
+                        this.isReloading = false;
+                    },
+                    callbackScope: this,
+                    loop: false
+                });
+            }
         } else {
             this.isReloading = false;
             this.reloadText?.setVisible(false);
         }
-    }
+    }    
 }
