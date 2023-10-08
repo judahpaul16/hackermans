@@ -415,86 +415,118 @@ export function destroyHealthBar(player: any) {
     }
 }
 
-export function handleInteract(
+export function triggerDialogue(
     scene: any,
-    player: any,
+    character: any,
     dialogue: string,
-    dialogueSoundKey: string,
-    interactKey: Phaser.Input.Keyboard.Key
+    dialogueSoundKey: string
 ) {
-    if (scene.isInteracting) return; // Exit if interaction is already in progress
+    if (scene.isInteracting) return;
 
-    if (Phaser.Input.Keyboard.JustDown(interactKey)) {
-        scene.isInteracting = true; // Set the lock
+    scene.isInteracting = true;
+    
+    const mainMusic = scene.sound.get('mainMusic');
+    if (mainMusic instanceof Phaser.Sound.WebAudioSound || mainMusic instanceof Phaser.Sound.HTML5AudioSound)
+        mainMusic.setVolume(0.15);
+    
+    scene.sound.stopByKey(dialogueSoundKey);
+    scene.sound.play(dialogueSoundKey, { volume: 1 });
 
-        // Lower Main Music Volume
-        const mainMusic = scene.sound.get('mainMusic');
-        if (mainMusic instanceof Phaser.Sound.WebAudioSound || mainMusic instanceof Phaser.Sound.HTML5AudioSound)
-            mainMusic.setVolume(0.15);
-        
-        scene.sound.stopByKey(dialogueSoundKey);
-        scene.sound.play(dialogueSoundKey, { volume: 1 });
-
-        if (scene.chatBubble && scene.chatBubble.anims && scene.chatBubble.anims.isPlaying) {
-            if (scene.timerEvent) {
-                scene.timerEvent.remove(false);
-                scene.timerEvent = null;
-            }
-            scene.chatBubble.anims.play('chat_bubble_reverse', true);
-            scene.time.delayedCall(500, () => {
+    if (scene.chatBubble && scene.chatBubble.anims && scene.chatBubble.anims.isPlaying) {
+        if (scene.timerEvent) {
+            scene.timerEvent.remove(false);
+            scene.timerEvent = null;
+        }
+        scene.chatBubble.anims.play('chat_bubble_reverse', true);
+        scene.time.delayedCall(500, () => {
+            if (scene.dialogueText) {
                 scene.dialogueText.destroy();
-                scene.chatBubble.destroy();
-            });
-            // Raise Main Music Volume
+            }
+            scene.chatBubble.destroy();
+        });
+        if (mainMusic instanceof Phaser.Sound.WebAudioSound || mainMusic instanceof Phaser.Sound.HTML5AudioSound)
+            mainMusic.setVolume(0.35);
+        return;
+    }
+
+    if (scene.chatBubble) {
+        if (scene.dialogueText) {
+            scene.dialogueText.destroy();
+        }
+        scene.chatBubble.destroy();
+    }
+
+    let newChatBubble = scene.add.sprite(character.x - 123, character.y - 130, 'chat_bubble').setScale(0.34).setDepth(11);
+    newChatBubble.flipX = true;
+    newChatBubble.play('chat_bubble', true);
+
+    let charIndex = 0;
+    let textContent = "";
+    const textSpeed = 55;
+    let newlinesEncountered = 0;
+
+    scene.time.addEvent({
+        delay: textSpeed,
+        callback: () => {
+            if (dialogue[charIndex] === '\n') newlinesEncountered++;
+    
+            if (newlinesEncountered === 3) {
+                textContent = "";
+                newlinesEncountered = 0;
+    
+                // Wait 1 second and then continue processing the dialogue
+                scene.time.delayedCall(1000, () => {
+                    textContent += dialogue[charIndex];
+                    updateText(scene, newChatBubble, textContent);
+                    charIndex++;
+                });
+                return;
+            }
+    
+            textContent += dialogue[charIndex];
+            updateText(scene, newChatBubble, textContent);
+            charIndex++;
+        },
+        repeat: dialogue.length - 1
+    });
+    
+    function updateText(scene: any, newChatBubble: any, textContent: string) {
+        if (scene.dialogueText) {
+            scene.dialogueText.destroy();
+        }
+    
+        try {
+            scene.dialogueText = scene.add.text(
+                newChatBubble.x - (newChatBubble.width * 0.1 / 2) - 235,
+                newChatBubble.y - (newChatBubble.height * 0.1 / 2) - 15,
+                textContent,
+                { font: "16px", color: "#000", align: "center" }
+            ).setDepth(12);
+        } catch (e) {
+            console.error("Error creating the text: ", e);
+        }
+    }
+    
+    const totalDisplayTime = (dialogue.length * textSpeed) + 2000;
+    scene.timerEvent = scene.time.delayedCall(totalDisplayTime, () => {
+        if (!newChatBubble.anims) return;
+        newChatBubble.anims.play('chat_bubble_reverse', true);
+        if (scene.dialogueText)
+            scene.dialogueText.destroy();
+        scene.time.delayedCall(500, () => {
+            newChatBubble.destroy();
+            scene.isInteracting = false;
             if (mainMusic instanceof Phaser.Sound.WebAudioSound || mainMusic instanceof Phaser.Sound.HTML5AudioSound)
                 mainMusic.setVolume(0.35);
-            return;
-        }
-
-        if (scene.chatBubble) {
-            scene.dialogueText.destroy();
-            scene.chatBubble.destroy();
-        }
-
-        const newChatBubble = scene.add.sprite(player!.x - 123, player!.y - 130, 'chat_bubble').setScale(0.34).setDepth(11);
-        newChatBubble.flipX = true;
-        newChatBubble.play('chat_bubble', true);
-
-        let textContent = "";
-        const textSpeed = 55;
-
-        scene.dialogueText = scene.add.text(
-            newChatBubble.x - (newChatBubble.width * 0.1 / 2) - 235,
-            newChatBubble.y - (newChatBubble.height * 0.1 / 2) - 15,
-            "",
-            { font: "16px", color: "#000", align: "center" }
-        ).setDepth(12);
-
-        let charIndex = 0;
-
-        scene.time.addEvent({
-            delay: textSpeed,
-            callback: () => {
-                textContent += dialogue[charIndex];
-                scene.dialogueText.setText(textContent);
-                charIndex++;
-            },
-            repeat: dialogue.length - 1
         });
+    });
 
-        scene.timerEvent = scene.time.delayedCall(9000, () => {
-            if (!newChatBubble.anims) return;
-            newChatBubble.anims.play('chat_bubble_reverse', true);
-            scene.dialogueText?.destroy();
-            scene.time.delayedCall(500, () => {
-                newChatBubble.destroy();
-                scene.isInteracting = false; // Release the lock
-                // Raise Main Music Volume
-                if (mainMusic instanceof Phaser.Sound.WebAudioSound || mainMusic instanceof Phaser.Sound.HTML5AudioSound)
-                    mainMusic.setVolume(0.35);
-            });
-        });
+    scene.chatBubble = newChatBubble;
 
-        scene.chatBubble = newChatBubble;
-    }
+    scene.events.on('update', () => {
+        if (scene.chatBubble && scene.dialogueText) {
+            scene.chatBubble.setPosition(character.x - 123, character.y - 130);
+            scene.dialogueText.setPosition(scene.chatBubble.x - (scene.chatBubble.width * 0.1 / 2) - 165, scene.chatBubble.y - (scene.chatBubble.height * 0.1 / 2) - 15);
+        }
+    });
 }

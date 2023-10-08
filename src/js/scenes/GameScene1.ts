@@ -49,6 +49,13 @@ export default class GameScene1 extends BaseScene {
 
         // Super
         super.create();
+
+        this.time.delayedCall(1000, () => {
+            if (this.player3) {
+                let key = `${this.player3.name.toLowerCase()}Dialogue${this.levelNumber}`
+                functions.triggerDialogue(this, this.player3, this.player3.dialogue[key], key);
+            }
+        }, [], this);
     }
 
     update() {

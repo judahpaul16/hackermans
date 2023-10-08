@@ -136,6 +136,20 @@ export default class BaseScene extends Phaser.Scene {
             });
         });
 
+        this.inputManager.interactKey.on('down', () => {
+            // Interact with Character if 'F' key is pressed
+            let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
+            if (activePlayer) {
+                for (let npc of this.npcs) {
+                    this.distanceA = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, npc.x, npc.y);
+                    if (this.distanceA <= 600) {
+                        let key = `${npc.name.toLowerCase()}Dialogue${this.levelNumber}`
+                        functions.triggerDialogue(this, npc, npc.dialogue[key], key);
+                    }
+                }
+            }
+        });
+
         this.inputManager.debugKey.on('down', () => {
             // Show Debug Menu if ESC key is pressed
             this.dg = this.registry.get('debugGUI');
@@ -144,7 +158,7 @@ export default class BaseScene extends Phaser.Scene {
             }
         });
         
-        // Reset players if 'R' key is pressed
+        // Reset players if '0' key is pressed
         this.inputManager.resetKey.on('down', () => { this.resetPlayers() });
 
         // Pause game if 'P' key is pressed
@@ -167,27 +181,6 @@ export default class BaseScene extends Phaser.Scene {
         if (this.player) if (this.player.isActive()) this.updatePlayer(this.player);
         if (this.player2) if (this.player2.isActive()) this.updatePlayer(this.player2);
         if (this.player3) if (this.player3.isActive()) this.updatePlayer(this.player3);
-
-        // Make chat bubble follow Player 3
-        if (this.player3) {
-            if (this.chatBubble && this.dialogueText) {
-                this.chatBubble.setPosition(this.player3.x - 123, this.player3.y - 130);
-                this.dialogueText.setPosition(this.chatBubble!.x - (this.chatBubble!.width * 0.1 / 2) - 165,
-                    this.chatBubble!.y - (this.chatBubble!.height * 0.1 / 2) - 15);
-            }
-        }
-
-        // Handle Interactions
-        if (this.player && this.player3)
-            functions.handleInteract(
-                this,
-                this.player3,
-                "Things haven't been the same since the 7/11 attacks.\n" +
-                "But, if you follow my lead, you might just\n" +
-                "make it out of here alive.",
-                "p3Dialogue1", // key for dialogue sound
-                this.inputManager.interactKey!
-            );
         
         // if Lv. # not in camera top right corner, move it there
         if (this.level!.x != this.cameras.main.width - 80 || this.level!.y != 20)
