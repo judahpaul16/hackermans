@@ -54,13 +54,7 @@ export default class Player2 extends Player {
         animation: Phaser.Animations.Animation,
         frame: Phaser.Animations.AnimationFrame
     ) {
-        if (animation.key === this.dyingKey) {
-            this.isDead = true;
-        }
-
-        if (this.currentAnimation === animation.key) {
-            this.currentAnimation = undefined;
-        }
+        super.handleAnimationComplete(animation, frame);
     }
 
     public attack() {

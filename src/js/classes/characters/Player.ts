@@ -107,18 +107,29 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             if (!this.attackSound) this.attackSound = this.scene.sound.add(this.attackKey);
             if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: false });
         }
+
+        // Disable gravity and adjust offset for crouching animation
+        if (animation.key === this.crouchKey && this.body instanceof Phaser.Physics.Arcade.Body) {
+            this.body!.setAllowGravity(false);
+            if (this.y > 670) this.y -= 10;
+        }
     }
     
     protected handleAnimationComplete(
         animation: Phaser.Animations.Animation,
         frame: Phaser.Animations.AnimationFrame
     ) {
+        if (animation.key === this.crouchKey && this.body instanceof Phaser.Physics.Arcade.Body) {
+            this.body!.setAllowGravity(true);
+            if (this.y > 670) this.y -= 10;
+        }
+
         if (animation.key === this.dyingKey) {
             this.isDead = true;
         }
 
         // Tweak the hitbox for the dying animation
-        if (animation.key === this.dyingKey && frame.index === 4) {
+        if (animation.key === this.dyingKey && frame.index === 4 && this.number === 1) {
             const newWidth = 78;
             const newHeight = 12;
             this.body!.setSize(newWidth, newHeight);
@@ -127,7 +138,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
 
         // If the animation is 'meleeP1', reset gravity
-        if (animation.key === this.attackKey) {
+        if (animation.key === this.attackKey && this.number === 1) {
             this.setVelocityY(-100);
         }
 

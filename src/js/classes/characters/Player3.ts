@@ -7,7 +7,7 @@ export default class Player3 extends Player {
     public width: number = 83;
     public height: number = 186;
     public offsetX: number = -2;
-    public offsetY: number = -38.4;
+    public offsetY: number = -13;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
     public runSpeed: number = 225;
@@ -55,17 +55,10 @@ export default class Player3 extends Player {
         animation: Phaser.Animations.Animation,
         frame: Phaser.Animations.AnimationFrame
     ) {
-        if (animation.key === this.dyingKey) {
-            this.isDead = true;
-        }
-
-        if (animation.key === this.attackKey) {
+        if (animation.key === this.attackKey)
             if (this.y > 670) this.y -= 10;
-        }
-
-        if (this.currentAnimation === animation.key) {
-            this.currentAnimation = undefined;
-        }
+        
+        super.handleAnimationComplete(animation, frame);
     }
 
     public attack() {
