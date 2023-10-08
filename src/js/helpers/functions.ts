@@ -124,15 +124,15 @@ export function toggleXYCoords(scene: any, value: boolean) {
     // Update XY coords for all players
     if (scene.player) {
         scene.player.showXY = value;
-        scene.player.updateXYCoords();
+        scene.player.updateDebugInfo();
     }
     if (scene.player2) {
         scene.player2.showXY = value;
-        scene.player2.updateXYCoords();
+        scene.player2.updateDebugInfo();
     }
     if (scene.player3) {
         scene.player3.showXY = value;
-        scene.player3.updateXYCoords();
+        scene.player3.updateDebugInfo();
     }
 
     // Update XY coords for all NPCs
@@ -140,7 +140,7 @@ export function toggleXYCoords(scene: any, value: boolean) {
         for (let i = 0; i < scene.npcs.length; i++) {
             let npc = scene.npcs[i];
             npc.showXY = value;
-            npc.updateXYCoords();
+            npc.updateDebugInfo();
         }
     }
 
@@ -149,7 +149,7 @@ export function toggleXYCoords(scene: any, value: boolean) {
         for (let i = 0; i < scene.enemies.length; i++) {
             let enemy = scene.enemies[i];
             enemy.showXY = value;
-            enemy.updateXYCoords();
+            enemy.updateDebugInfo();
         }
     }
 
@@ -158,7 +158,7 @@ export function toggleXYCoords(scene: any, value: boolean) {
         for (let i = 0; i < scene.drones.length; i++) {
             let drone = scene.drones[i];
             drone.showXY = value;
-            drone.updateXYCoords();
+            drone.updateDebugInfo();
         }
     }
 }
@@ -167,15 +167,15 @@ function toggleAllAnimationInfo(scene: any, value: boolean) {
     // Update animation info for all players
     if (scene.player) {
         scene.player.showAnimationInfo = value;
-        scene.player.updateAnimationInfo();
+        scene.player.updateDebugInfo();
     }
     if (scene.player2) {
         scene.player2.showAnimationInfo = value;
-        scene.player2.updateAnimationInfo();
+        scene.player2.updateDebugInfo();
     }
     if (scene.player3) {
         scene.player3.showAnimationInfo = value;
-        scene.player3.updateAnimationInfo();
+        scene.player3.updateDebugInfo();
     }
 
     // Update animation info for all NPCs
@@ -183,7 +183,7 @@ function toggleAllAnimationInfo(scene: any, value: boolean) {
         for (let i = 0; i < scene.npcs.length; i++) {
             let npc = scene.npcs[i];
             npc.showAnimationInfo = value;
-            npc.updateAnimationInfo();
+            npc.updateDebugInfo();
         }
     }
 
@@ -192,7 +192,7 @@ function toggleAllAnimationInfo(scene: any, value: boolean) {
         for (let i = 0; i < scene.enemies.length; i++) {
             let enemy = scene.enemies[i];
             enemy.showAnimationInfo = value;
-            enemy.updateAnimationInfo();
+            enemy.updateDebugInfo();
         }
     }
 
@@ -201,7 +201,7 @@ function toggleAllAnimationInfo(scene: any, value: boolean) {
         for (let i = 0; i < scene.drones.length; i++) {
             let drone = scene.drones[i];
             drone.showAnimationInfo = value;
-            drone.updateAnimationInfo();
+            drone.updateDebugInfo();
         }
     }
 }

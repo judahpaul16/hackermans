@@ -156,7 +156,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         return this.currentAnimation;
     }
 
-    public updateAnimationInfo() {
+    public updateDebugInfo() {
         if (this && this.anims && this.showAnimationInfo && this.animationInfoText && this.anims.currentFrame) {
             // Retrieve the frame number of the current animation
             const frameNumber = this.anims.currentFrame ? this.anims.currentFrame.index : 'N/A';
@@ -166,9 +166,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         } else if (this.animationInfoText) {
             this.animationInfoText.setVisible(false);
         }
-    }
 
-    public updateXYCoords() {
         if (this && this.xyText && this.showXY) {
             this.xyText.setText(`x: ${this.x}\ny: ${this.y}`);
             this.xyText.setPosition(this.x + 50, this.y - 30);

@@ -530,14 +530,12 @@ export default class BaseScene extends Phaser.Scene {
         [this.player, this.player2, this.player3].forEach(p => {
             if (p && p.indicator) p.updateIndicatorPosition();
             if (p) functions.updateHealthBar(this, p);
-            if (p) p.updateAnimationInfo();
-            if (p) p.updateXYCoords();
+            if (p) p.updateDebugInfo();
         });
     
         if (this.npcs) {
             for (let npc of this.npcs) {
-                npc.updateAnimationInfo();
-                npc.updateXYCoords();
+                npc.updateDebugInfo();
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 this.updateCharacterDistance(this.distanceA, activePlayer, npc, 600);
             }
@@ -545,8 +543,7 @@ export default class BaseScene extends Phaser.Scene {
     
         if (this.enemies) {
             for (let enemy of this.enemies) {
-                enemy.updateAnimationInfo();
-                enemy.updateXYCoords();
+                enemy.updateDebugInfo();
                 let activePlayer = this.game.registry.get('activePlayer') as Player | Player2 | Player3;
                 this.updateCharacterDistance(this.distanceB, activePlayer, enemy, 600);
             }
@@ -554,8 +551,7 @@ export default class BaseScene extends Phaser.Scene {
     
         if (this.drones) {
             for (let drone of this.drones) {
-                drone.updateAnimationInfo();
-                drone.updateXYCoords();
+                drone.updateDebugInfo();
             }
         }
     
