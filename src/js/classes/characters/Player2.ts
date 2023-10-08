@@ -4,7 +4,6 @@ import Player from './Player';
 export default class Player2 extends Player {
     public number: number = 2;
     public name: string = 'Anonymoose';
-    public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
     public runSpeed: number = 275;
@@ -15,7 +14,6 @@ export default class Player2 extends Player {
     public isReloading: boolean = false;
     public reloadText?: Phaser.GameObjects.Text;
     public type: string = 'ranged';
-    public attackSound: Phaser.Sound.BaseSound | null = null;
     public textureKey: string = 'player2';
     public avatarKey: string = 'avatarP2';
     public hbFrameKey: string = 'health-bar-frame-2';

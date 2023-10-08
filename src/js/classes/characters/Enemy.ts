@@ -6,7 +6,6 @@ import NPC from './NPC';
 
 export default class Enemy extends Player {
     public name: string = 'Bad Guy';
-    public currentAnimation?: string;
     public scale = 1.8;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
@@ -23,7 +22,6 @@ export default class Enemy extends Player {
     public hurtKey: string = 'hurtE1';
     public meleeKey: string = 'meleeE1';
     public shootKey: string = 'shootE1';
-    public attackSound: Phaser.Sound.BaseSound | null = null;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, type: string) {
         super(scene, x, y, texture);

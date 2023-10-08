@@ -8,7 +8,6 @@ export default class Player3 extends Player {
     public height: number = 186;
     public offsetX: number = -2;
     public offsetY: number = -38.4;
-    public currentAnimation?: string;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
     public runSpeed: number = 225;
@@ -19,7 +18,6 @@ export default class Player3 extends Player {
     public isReloading: boolean = false;
     public reloadText?: Phaser.GameObjects.Text;
     public type: string = 'ranged';
-    public shootSound: Phaser.Sound.BaseSound | null = null;
     public textureKey: string = 'player3';
     public hbFrameKey: string = 'health-bar-frame-3';
     public avatarKey: string = 'avatarP3';

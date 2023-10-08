@@ -3,12 +3,10 @@ import Player from './Player';
 
 export default class NPC extends Player {
     public name: string = 'Anonymiss';
-    public currentAnimation?: string;
     public scale = 2;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
     public interactHint?: Phaser.GameObjects.Text | null = null;
-    public attackSound: Phaser.Sound.BaseSound | null = null;
     public textureKey: string = 'npc';
     public avatarKey: string = 'avatarNPC1';
     public hbFrameKey: string = 'health-bar-frame-npc';
