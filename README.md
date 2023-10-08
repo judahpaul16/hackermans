@@ -25,8 +25,8 @@ A platformer game made with Phaser.JS and TypeScript for the lulz. Maybe I'll ma
 
 ---
 
-![Screenshot 1](screenshots/1.png)
----
+![Screenshot 1](screenshots/1.png)  
+
 ![Screenshot 2](screenshots/2.png)
 
 ## Useful Links
