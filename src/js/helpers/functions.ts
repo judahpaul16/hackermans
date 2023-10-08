@@ -426,6 +426,11 @@ export function handleInteract(
 
     if (Phaser.Input.Keyboard.JustDown(interactKey)) {
         scene.isInteracting = true; // Set the lock
+
+        // Lower Main Music Volume
+        const mainMusic = scene.sound.get('mainMusic');
+        if (mainMusic instanceof Phaser.Sound.WebAudioSound || mainMusic instanceof Phaser.Sound.HTML5AudioSound)
+            mainMusic.setVolume(0.15);
         
         scene.sound.stopByKey(dialogueSoundKey);
         scene.sound.play(dialogueSoundKey, { volume: 1 });
@@ -440,6 +445,9 @@ export function handleInteract(
                 scene.dialogueText.destroy();
                 scene.chatBubble.destroy();
             });
+            // Raise Main Music Volume
+            if (mainMusic instanceof Phaser.Sound.WebAudioSound || mainMusic instanceof Phaser.Sound.HTML5AudioSound)
+                mainMusic.setVolume(0.35);
             return;
         }
 
@@ -481,6 +489,9 @@ export function handleInteract(
             scene.time.delayedCall(500, () => {
                 newChatBubble.destroy();
                 scene.isInteracting = false; // Release the lock
+                // Raise Main Music Volume
+                if (mainMusic instanceof Phaser.Sound.WebAudioSound || mainMusic instanceof Phaser.Sound.HTML5AudioSound)
+                    mainMusic.setVolume(0.35);
             });
         });
 
