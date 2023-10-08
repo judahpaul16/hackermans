@@ -579,7 +579,8 @@ export default class BaseScene extends Phaser.Scene {
                     player.transitionTo(PlayerState.WALKING, isMovingLeft);
             }
         } else if (isJumping) {
-            player.transitionTo(PlayerState.JUMPING, player.flipX);
+            if (!isAttacking)
+                player.transitionTo(PlayerState.JUMPING, player.flipX);
         } else if (isCrouching) {
             if (!isAttacking)
                 player.transitionTo(PlayerState.CROUCHING, player.flipX);

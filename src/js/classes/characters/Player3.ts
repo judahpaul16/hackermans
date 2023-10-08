@@ -49,12 +49,21 @@ export default class Player3 extends Player {
         frame: Phaser.Animations.AnimationFrame
     ) {
         super.handleAnimationStart(animation, frame);
+
+        // Tweak the hitbox for the crouching animation
+        if (animation.key === this.crouchKey) {
+            this.setOffset(this.offsetX, this.offsetY);
+        }
     }
 
     protected handleAnimationComplete(
         animation: Phaser.Animations.Animation,
         frame: Phaser.Animations.AnimationFrame
     ) {
+        if (animation.key === this.crouchKey) {
+            this.setOffset(this.offsetX, this.offsetY);
+        }
+
         if (animation.key === this.attackKey)
             if (this.y > 670) this.y -= 10;
         
