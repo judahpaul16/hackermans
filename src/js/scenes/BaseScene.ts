@@ -3,7 +3,7 @@ import Player, { PlayerState } from '../classes/characters/Player';
 import Player2 from '../classes/characters/Player2';
 import Player3 from '../classes/characters/Player3';
 import NPC from '../classes/characters/NPC';
-import Enemy from '../classes/characters/Enemy';
+import EnemyAI from '../classes/characters/EnemyAI';
 import Drone from '../classes/entities/Drone';
 import InputManager from '../classes/utils/InputManager';
 import * as functions from '../helpers/functions';
@@ -19,7 +19,7 @@ export default class BaseScene extends Phaser.Scene {
     protected p2StartY: number = this.p1StartY;
     protected p3StartX: number = this.p2StartX + 50;
     protected p3StartY: number = this.p1StartY;
-    protected enemies: Enemy[] = [];
+    protected enemies: EnemyAI[] = [];
     protected npcs: NPC[] = [];
     protected drones: Drone[] = [];
     protected chatBubble?: Phaser.GameObjects.Sprite;
@@ -134,13 +134,6 @@ export default class BaseScene extends Phaser.Scene {
                     player.reload();
                 }
             });
-            if (this.enemies) {
-                for (let enemy of this.enemies) {
-                    if (enemy.type === 'ranged') {
-                        enemy.reload();
-                    }
-                }
-            }
         });
 
         this.inputManager.debugKey.on('down', () => {
@@ -430,7 +423,7 @@ export default class BaseScene extends Phaser.Scene {
                     if (this.distanceB <= 600) {
                         // Create Enemy health bar
                         functions.createHealthBar(this, enemy!);
-                        enemy.hunt();
+                        enemy.transitionTo(PlayerState.HUNTING, enemy.flipX);
                     } else if (this.distanceB > 600) {
                         // Destroy Enemy health bar
                         functions.destroyHealthBar(enemy!);
@@ -633,11 +626,17 @@ export default class BaseScene extends Phaser.Scene {
         distance = Phaser.Math.Distance.Between(activePlayer!.x, activePlayer!.y, character.x, character.y);
         if (distance <= range) {
             functions.createHealthBar(this, character);
-            character.interactHint!.setVisible(true);
-            character.interactHint!.x = character.x - 45;
+            if (character.name.includes('Enemy'))
+                character.transitionTo(PlayerState.HUNTING, character.flipX);
+            if (character.interactHint) {
+                character.interactHint.setVisible(true);
+                character.interactHint.x = character.x - 45;
+            }
         } else {
             functions.destroyHealthBar(character!);
-            character.interactHint!.setVisible(false);
+            if (character.interactHint) {
+                character.interactHint.setVisible(false);
+            }
         }
     }
     

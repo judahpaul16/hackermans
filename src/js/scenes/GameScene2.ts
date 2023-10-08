@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import BaseScene from './BaseScene';
-import Enemy from '../classes/characters/Enemy';
+import EnemyAI from '../classes/characters/EnemyAI';
 import Drone from '../classes/entities/Drone';
 import * as functions from '../helpers/functions';
 
@@ -40,12 +40,12 @@ export default class GameScene2 extends BaseScene {
             this.drones.push(new Drone(this, x, y, 'drone').setFlipX(true).play('spin', true));
         }
 
-        // Enemy setup
+        // EnemyAI setup
         this.enemies = [
-            new Enemy(this, 2500, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
-            new Enemy(this, 3000, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
-            new Enemy(this, 3500, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
-            new Enemy(this, 4000, 600, 'enemy', 'ranged').setFlipX(true).play('standingE1', true),
+            new EnemyAI(this, 2500, 600, 'enemyAI', 'ranged').setFlipX(true).play('standingEAI', true),
+            new EnemyAI(this, 3000, 600, 'enemyAI', 'ranged').setFlipX(true).play('standingEAI', true),
+            new EnemyAI(this, 3500, 600, 'enemyAI', 'ranged').setFlipX(true).play('standingEAI', true),
+            new EnemyAI(this, 4000, 600, 'enemyAI', 'ranged').setFlipX(true).play('standingEAI', true),
         ];
 
         // Super

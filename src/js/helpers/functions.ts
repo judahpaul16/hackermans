@@ -3,7 +3,7 @@ import Player from '../classes/characters/Player';
 import Player2 from '../classes/characters/Player3';
 import Player3 from '../classes/characters/Player2';
 import NPC from '../classes/characters/NPC';
-import Enemy from '../classes/characters/Enemy';
+import EnemyAI from '../classes/characters/EnemyAI';
 import * as dat from 'dat.gui';
 
 export function createBackground(scene: any, key: string, width: number, height: number): Phaser.GameObjects.TileSprite {
@@ -109,7 +109,7 @@ export function initializeDebugGUI(scene: any) {
         if (scene.enemies) {
             for (let i = 0; i < scene.enemies!.length; i++) {
                 let enemy = scene.enemies![i];
-                let enemyFolderN = enemyFolder.addFolder('Enemy ' + (i + 1));
+                let enemyFolderN = enemyFolder.addFolder(`${enemy.name} ` + (i + 1));
                 enemyFolderN.add(enemy, 'scale', 0.1, 5).name('Sprite Scale').listen();
                 enemyFolderN.add(enemy.body!, 'width', 0, 200).name('Hitbox Width').listen();
                 enemyFolderN.add(enemy.body!, 'height', 0, 200).name('Hitbox Height').listen();
@@ -273,13 +273,13 @@ export function updateClouds(scene: any) {
     }
 }
 
-export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy, extraYoffset: number = 0) {
+export function createHealthBar(scene: Phaser.Scene, player: any, extraYoffset: number = 0) {
     if (player && !player.avatar && !player.amask && !player.healthBarFrame && !player.healthBarFill && !player.healthBar) {
         // Determine type of character
         const isP2 = player instanceof Player2;
         const isP3 = player instanceof Player3;
         const isNPC = player instanceof NPC;
-        const isEnemy = player instanceof Enemy;
+        const isEnemy = player.name.includes('Enemy');
         const avatarOffsetX = isNPC || isEnemy ? 255 : 0;
         const fillOffsetX = isNPC || isEnemy ? -15 : 0;
 
@@ -361,9 +361,9 @@ export function createHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
     }
 }
 
-export function updateHealthBar(scene: Phaser.Scene, player: Player | Player2 | Player3 | NPC | Enemy) {
+export function updateHealthBar(scene: Phaser.Scene, player: any) {
     if (player && player.healthBarFill && player.healthBarFrame && player.healthBar) {
-        if (player instanceof NPC || player instanceof Enemy) {
+        if (player instanceof NPC || player.type === 'enemy') {
             let scrollX = scene.cameras.main.scrollX + window.innerWidth - scene.scale.width;
             let scrollY = (window.innerWidth < 1100) ? scene.cameras.main.scrollY + 100 : scene.cameras.main.scrollY;
             
@@ -396,7 +396,7 @@ export function updateHealthBar(scene: Phaser.Scene, player: Player | Player2 | 
     return player.healthBarFill;
 }
 
-export function destroyHealthBar(player: Player | Player2 | Player3 | NPC | Enemy) {
+export function destroyHealthBar(player: any) {
     if (player.avatar && player.amask && player.healthBarFrame && player.healthBarFill && player.healthBar) {
         player.avatar.destroy();
         player.avatar = undefined;
@@ -417,7 +417,7 @@ export function destroyHealthBar(player: Player | Player2 | Player3 | NPC | Enem
 
 export function handleInteract(
     scene: any,
-    player: Player | Player2 | Player3 | NPC | Enemy,
+    player: any,
     dialogue: string,
     dialogueSoundKey: string,
     interactKey: Phaser.Input.Keyboard.Key

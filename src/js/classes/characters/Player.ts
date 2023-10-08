@@ -1,5 +1,5 @@
 import Phaser, { NONE } from 'phaser';
-import Enemy from './Enemy';
+import EnemyAI from './EnemyAI';
 import InputManager from '../utils/InputManager';
 
 export enum PlayerState {
@@ -12,7 +12,8 @@ export enum PlayerState {
     DYING,
     CROUCHING,
     FOLLOWING,
-    HUNTING
+    HUNTING,
+    PACING
 }
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
@@ -300,13 +301,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.transitionTo(PlayerState.STANDING, distanceToPlayer > 0);
         }
     }
+
+    public pace() {
+        if (this.currentState !== PlayerState.PACING) return;
+        else {
+            this.setVelocityX(this.flipX ? -this.walkSpeed : this.walkSpeed);
+            this.play(this.walkKey, true);
+        }
+    }
     
     public hunt() {
-        if (this.currentState !== PlayerState.HUNTING) {
-            this.currentState = PlayerState.HUNTING
+        if (this.currentState !== PlayerState.HUNTING) return;
+        else {
             // Find the nearest player
             let nearestDistance: number = Infinity;
-            let nearestEnemy: Enemy | undefined;
+            let nearestEnemy: EnemyAI | undefined;
             let enemies = this.scene.game.registry.get('enemies');
             for (let enemy of enemies) {
                 const tempDistance = Phaser.Math.Distance.Between(this.x, this.y, enemy.x, enemy.y);
@@ -382,6 +391,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 this.hunt();
                 break;
     
+            case PlayerState.PACING:
+                this.pace();
+                break;
+
             default:
                 break;
         }
