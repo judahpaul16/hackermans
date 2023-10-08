@@ -403,7 +403,6 @@ export function handleInteract(
         newChatBubble.flipX = true;
         newChatBubble.play('chat_bubble', true);
 
-        const dialogueMsg = dialogue;
         let textContent = "";
         const textSpeed = 55;
 
