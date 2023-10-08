@@ -311,8 +311,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     
         switch(state) {
             case PlayerState.STANDING:
-                if (this.body instanceof Phaser.Physics.Arcade.Body)
+                if (this.body instanceof Phaser.Physics.Arcade.Body) {
+                    this.body.setVelocity(0);
                     this.body.setAllowGravity(false);
+                }
                 this.setVelocityX(0);
                 this.play(this.standKey, true);
                 break;
@@ -341,8 +343,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
                 break;
     
             case PlayerState.CROUCHING:
-                if (this.body instanceof Phaser.Physics.Arcade.Body)
-                    this.body.setAllowGravity(false);
                 this.play(this.crouchKey, true);
                 break;
     
