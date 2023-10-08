@@ -14,7 +14,7 @@ export default class BaseScene extends Phaser.Scene {
     protected player2?: Player2;
     protected player3?: Player3;
     protected p1StartX: number = 200;
-    protected p1StartY: number = 650;
+    protected p1StartY: number = 690;
     protected p2StartX: number = this.p1StartX + 25;
     protected p2StartY: number = this.p1StartY;
     protected p3StartX: number = this.p2StartX + 50;
@@ -251,6 +251,8 @@ export default class BaseScene extends Phaser.Scene {
             this.player.flipX = true;
         } else {
             this.player = new Player(this, this.p1StartX, this.p1StartY, 'player');
+            if (this.player.body && this.player.body instanceof Phaser.Physics.Arcade.Body)
+                this.player.body.setVelocity(0);
         }
 
         this.player!.body!.setSize(40, 60);
