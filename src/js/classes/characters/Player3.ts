@@ -98,6 +98,7 @@ export default class Player3 extends Player {
             projectile.body.setAllowGravity(false);
             projectile.setVelocityX(this.flipX ? -1500 : 1500); // Set velocity based on player's direction
             this.magazine--;
+            if (this.magazine <= 0) this.checkReload();
         } else if (this.isReloading) {
             this.attackSound?.stop();
             this.reloadText?.setVisible(true);
