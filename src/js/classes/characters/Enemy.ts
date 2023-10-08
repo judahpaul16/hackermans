@@ -9,7 +9,11 @@ export default class Enemy extends Player {
     public scale = 1.8;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
+    public magazine: number = 6;
+    public magazineSize: number = 6;
+    public isReloading: boolean = false;
     public attackHint?: Phaser.GameObjects.Image | null = null;
+    public reloadText?: Phaser.GameObjects.Text;
     public type: string = 'basic';
     public textureKey: string = 'enemy';
     public avatarKey: string = 'avatarE1';
@@ -125,13 +129,19 @@ export default class Enemy extends Player {
     }    
 
     public emitProjectile() {
-        if (this.scene && this.scene.game && this.scene.game.registry) {
+        if (this.scene && this.scene.game && this.scene.game.registry && !this.isReloading) {
             // Create a projectile at player's position
-            let projectileGroup = this.scene.game.registry.get('enemyProjectileGroup') as Phaser.Physics.Arcade.Group;
-            let projectile = projectileGroup.create(this.x, this.y, 'projectile-1').setScale(1.5);
-            projectile.flipX = this.flipX;
-            projectile.body.setAllowGravity(false);
-            projectile.setVelocityX(this.flipX ? -750 : 750); // Set velocity based on player's direction
+            setTimeout(() => {
+                let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
+                let projectile = projectileGroup.create(this.x, this.y - 15, 'projectile-1').setScale(1.5);
+                projectile.flipX = this.flipX;
+                projectile.body.setAllowGravity(false);
+                projectile.setVelocityX(this.flipX ? -750 : 750); // Set velocity based on player's direction
+                this.magazine--;
+            }
+            , 150);
+        } else if (this.isReloading) {
+            this.reloadText?.setVisible(true);
         }
     }
 }
