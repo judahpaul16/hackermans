@@ -17,21 +17,7 @@ export function setupAnimations(scene: any) {
             repeat
         };
     };
-    const generateSingleFrameProps = (
-        key: string,
-        texture: string,
-        frameName: string,
-        frameRate: number = 1,
-        repeat: number = 0
-    ) => {
-        return {
-            key,
-            frames: [{ key: texture, frame: frameName }],
-            frameRate,
-            repeat
-        };
-    };    
-
+    
     // Define animations
     const animations = [
         // UI
@@ -97,27 +83,6 @@ export function setupAnimations(scene: any) {
         generateAnimationProps('spin', 'drone', 'spin', 1, 4, 10, -1, 2),
         generateAnimationProps('explode', 'drone', 'explode', 1, 4, 10, 0, 2),
         // Misc. Props (Objects, Environment, etc.)
-        generateSingleFrameProps('floor-tileset', 'props', 'floor-tileset'),
-        generateSingleFrameProps('antenna', 'props', 'antenna'),
-        generateSingleFrameProps('hanging-monitors', 'props', 'hanging-monitors'),
-        generateSingleFrameProps('terminal-1', 'props', 'terminal-1'),
-        generateSingleFrameProps('terminal-2', 'props', 'terminal-2'),
-        generateSingleFrameProps('container', 'props', 'container'),
-        generateSingleFrameProps('container-gray', 'props', 'container-gray'),
-        generateSingleFrameProps('container-yellow', 'props', 'container-yellow'),
-        generateSingleFrameProps('container-small-gray', 'props', 'container-small-gray'),
-        generateSingleFrameProps('container-small-yellow', 'props', 'container-small-yellow'),
-        generateSingleFrameProps('box-1', 'props', 'box-1'),
-        generateSingleFrameProps('box-2', 'props', 'box-2'),
-        generateSingleFrameProps('box-3', 'props', 'box-3'),
-        generateSingleFrameProps('chest-opened', 'props', 'chest-opened'),
-        generateSingleFrameProps('chest-closed', 'props', 'chest-closed'),
-        generateSingleFrameProps('banners', 'props', 'banners'),
-        generateSingleFrameProps('banner-open', 'props', 'banner-open'),
-        generateSingleFrameProps('banner-floor', 'props', 'banner-floor'),
-        generateSingleFrameProps('banner-arrow', 'props', 'banner-arrow'),
-        generateSingleFrameProps('pod', 'props', 'pod'),
-        generateSingleFrameProps('hotel-sign', 'props', 'hotel-sign'),
         generateAnimationProps('banner-scroll', 'props', 'banner-scroll-', 1, 4, 1, 0),
         generateAnimationProps('banner-side', 'props', 'banner-side-', 1, 4, 1, 0),
         generateAnimationProps('banner-neon', 'props', 'banner-neon-', 1, 4, 1, 0),
