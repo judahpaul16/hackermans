@@ -17,6 +17,20 @@ export function setupAnimations(scene: any) {
             repeat
         };
     };
+    const generateSingleFrameProps = (
+        key: string,
+        texture: string,
+        frameName: string,
+        frameRate: number = 1,
+        repeat: number = 0
+    ) => {
+        return {
+            key,
+            frames: [{ key: texture, frame: frameName }],
+            frameRate,
+            repeat
+        };
+    };    
 
     // Define animations
     const animations = [
@@ -26,7 +40,6 @@ export function setupAnimations(scene: any) {
         generateAnimationProps('cloud', 'cloud', 'cloud', 1, 4, 7, -1, 4),
         generateAnimationProps('chat_bubble', 'chat_bubble', 'chat', 0, 3, 7, 0, 2),
         generateAnimationProps('chat_bubble_reverse', 'chat_bubble', 'chat', 3, 0, 7, 0, 2),
-        generateAnimationProps('floor-tileset', 'props', 'floor-tileset', 1, 1, 1, 0, 4),
         // Effects
         generateAnimationProps('projectile-1', 'projectile-1', 'shot-', 0, 12, 30, -1),
         generateAnimationProps('hitSprite1', 'hitSprite1', 'hits-1-', 1, 5, 10, 0),
@@ -84,35 +97,36 @@ export function setupAnimations(scene: any) {
         generateAnimationProps('spin', 'drone', 'spin', 1, 4, 10, -1, 2),
         generateAnimationProps('explode', 'drone', 'explode', 1, 4, 10, 0, 2),
         // Props
-        generateAnimationProps('antenna', 'props', 'antenna', 1, 1, 1, 0, 4),
-        generateAnimationProps('hanging-monitors', 'props', 'hanging-monitors', 1, 1, 1, 0, 4),
-        generateAnimationProps('terminal-1', 'props', 'terminal-1', 1, 1, 1, 0, 4),
-        generateAnimationProps('terminal-2', 'props', 'terminal-2', 1, 1, 1, 0, 4),
-        generateAnimationProps('container', 'props', 'container', 1, 1, 1, 0, 4),
-        generateAnimationProps('container-gray', 'props', 'container-gray', 1, 1, 1, 0, 4),
-        generateAnimationProps('container-yellow', 'props', 'container-yellow', 1, 1, 1, 0, 4),
-        generateAnimationProps('container-small-grey', 'props', 'container-small-grey', 1, 1, 1, 0, 4),
-        generateAnimationProps('container-small-yellow', 'props', 'container-small-yellow', 1, 1, 1, 0, 4),
-        generateAnimationProps('box-1', 'props', 'box-1', 1, 1, 1, 0, 4),
-        generateAnimationProps('box-2', 'props', 'box-2', 1, 1, 1, 0, 4),
-        generateAnimationProps('box-3', 'props', 'box-3', 1, 1, 1, 0, 4),
-        generateAnimationProps('chest-open', 'props', 'chest-open', 1, 1, 1, 0, 4),
-        generateAnimationProps('chest-closed', 'props', 'chest-closed', 1, 1, 1, 0, 4),
-        generateAnimationProps('banners', 'props', 'banners', 1, 1, 1, 0, 4),
-        generateAnimationProps('banner-open', 'props', 'banner-open', 1, 1, 1, 0, 4),
-        generateAnimationProps('banner-floor', 'props', 'banner-floor', 1, 1, 1, 0, 4),
-        generateAnimationProps('banner-arrow', 'props', 'banner-arrow', 1, 1, 1, 0, 4),
-        generateAnimationProps('banner-scroll', 'props', 'banner-scroll-', 1, 4, 1, 0, 4),
-        generateAnimationProps('banner-side', 'props', 'banner-side-', 1, 4, 1, 0, 4),
-        generateAnimationProps('banner-neon', 'props', 'banner-neon-', 1, 4, 1, 0, 4),
-        generateAnimationProps('banner-coke', 'props', 'banner-coke-', 1, 3, 1, 0, 4),
-        generateAnimationProps('banner-sushi', 'props', 'banner-sushi-', 1, 3, 1, 0, 4),
-        generateAnimationProps('banner-big', 'props', 'banner-big-', 1, 4, 1, 0, 4),
-        generateAnimationProps('hotel-sign', 'props', 'hotel-sign', 1, 1, 1, 0, 4),
-        generateAnimationProps('monitor-face', 'props', 'monitor-face-', 1, 4, 1, 0, 4),
-        generateAnimationProps('pod', 'props', 'pod', 1, 1, 1, 0, 4),
-        generateAnimationProps('ball', 'props', 'ball-', 1, 4, 2, 0, 4),
-        generateAnimationProps('small-ball', 'props', 'small-ball-', 1, 2, 2, 0, 4),
+        generateSingleFrameProps('floor-tileset', 'props', 'floor-tileset'),
+        generateSingleFrameProps('antenna', 'props', 'antenna'),
+        generateSingleFrameProps('hanging-monitors', 'props', 'hanging-monitors'),
+        generateSingleFrameProps('terminal-1', 'props', 'terminal-1'),
+        generateSingleFrameProps('terminal-2', 'props', 'terminal-2'),
+        generateSingleFrameProps('container', 'props', 'container'),
+        generateSingleFrameProps('container-gray', 'props', 'container-gray'),
+        generateSingleFrameProps('container-yellow', 'props', 'container-yellow'),
+        generateSingleFrameProps('container-small-gray', 'props', 'container-small-gray'),
+        generateSingleFrameProps('container-small-yellow', 'props', 'container-small-yellow'),
+        generateSingleFrameProps('box-1', 'props', 'box-1'),
+        generateSingleFrameProps('box-2', 'props', 'box-2'),
+        generateSingleFrameProps('box-3', 'props', 'box-3'),
+        generateSingleFrameProps('chest-opened', 'props', 'chest-opened'),
+        generateSingleFrameProps('chest-closed', 'props', 'chest-closed'),
+        generateSingleFrameProps('banners', 'props', 'banners'),
+        generateSingleFrameProps('banner-open', 'props', 'banner-open'),
+        generateSingleFrameProps('banner-floor', 'props', 'banner-floor'),
+        generateSingleFrameProps('banner-arrow', 'props', 'banner-arrow'),
+        generateSingleFrameProps('pod', 'props', 'pod'),
+        generateSingleFrameProps('hotel-sign', 'props', 'hotel-sign'),
+        generateAnimationProps('banner-scroll', 'props', 'banner-scroll-', 1, 4, 1, 0),
+        generateAnimationProps('banner-side', 'props', 'banner-side-', 1, 4, 1, 0),
+        generateAnimationProps('banner-neon', 'props', 'banner-neon-', 1, 4, 1, 0),
+        generateAnimationProps('banner-coke', 'props', 'banner-coke-', 1, 3, 1, 0),
+        generateAnimationProps('banner-sushi', 'props', 'banner-sushi-', 1, 3, 1, 0),
+        generateAnimationProps('banner-big', 'props', 'banner-big-', 1, 4, 1, 0),
+        generateAnimationProps('monitor-face', 'props', 'monitor-face-', 1, 4, 1, 0),
+        generateAnimationProps('ball', 'props', 'ball-', 1, 4, 2, 0),
+        generateAnimationProps('small-ball', 'props', 'small-ball-', 1, 2, 2, 0),
     ];
 
     // Create animations
