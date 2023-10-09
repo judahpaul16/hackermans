@@ -20,11 +20,17 @@ export function setupAnimations(scene: any) {
 
     // Define animations
     const animations = [
+        // UI
         generateAnimationProps('coinAnimation', 'coin', 'coin', 1, 8, 15, -1, 2),
         generateAnimationProps('logoAnimation', 'logo', 'logo_', 1, 29, 15, -1, 4),
         generateAnimationProps('cloud', 'cloud', 'cloud', 1, 4, 7, -1, 4),
         generateAnimationProps('chat_bubble', 'chat_bubble', 'chat', 0, 3, 7, 0, 2),
         generateAnimationProps('chat_bubble_reverse', 'chat_bubble', 'chat', 3, 0, 7, 0, 2),
+        generateAnimationProps('floor-tileset', 'props', 'floor-tileset', 1, 1, 1, 0, 4),
+        // Combat
+        generateAnimationProps('projectile-1', 'projectile-1', 'shot-', 0, 12, 30, -1),
+        generateAnimationProps('hitSprite1', 'hitSprite1', 'hits-1-', 1, 5, 10, 0),
+        // Player 1
         generateAnimationProps('standingP1', 'player', 'standing', 1, 11, 3, -1, 4),
         generateAnimationProps('walkingP1', 'player', 'walk', 1, 7, 10, -1, 4),
         generateAnimationProps('runningP1', 'player', 'run', 1, 8, 10, -1, 4),
@@ -33,6 +39,17 @@ export function setupAnimations(scene: any) {
         generateAnimationProps('meleeP1', 'player', 'melee', 1, 13, 10, 0, 4),
         generateAnimationProps('dyingP1', 'player', 'death', 1, 4, 4, 0, 4),
         generateAnimationProps('hurtP1', 'player', 'death', 1, 1, 1, 0, 4),
+        // Player 2
+        generateAnimationProps('walkingP2', 'player2', 'walk', 1, 8, 10, -1, 4),
+        generateAnimationProps('runningP2', 'player2', 'run', 1, 8, 10, -1, 4),
+        generateAnimationProps('jumpingP2', 'player2', 'jump', 1, 7, 7, 0, 4),
+        generateAnimationProps('shootP2', 'player2', 'shoot', 1, 12, 10, 0, 4),
+        generateAnimationProps('meleeP2', 'player2', 'melee', 1, 11, 10, 0, 4),
+        generateAnimationProps('crouchingP2', 'player2', 'jump', 1, 1, 4, 0, 4),
+        generateAnimationProps('standingP2', 'player2', 'standing', 1, 12, 4, -1, 4),
+        generateAnimationProps('dyingP2', 'player2', 'death', 1, 4, 1, 0, 4),
+        generateAnimationProps('hurtP2', 'player2', 'death', 1, 1, 1, 0, 4),
+        // Player 3
         generateAnimationProps('standingP3', 'player3', 'standing', 0, 22, 2.5, -1, 4),
         generateAnimationProps('walkingP3', 'player3', 'walk', 0, 6, 10, -1, 4),
         generateAnimationProps('runningP3', 'player3', 'run', 0, 7, 10, -1, 4),
@@ -43,6 +60,7 @@ export function setupAnimations(scene: any) {
         generateAnimationProps('dyingP3', 'player3', 'death', 0, 4, 4, 0, 4),
         generateAnimationProps('hurtP3', 'player3', 'run', 0, 0, 1, 0, 4),
         generateAnimationProps('crouchingP3', 'player3', 'jump', 0, 0, 4, 0, 4),
+        // NPC 1
         generateAnimationProps('walkingNPC1', 'npc', 'walk-', 1, 16, 10, -1),
         generateAnimationProps('runningNPC1', 'npc', 'run-', 1, 8, 10, -1),
         generateAnimationProps('jumpingNPC1', 'npc', 'jump-', 1, 4, 7, 0),
@@ -54,17 +72,7 @@ export function setupAnimations(scene: any) {
         generateAnimationProps('hurtNPC1', 'npc', 'hurt-', 1, 1, 1, 0),
         generateAnimationProps('dyingNPC1', 'npc', 'jump-', 3, 3, 1, 0),
         generateAnimationProps('crouchingNPC1', 'npc', 'crouch-', 1, 1, 1, 0),
-        generateAnimationProps('projectile-1', 'projectile-1', 'shot-', 0, 12, 30, -1),
-        generateAnimationProps('hitSprite1', 'hitSprite1', 'hits-1-', 1, 5, 10, 0),
-        generateAnimationProps('walkingP2', 'player2', 'walk', 1, 8, 10, -1, 4),
-        generateAnimationProps('runningP2', 'player2', 'run', 1, 8, 10, -1, 4),
-        generateAnimationProps('jumpingP2', 'player2', 'jump', 1, 7, 7, 0, 4),
-        generateAnimationProps('shootP2', 'player2', 'shoot', 1, 12, 10, 0, 4),
-        generateAnimationProps('meleeP2', 'player2', 'melee', 1, 11, 10, 0, 4),
-        generateAnimationProps('crouchingP2', 'player2', 'jump', 1, 1, 4, 0, 4),
-        generateAnimationProps('standingP2', 'player2', 'standing', 1, 12, 4, -1, 4),
-        generateAnimationProps('dyingP2', 'player2', 'death', 1, 4, 1, 0, 4),
-        generateAnimationProps('hurtP2', 'player2', 'death', 1, 1, 1, 0, 4),
+        // Enemy AI
         generateAnimationProps('walkingEAI', 'enemyAI', 'walk', 1, 8, 10, -1, 4),
         generateAnimationProps('runningEAI', 'enemyAI', 'run', 1, 8, 10, -1, 4),
         generateAnimationProps('jumpingEAI', 'enemyAI', 'jump', 1, 7, 7, 0, 4),
@@ -74,7 +82,37 @@ export function setupAnimations(scene: any) {
         generateAnimationProps('dyingEAI', 'enemyAI', 'death', 1, 4, 1, 0, 4),
         generateAnimationProps('hurtEAI', 'enemyAI', 'death', 1, 1, 1, 0, 4),
         generateAnimationProps('spin', 'drone', 'spin', 1, 4, 10, -1, 2),
-        generateAnimationProps('explode', 'drone', 'explode', 1, 4, 10, 0, 2)
+        generateAnimationProps('explode', 'drone', 'explode', 1, 4, 10, 0, 2),
+        // Props
+        generateAnimationProps('antenna', 'props', 'antenna', 1, 1, 1, 0, 4),
+        generateAnimationProps('hanging-monitors', 'props', 'hanging-monitors', 1, 1, 1, 0, 4),
+        generateAnimationProps('terminal-1', 'props', 'terminal-1', 1, 1, 1, 0, 4),
+        generateAnimationProps('terminal-2', 'props', 'terminal-2', 1, 1, 1, 0, 4),
+        generateAnimationProps('container', 'props', 'container', 1, 1, 1, 0, 4),
+        generateAnimationProps('container-gray', 'props', 'container-gray', 1, 1, 1, 0, 4),
+        generateAnimationProps('container-yellow', 'props', 'container-yellow', 1, 1, 1, 0, 4),
+        generateAnimationProps('container-small-grey', 'props', 'container-small-grey', 1, 1, 1, 0, 4),
+        generateAnimationProps('container-small-yellow', 'props', 'container-small-yellow', 1, 1, 1, 0, 4),
+        generateAnimationProps('box-1', 'props', 'box-1', 1, 1, 1, 0, 4),
+        generateAnimationProps('box-2', 'props', 'box-2', 1, 1, 1, 0, 4),
+        generateAnimationProps('box-3', 'props', 'box-3', 1, 1, 1, 0, 4),
+        generateAnimationProps('chest-open', 'props', 'chest-open', 1, 1, 1, 0, 4),
+        generateAnimationProps('chest-closed', 'props', 'chest-closed', 1, 1, 1, 0, 4),
+        generateAnimationProps('banners', 'props', 'banners', 1, 1, 1, 0, 4),
+        generateAnimationProps('banner-open', 'props', 'banner-open', 1, 1, 1, 0, 4),
+        generateAnimationProps('banner-floor', 'props', 'banner-floor', 1, 1, 1, 0, 4),
+        generateAnimationProps('banner-arrow', 'props', 'banner-arrow', 1, 1, 1, 0, 4),
+        generateAnimationProps('banner-scroll', 'props', 'banner-scroll-', 1, 4, 1, 0, 4),
+        generateAnimationProps('banner-side', 'props', 'banner-side-', 1, 4, 1, 0, 4),
+        generateAnimationProps('banner-neon', 'props', 'banner-neon-', 1, 4, 1, 0, 4),
+        generateAnimationProps('banner-coke', 'props', 'banner-coke-', 1, 3, 1, 0, 4),
+        generateAnimationProps('banner-sushi', 'props', 'banner-sushi-', 1, 3, 1, 0, 4),
+        generateAnimationProps('banner-big', 'props', 'banner-big-', 1, 4, 1, 0, 4),
+        generateAnimationProps('hotel-sign', 'props', 'hotel-sign', 1, 1, 1, 0, 4),
+        generateAnimationProps('monitor-face', 'props', 'monitor-face-', 1, 4, 1, 0, 4),
+        generateAnimationProps('pod', 'props', 'pod', 1, 1, 1, 0, 4),
+        generateAnimationProps('ball', 'props', 'ball-', 1, 4, 2, 0, 4),
+        generateAnimationProps('small-ball', 'props', 'small-ball-', 1, 2, 2, 0, 4),
     ];
 
     // Create animations

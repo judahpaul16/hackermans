@@ -85,6 +85,9 @@ import hitSprite1JSON from '../../assets/sprites/effects/hits/hits-1/hits-1.json
 
 import attackHintImg from '../../assets/sprites/ui/attack_hint.png';
 
+import props from '../../assets/sprites/entities/props/props.png';
+import propsJSON from '../../assets/sprites/entities/props/props.json';
+
 export default class BootScene extends Phaser.Scene {
     constructor() {
         super({ key: 'BootScene' });
@@ -144,6 +147,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.image('player-indicator', playerIndicatorImg);
         this.load.atlas('hitSprite1', hitSprite1Img, hitSprite1JSON);
         this.load.image('attack-hint', attackHintImg);
+        this.load.atlas('props', props, propsJSON);
     }
 
     create() {
