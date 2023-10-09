@@ -27,7 +27,7 @@ export function setupAnimations(scene: any) {
         generateAnimationProps('chat_bubble', 'chat_bubble', 'chat', 0, 3, 7, 0, 2),
         generateAnimationProps('chat_bubble_reverse', 'chat_bubble', 'chat', 3, 0, 7, 0, 2),
         generateAnimationProps('floor-tileset', 'props', 'floor-tileset', 1, 1, 1, 0, 4),
-        // Combat
+        // Effects
         generateAnimationProps('projectile-1', 'projectile-1', 'shot-', 0, 12, 30, -1),
         generateAnimationProps('hitSprite1', 'hitSprite1', 'hits-1-', 1, 5, 10, 0),
         // Player 1
