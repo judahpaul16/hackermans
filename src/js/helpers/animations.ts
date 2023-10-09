@@ -96,7 +96,7 @@ export function setupAnimations(scene: any) {
         generateAnimationProps('hurtEAI', 'enemyAI', 'death', 1, 1, 1, 0, 4),
         generateAnimationProps('spin', 'drone', 'spin', 1, 4, 10, -1, 2),
         generateAnimationProps('explode', 'drone', 'explode', 1, 4, 10, 0, 2),
-        // Props
+        // Misc. Props (Objects, Environment, etc.)
         generateSingleFrameProps('floor-tileset', 'props', 'floor-tileset'),
         generateSingleFrameProps('antenna', 'props', 'antenna'),
         generateSingleFrameProps('hanging-monitors', 'props', 'hanging-monitors'),
