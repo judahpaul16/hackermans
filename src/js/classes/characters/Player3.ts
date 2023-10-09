@@ -95,7 +95,7 @@ export default class Player3 extends Player {
     public emitProjectile() {
         if (this.scene && this.scene.game && this.scene.game.registry && !this.isReloading) {
             if (!this.attackSound) this.attackSound = this.scene.sound.add(this.attackKey);
-            if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: true });
+            this.attackSound.play({ volume: 0.5, loop: false });
             // Create a projectile at player's position
             let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
             let y = (this.body!.velocity.x != 0) ? this.y : this.y - 40;

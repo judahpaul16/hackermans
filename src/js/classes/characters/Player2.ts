@@ -78,7 +78,7 @@ export default class Player2 extends Player {
             // Create a projectile at player's position
             setTimeout(() => {
                 if (!this.attackSound) this.attackSound = this.scene.sound.add(this.attackKey);
-                if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: false });
+                this.attackSound.play({ volume: 0.5, loop: false });
                 let projectileGroup = this.scene.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
                 let projectile = projectileGroup.create(this.x, this.y - 15, 'projectile-1').setScale(1.5);
                 projectile.flipX = this.flipX;

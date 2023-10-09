@@ -54,7 +54,7 @@ export default class NPC extends Player {
                     this.attackSound = null;
                 });
             }
-            if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: false });
+            this.attackSound.play({ volume: 0.5, loop: false });
         }
     }
 
