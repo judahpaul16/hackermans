@@ -150,6 +150,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.audio('shootP2', shootSoundP2);
         this.load.audio('shootP3', shootSoundP3);
         this.load.audio('shotgunPumpSound', shotgunPumpSound);
+        this.load.audio('shootEAI', shootSoundP2);
     }
 
     create() {
