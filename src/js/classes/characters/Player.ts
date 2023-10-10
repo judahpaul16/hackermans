@@ -60,7 +60,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public xyText!: Phaser.GameObjects.Text;
     private hitSpritePool: Phaser.GameObjects.Sprite[] = [];
     public currentState: PlayerState = PlayerState.STANDING;
-
+    public dialogue: { [key: string]: string } = {
+        "anonymouseDialogue1":
+                "Musk! All the highways coming her are blocked!\n" +
+                "I saw what happened on the news. Aliens, huh?\n" +
+                "Thought you could use some help.",
+    }
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);

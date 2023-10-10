@@ -489,6 +489,7 @@ export function triggerDialogue(
                 textContent = "";
                 newlinesEncountered = 0;
                 nextAppendDelay = delayInSeconds * 1000;
+                charIndex++;
                 return;
             }
     
@@ -535,6 +536,36 @@ export function triggerDialogue(
         if (scene.chatBubble && scene.dialogueText) {
             scene.chatBubble.setPosition(character.x - 123, character.y - 130);
             scene.dialogueText.setPosition(scene.chatBubble.x - (scene.chatBubble.width * 0.1 / 2) - 165, scene.chatBubble.y - (scene.chatBubble.height * 0.1 / 2) - 15);
+        }
+    });
+}
+
+export function triggerDialogueQueue(scene: any, queue: { character: any; dialogue: string; key: string; }[]) {
+    if (!scene.dialogueQueue) {
+        scene.dialogueQueue = [];
+    }
+
+    scene.dialogueQueue = [...scene.dialogueQueue, ...queue];
+
+    if (!scene.isDialogueInProgress) {
+        processDialogueQueue(scene);
+    }
+}
+
+function processDialogueQueue(scene: any) {
+    if (scene.dialogueQueue.length === 0) {
+        scene.isDialogueInProgress = false;
+        return;
+    }
+
+    scene.isDialogueInProgress = true;
+
+    const { character, dialogue, key } = scene.dialogueQueue.shift() as { character: any; dialogue: string; key: string; };
+    triggerDialogue(scene, character, dialogue, key);
+
+    scene.events.on('update', () => {
+        if (!scene.isInteracting) {
+            processDialogueQueue(scene);
         }
     });
 }

@@ -25,6 +25,7 @@ export default class BaseScene extends Phaser.Scene {
     protected chatBubble?: Phaser.GameObjects.Sprite;
     protected dialogueText?: Phaser.GameObjects.Text;
     protected isInteracting: boolean = false;
+    protected isDialogueInProgress: boolean = false;
     protected width: number = 3000;
     protected height: number = 650;
     // scale factors
@@ -53,6 +54,10 @@ export default class BaseScene extends Phaser.Scene {
     public platformKey: string = 'street';
     public levelNumber: number = 1;
     public players: Player[] = [];
+    public dialogeQueue: {
+        character: Player | Player2 | Player3 | NPC,
+        dialogue: string, key: string
+    }[] = [];
 
     create() {
         // Basic Scene Setup

@@ -27,6 +27,9 @@ export default class Player2 extends Player {
     public hurtKey: string = 'hurtP2';
     public attackKey: string = 'shootP2';
     public dyingKey: string = 'dyingP2';
+    public dialogue: { [key: string]: string } = {
+        // Broken voice box
+    }
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
         super(scene, x, y, texture, frame);

@@ -12,8 +12,9 @@ export default class GameScene1 extends BaseScene {
     public levelNumber: number = 1;
     public width: number = 3000;
     public p1StartX: number = 200;
-    public p2StartX: number = 525;
+    public p2StartX: number = 1600;
     public p3StartX: number = 1500;
+    public introDialogueStart: boolean = false;
 
     constructor() {
         super({ key: 'GameScene1' });
@@ -50,12 +51,18 @@ export default class GameScene1 extends BaseScene {
         // Super
         super.create();
 
+        // Dialogue
         this.time.delayedCall(1000, () => {
-            if (this.player3) {
-                let key = `${this.player3.name.toLowerCase()}Dialogue${this.levelNumber}`
-                functions.triggerDialogue(this, this.player3, this.player3.dialogue[key], key);
+            if (this.player && this.player3) {
+                let key1 = `${this.player.name.toLowerCase()}Dialogue${this.levelNumber}`;
+                let key2 = `${this.player3.name.toLowerCase()}Dialogue${this.levelNumber}`;
+                let queue = [
+                    { character: this.player, dialogue: this.player.dialogue[key1], key: key1 },
+                    { character: this.player3, dialogue: this.player3.dialogue[key2], key: key2 }
+                ];
+                functions.triggerDialogueQueue(this, queue);
             }
-        }, [], this);
+        });
     }
 
     update() {

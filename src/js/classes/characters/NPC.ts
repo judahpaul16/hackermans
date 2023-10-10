@@ -21,11 +21,16 @@ export default class NPC extends Player {
     public runShootKey: string = 'runShootNPC1';
     public crouchKey: string = 'crouchingNPC1';
     public dialogue: { [key: string]: string } = {
-        'anonymissDialogue1': "There you are! I was starting to think you weren't\n" +
-                        "gonna show. Anyways, I saw some androids lurking\n" +
-                        "around down there so be careful.\n" +
-                        "I'm gonna hang back here and keep an eye out.\n" +
-                        "Meet me back here when you find the keycard.",
+        'anonymissDialogue1': 
+                "Mouse?! What are you doing here?\n" +
+                "I guess we're getting the band back together.\n" +
+                "Hackermans Corporation has been working\n" +
+                "with the aliens and they're using their current\n" +
+                "line of droids to control the population. The 7/11\n" +
+                "attacks were a false flag made to look like an invasion\n" +
+                "as justification for private military force.\n" +
+                "This is what happens when you let an AI run\n" +
+                "a company I guess. We've gotta stop them.",
     };
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {

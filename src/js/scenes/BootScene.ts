@@ -71,6 +71,7 @@ import industrialFarBuildings from '../../assets/sprites/backgrounds/industrial-
 
 // Audio assets
 import mainMusicSrc from '../../assets/audio/music/main.mp3';
+import anonymouseDialogue1 from '../../assets/audio/dialogue/anonymouse_1.mp3';
 import anonymuskDialogue1 from '../../assets/audio/dialogue/anonymusk_1.mp3';
 import anonymissDialogue1 from '../../assets/audio/dialogue/anonymiss_1.mp3';
 import coinSound from '../../assets/audio/sfx/coin.mp3';
@@ -143,6 +144,7 @@ export default class BootScene extends Phaser.Scene {
 
         // Audio
         this.load.audio('mainMusic', mainMusicSrc);
+        this.load.audio('anonymouseDialogue1', anonymouseDialogue1);
         this.load.audio('anonymuskDialogue1', anonymuskDialogue1);
         this.load.audio('anonymissDialogue1', anonymissDialogue1);
         this.load.audio('coinSound', coinSound);
