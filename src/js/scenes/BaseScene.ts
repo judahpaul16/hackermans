@@ -65,6 +65,9 @@ export default class BaseScene extends Phaser.Scene {
         // Pause Menu setup
         this.setupPauseMenu();
 
+        // Create base background
+        functions.createBackground(this, 'underground', this.width, this.height, 650, -0.65);
+
         // Add pause button to the top left corner of the camera
         this.pauseButton = this.add.text(20, 20, '[P] Pause / View Controls', {
             fontSize: 14,
@@ -235,7 +238,7 @@ export default class BaseScene extends Phaser.Scene {
 
         // Street setup
         this.platforms = this.physics.add.staticGroup();
-        functions.addPlatform(this, 150, 790, 1000, this.platformKey);
+        functions.addPlatform(this, 0, 750, this.width, 64, this.platformKey);
 
         // Player setup
         // if previous scene is not this scene, start player at the end of the scene

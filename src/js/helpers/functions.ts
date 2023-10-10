@@ -6,18 +6,41 @@ import NPC from '../classes/characters/NPC';
 import EnemyAI from '../classes/characters/EnemyAI';
 import * as dat from 'dat.gui';
 
-export function createBackground(scene: any, key: string, width: number, height: number): Phaser.GameObjects.TileSprite {
+export function createBackground(
+    scene: any,
+    key: string,
+    width: number,
+    height: number,
+    offset: number = 0,
+    scaleOffset: number = 0
+): Phaser.GameObjects.TileSprite {
+
     const imageHeight = scene.textures.get(key).getSourceImage().height;
-    const ratio = height / imageHeight;
-    const sprite = scene.add.tileSprite(0, scene.physics.world.bounds.height - height, width, height, key)
+    const ratio = (height / imageHeight) + scaleOffset;
+    const sprite = scene.add.tileSprite(0, scene.physics.world.bounds.height - height + offset, width, height, key)
         .setOrigin(0)
         .setTileScale(ratio, ratio);
     return sprite;
 }
 
-export function addPlatform(scene: any, x: number, y: number, width: number, type: string) {
-    for (let i = 0; i < width; i++) {
-        scene.platforms!.create(x + i * 64, y, type);
+export function addPlatform(scene: any, x: number, y: number, width: number, height: number, type: string) {
+    // Check if 'scene.platforms' exists
+    if (scene.platforms) {
+        // Get the original image height and width for scaling
+        const imageHeight = scene.textures.get(type).getSourceImage().height;
+        const imageWidth = scene.textures.get(type).getSourceImage().width;
+        
+        // Calculate scaling ratio based on desired height and original image height
+        const ratioHeight = height / imageHeight;
+        const ratioWidth = width / imageWidth;
+
+        // Create and scale the platform sprite
+        const platform = scene.platforms.create(x, y, type)
+            .setOrigin(0)
+            .setScale(ratioWidth, ratioHeight)
+            .refreshBody();
+        
+        return platform;
     }
 }
 

@@ -54,6 +54,7 @@ import hitSprite1JSON from '../../assets/sprites/effects/hits/hits-1/hits-1.json
 
 // Backgrounds
 import mainMenuBG from '../../assets/videos/mainMenuBG.mp4';
+import underground from '../../assets/sprites/backgrounds/underground.png';
 import farBuildings from '../../assets/sprites/backgrounds/far-buildings.png';
 import backBuildings from '../../assets/sprites/backgrounds/back-buildings.png';
 import middle from '../../assets/sprites/backgrounds/middle.png';
@@ -127,6 +128,7 @@ export default class BootScene extends Phaser.Scene {
         this.load.atlas('hitSprite1', hitSprite1Img, hitSprite1JSON);
 
         // Backgrounds
+        this.load.image('underground', underground);
         this.load.image('far-buildings', farBuildings);
         this.load.image('back-buildings', backBuildings);
         this.load.image('middle', middle);
