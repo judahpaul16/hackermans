@@ -587,7 +587,8 @@ export default class BaseScene extends Phaser.Scene {
                     player.transitionTo(PlayerState.RUNNING, isMovingLeft);
                 }
             } else if (isJumping) {
-                player.transitionTo(PlayerState.JUMPING, isMovingLeft);
+                if (!isAttacking) 
+                    player.transitionTo(PlayerState.JUMPING, isMovingLeft);
             } else {
                 if (!isAttacking) {
                     if (player.attackSound && player.number === 1) player.attackSound.stop();
