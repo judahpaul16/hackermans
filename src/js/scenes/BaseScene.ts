@@ -66,7 +66,7 @@ export default class BaseScene extends Phaser.Scene {
         this.setupPauseMenu();
 
         // Create base background
-        functions.createBackground(this, 'underground', this.width, this.height, 650, -0.65);
+        functions.createBackground(this, 'underground', this.width, this.height, -2, 650, -0.65);
 
         // Add pause button to the top left corner of the camera
         this.pauseButton = this.add.text(20, 20, '[P] Pause / View Controls', {

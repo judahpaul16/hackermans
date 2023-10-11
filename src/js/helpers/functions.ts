@@ -11,6 +11,7 @@ export function createBackground(
     key: string,
     width: number,
     height: number,
+    depth: number = -1,
     offset: number = 0,
     scaleOffset: number = 0
 ): Phaser.GameObjects.TileSprite {
