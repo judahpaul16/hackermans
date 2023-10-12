@@ -7,7 +7,7 @@ export default class Player3 extends Player {
     public width: number = 83;
     public height: number = 186;
     public offsetX: number = -2;
-    public offsetY: number = -13;
+    public offsetY: number = -0.6;
     public maxHealth: number = 100;
     public currentHealth: number = 100;
     public runSpeed: number = 225;
