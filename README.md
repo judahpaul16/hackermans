@@ -30,12 +30,13 @@ A 2D cyberpunk platformer game made with Phaser.JS and TypeScript.
 ![Screenshot 2](screenshots/2.png)
 
 ## Useful Links
-| Phaser | LeshyLabs | Forums & Stuff |
+| Phaser | LeshyLabs | More Stuff |
 | --- | --- | --- |
 | [Phaser 3 Documentation](https://photonstorm.github.io/phaser3-docs/index.html) | [LeshyLabs SpriteSheet Tool](https://www.leshylabs.com/apps/sstool/) | [Game Development Stack Exchange](https://gamedev.stackexchange.com/) |
 | [Phaser 3 Examples](https://phaser.io/examples) | [LeshyLabs Sound Effects Tool](https://www.leshylabs.com/apps/sfMaker/) | [Game Development Subreddit](https://www.reddit.com/r/gamedev/) |
 | [Phaser 3 Tutorials](https://phaser.io/learn) | [LeshyLabs Spritesheet Animator](https://www.leshylabs.com/apps/spriteSheetAnimator/#demo) | [Game Development Discord](https://discord.gg/gameDev) |
-| [Phaser Editor 2D](https://phasereditor2d.com/) | | [Keyboard Layout Editor](http://www.keyboard-layout-editor.com/) |
+| [Phaser 3 Plugins](https://rexrainbow.github.io/phaser3-rex-notes/docs/site/plugin-list/) | | [Keyboard Layout Editor](http://www.keyboard-layout-editor.com/) |
+| [Phaser Editor 2D](https://phasereditor2d.com/) | | |
 
 ## Special Thanks
 Game Assets (sprites, music, pixel art) - Asimuz (https://ansimuz.itch.io/)
