@@ -79,8 +79,6 @@ export default class EnemyAI extends Player {
                     if (frame) {
                         if (frame.index === 3 && this.attackSound === null) { // Emit projectile on frame 3
                             this.emitProjectile();
-                            this.attackSound = this.scene.sound.add(this.shootKey);
-                            this.attackSound.play({ volume: 0.5, loop: false });
                         }
                     }
                 }).on('animationcomplete', () => {
