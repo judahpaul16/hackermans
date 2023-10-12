@@ -63,7 +63,6 @@ export default class MainMenuScene extends Phaser.Scene {
                     color: '#333333',
                     fontStyle: 'bold',
                     align: 'center',
-                    stroke: '#00ff00',
                     strokeThickness: 2
                 }).setOrigin(0.5).setAlpha(0);
                 // Ellipses animation
