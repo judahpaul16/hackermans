@@ -133,22 +133,34 @@ export default class EnemyAI extends Player {
     public emitProjectile() {
         if (this.scene && this.scene.game && this.scene.game.registry && !this.isReloading) {
             // Create a projectile at player's position
+            let projectile: Phaser.Physics.Arcade.Sprite | null = null;
             setTimeout(() => {
                 if (!this.attackSound) this.attackSound = this.scene.sound.add(this.shootKey);
-                if (!this.attackSound.isPlaying) this.attackSound.play({ volume: 0.5, loop: false });
+                this.attackSound.play({ volume: 0.5, loop: false });
                 let projectileGroup = this.scene.game.registry.get('enemyProjectileGroup') as Phaser.Physics.Arcade.Group;
-                let projectile = projectileGroup.create(this.x, this.y - 15, 'projectile-1').setScale(1.5);
+                projectile = projectileGroup.create(this.x, this.y - 15, 'projectile-1').setScale(1.5) as Phaser.Physics.Arcade.Sprite;
                 projectile.flipX = this.flipX;
-                projectile.body.setAllowGravity(false);
-                projectile.setVelocityX(this.flipX ? -750 : 750); // Set velocity based on player's direction
+                const body = projectile.body as Phaser.Physics.Arcade.Body;
+                body.allowGravity = false;
+                body.setVelocityX(this.flipX ? -750 : 750); // Set velocity based on player's direction
                 this.magazine--;
             }, 150);
+
+            // on update, check if max distance has been reached
+            // if so, destroy the projectile
+            this.scene.events.on('update', () => {
+                if (projectile) {
+                    if (projectile.x > this.x + this.maxProjectileRange || projectile.x < this.x - this.maxProjectileRange) {
+                        projectile.destroy();
+                        projectile = null;
+                    }
+                }
+            });
         } else if (this.isReloading) {
             this.attackSound?.stop();
             this.reloadText?.setVisible(true);
         }
     }
-
     public checkReload() {
         if (this.magazine <= 0 || this.manualReload) {
             if (!this.isReloading) {
