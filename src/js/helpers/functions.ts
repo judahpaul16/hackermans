@@ -20,6 +20,7 @@ export function createBackground(
     const ratio = (height / imageHeight) + scaleOffset;
     const sprite = scene.add.tileSprite(0, scene.physics.world.bounds.height - height + offset, width, height, key)
         .setOrigin(0)
+        .setDepth(depth)
         .setTileScale(ratio, ratio);
     return sprite;
 }
