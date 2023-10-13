@@ -238,7 +238,7 @@ export default class BaseScene extends Phaser.Scene {
 
         // Street setup
         this.platforms = this.physics.add.staticGroup();
-        functions.addPlatform(this, 0, 750, this.width, 64, this.platformKey);
+        functions.addPlatform(this, 0, 750, this.width, this.platformKey, 0.7);
 
         // Player setup
         // if previous scene is not this scene, start player at the end of the scene
@@ -254,7 +254,7 @@ export default class BaseScene extends Phaser.Scene {
         // Check if the previous scene number is exactly 1 less than the current scene number
         if (previousSceneNumber === currentSceneNumber + 1) {
             // The previous scene ends in a number 1 greater than this scene
-            this.player = new Player(this, this.width - 50, 650, 'player');
+            this.player = new Player(this, this.width - 50, 600, 'player');
             this.player.flipX = true;
         } else {
             this.player = new Player(this, this.p1StartX, this.p1StartY, 'player');
@@ -272,7 +272,7 @@ export default class BaseScene extends Phaser.Scene {
         // Check if the previous scene number is exactly 1 less than the current scene number
         if (previousSceneNumber === currentSceneNumber + 1) {
             // The previous scene ends in a number 1 greater than this scene
-            this.player2! = new Player2(this, this.width - 50, 650, 'player2');
+            this.player2! = new Player2(this, this.width - 50, 600, 'player2');
             this.player2!.flipX = true;
         } else {
             this.player2! = new Player2(this, this.p2StartX, this.p2StartY, 'player2');
@@ -310,7 +310,7 @@ export default class BaseScene extends Phaser.Scene {
         // Check if the previous scene number is exactly 1 less than the current scene number
         if (previousSceneNumber === currentSceneNumber + 1) {
             // The previous scene ends in a number 1 greater than this scene
-            this.player3! = new Player3(this, this.width - 50, 650, 'player3');
+            this.player3! = new Player3(this, this.width - 50, 600, 'player3');
             this.player3!.flipX = true;
         } else {
             this.player3! = new Player3(this, this.p3StartX, this.p3StartY, 'player3');

@@ -24,24 +24,11 @@ export function createBackground(
     return sprite;
 }
 
-export function addPlatform(scene: any, x: number, y: number, width: number, height: number, type: string) {
-    // Check if 'scene.platforms' exists
+export function addPlatform(scene: any, x: number, y: number, width: number, type: string, scale: number = 1) {
     if (scene.platforms) {
-        // Get the original image height and width for scaling
-        const imageHeight = scene.textures.get(type).getSourceImage().height;
-        const imageWidth = scene.textures.get(type).getSourceImage().width;
-        
-        // Calculate scaling ratio based on desired height and original image height
-        const ratioHeight = height / imageHeight;
-        const ratioWidth = width / imageWidth;
-
-        // Create and scale the platform sprite
-        const platform = scene.platforms.create(x, y, type)
-            .setOrigin(0)
-            .setScale(ratioWidth, ratioHeight)
-            .refreshBody();
-        
-        return platform;
+        let imageWidth = scene.textures.get(type).getSourceImage().width * scale;
+        for (let i = 0; i < width; i += imageWidth)
+            scene.platforms.create(x + i, y, type).setOrigin(0).setScale(scale).refreshBody();
     }
 }
 

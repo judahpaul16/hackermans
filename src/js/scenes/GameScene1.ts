@@ -10,7 +10,7 @@ export default class GameScene1 extends BaseScene {
     public backgroundKey3: string = 'back-buildings';
     public backgroundKey4: string = 'far-buildings';
     public levelNumber: number = 1;
-    public width: number = 3000;
+    public width: number = 6000;
     public p1StartX: number = 200;
     public p2StartX: number = 1600;
     public p3StartX: number = 1500;
@@ -45,7 +45,7 @@ export default class GameScene1 extends BaseScene {
 
         // NPC setup
         this.npcs = [
-            new NPC(this, 2750, 600, 'npc').setFlipX(true).play('standingNPC1', true),
+            new NPC(this, 5750, 600, 'npc').setFlipX(true).play('standingNPC1', true),
         ];
 
         // Super
