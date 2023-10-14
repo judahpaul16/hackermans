@@ -9,6 +9,7 @@ import InputManager from '../classes/utils/InputManager';
 import * as functions from '../helpers/functions';
 
 export default class BaseScene extends Phaser.Scene {
+    protected dg!: dat.GUI;
     protected inputManager!: InputManager;
     protected player?: Player;
     protected player2?: Player2;
@@ -28,19 +29,20 @@ export default class BaseScene extends Phaser.Scene {
     protected isDialogueInProgress: boolean = false;
     protected width: number = 3000;
     protected height: number = 650;
-    // scale factors
+    // scale factors for parallax scrolling
     protected sfactor1: number = 1.25;
     protected sfactor2: number = 1.1;
     protected sfactor3: number = 0.9;
     protected sfactor4: number = 0.9;
+    protected backgroundImages?: { 
+        [key: string]: Phaser.GameObjects.TileSprite 
+    } = {};
     // distance between active player and nearest NPC
     protected distanceA: number = Infinity;
     // distance between active player and nearest Enemy
     protected distanceB: number = Infinity;
-    protected backgroundImages?: { [key: string]: Phaser.GameObjects.TileSprite } = {};
     protected clouds: Phaser.GameObjects.Sprite[] = [];
     protected platforms?: Phaser.Physics.Arcade.StaticGroup;
-    protected dg!: dat.GUI;
     protected pauseMenu?: Phaser.GameObjects.Container;
     protected pauseMenuSettings?: Phaser.GameObjects.Container;
     protected pauseMenuControls?: Phaser.GameObjects.Image;
@@ -244,7 +246,7 @@ export default class BaseScene extends Phaser.Scene {
         // if previous scene is not this scene, start player at the end of the scene
         let previousSceneName = this.game.registry.get('previousScene');
 
-        // onlt start at the end if the previous scene ends in a number 1 greater than this scene
+        // only start at the end if the previous scene ends in a number 1 greater than this scene
         // Extract the number from the current scene key (e.g., 'GameScene2' becomes 2)
         let currentSceneNumber = parseInt(this.scene.key.match(/\d+/)?.[0] || '0');
 
@@ -268,15 +270,13 @@ export default class BaseScene extends Phaser.Scene {
         this.physics.add.collider(this.player!, this.platforms);
 
         // Player 2 setup
-        // onlt start at the end if the previous scene ends in a number 1 greater than this scene
+        // only start at the end if the previous scene ends in a number 1 greater than this scene
         // Check if the previous scene number is exactly 1 less than the current scene number
         if (previousSceneNumber === currentSceneNumber + 1) {
             // The previous scene ends in a number 1 greater than this scene
             this.player2! = new Player2(this, this.width - 50, 600, 'player2');
             this.player2!.flipX = true;
-        } else {
-            this.player2! = new Player2(this, this.p2StartX, this.p2StartY, 'player2');
-        }
+        } else this.player2! = new Player2(this, this.p2StartX, this.p2StartY, 'player2');
 
         this.player2!.body!.setSize(40, 60);
         this.player2!.setScale(2);
@@ -306,15 +306,13 @@ export default class BaseScene extends Phaser.Scene {
         }
 
         // Player 3 setup
-        // onlt start at the end if the previous scene ends in a number 1 greater than this scene
+        // only start at the end if the previous scene ends in a number 1 greater than this scene
         // Check if the previous scene number is exactly 1 less than the current scene number
         if (previousSceneNumber === currentSceneNumber + 1) {
             // The previous scene ends in a number 1 greater than this scene
             this.player3! = new Player3(this, this.width - 50, 600, 'player3');
             this.player3!.flipX = true;
-        } else {
-            this.player3! = new Player3(this, this.p3StartX, this.p3StartY, 'player3');
-        }
+        } else this.player3! = new Player3(this, this.p3StartX, this.p3StartY, 'player3');
 
         this.player3!.body!.setSize(40, 60);
         this.player3!.setScale(2);
