@@ -49,7 +49,7 @@ export function initializeDebugGUI(scene: any) {
         toggleAllAnimationInfo(scene, value);
     });
     scene.showXY = false;
-    scene.dg.add(scene, 'showXY').name('Show X, Y Coords').onChange((value : boolean) => {
+    scene.dg.add(scene, 'showXY').name('Show X, Y Coordinates').onChange((value : boolean) => {
         // When the switch is toggled, update all sprites' X-Y coords visibility
         toggleXYCoords(scene, value);
     });
