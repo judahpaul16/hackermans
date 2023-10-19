@@ -445,9 +445,15 @@ export default class BaseScene extends Phaser.Scene {
         }
 
         // Define a common collision handler
-        const onProjectileHitPlayer = (player: any, projectile: any) => {
+        let onProjectileHitPlayer = (player: any, projectile: any) => {
             projectile.destroy();
             player.takeDamage(10);
+            // knockback
+            player.setVelocity(projectile.velocityX > 0 ? 50 : -50, -50);
+            // reset gravity
+            setTimeout(() => {
+                player.body.setGravityY(600);
+            }, 500);
         };
         
         // Projectile Collision

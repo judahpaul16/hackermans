@@ -159,6 +159,7 @@ export default class EnemyAI extends Player {
             this.reloadText?.setVisible(true);
         }
     }
+    
     public checkReload() {
         if (this.magazine <= 0 || this.manualReload) {
             if (!this.isReloading) {
