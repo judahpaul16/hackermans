@@ -453,6 +453,7 @@ export default class BaseScene extends Phaser.Scene {
             // reset gravity
             setTimeout(() => {
                 player.body.setGravityY(600);
+                player.setVelocity(0, 0);
             }, 500);
         };
         
@@ -460,28 +461,18 @@ export default class BaseScene extends Phaser.Scene {
         let friendlyProjectileGroup = this.game.registry.get('friendlyProjectileGroup') as Phaser.Physics.Arcade.Group;
         let enemyProjectileGroup = this.game.registry.get('enemyProjectileGroup') as Phaser.Physics.Arcade.Group;
         
-        // Adding collider for player 1
-        this.physics.add.collider(this.player, enemyProjectileGroup, (player, projectile) => {
-            onProjectileHitPlayer(player, projectile);
-        });
-        
-        // Adding collider for player 2
-        this.physics.add.collider(this.player2, enemyProjectileGroup, (player2, projectile) => {
-            onProjectileHitPlayer(player2, projectile);
-        });
-        
-        // Adding collider for player 3
-        this.physics.add.collider(this.player3, enemyProjectileGroup, (player3, projectile) => {
-            onProjectileHitPlayer(player3, projectile);
-        });
+        // Adding collider for players and npcs
+        for (let player of [...this.players, ...this.npcs]) {
+            this.physics.add.collider(player, enemyProjectileGroup, (player, projectile) => {
+                onProjectileHitPlayer(player, projectile);
+            });
 
-        // Add collider for npcs
-        if (this.npcs) {
-            for (let npc of this.npcs) {
-                this.physics.add.collider(npc, enemyProjectileGroup, (npc, projectile) => {
-                    onProjectileHitPlayer(npc, projectile);
-                });
-            }
+            this.physics.add.collider(player, this.enemies, (player: any, enemy: any) => {
+                if (player.currentAnimation === player.attackKey) {
+                    enemy.takeDamage(40);
+                    player.heal(40);
+                }
+            });
         }
 
         // Add collider for enemy
@@ -489,6 +480,13 @@ export default class BaseScene extends Phaser.Scene {
             for (let enemy of this.enemies) {
                 this.physics.add.collider(enemy, friendlyProjectileGroup, (enemy, projectile) => {
                     onProjectileHitPlayer(enemy, projectile);
+                });
+
+                this.physics.add.collider(enemy, this.players, (enemy: any, player: any) => {
+                    if (player.currentAnimation === player.attackKey) {
+                        enemy.takeDamage(40);
+                        player.heal(40);
+                    }
                 });
             }
         }
