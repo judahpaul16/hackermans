@@ -741,38 +741,6 @@ export default class BaseScene extends Phaser.Scene {
         this.pauseMenuSettings!.add([label, this.volumeBar, this.volumeHandle]);
     }
     
-    protected checkSceneTransition() {
-        // find active player
-        let activePlayer!: Player | Player2 | Player3;
-        for (let player of [this.player, this.player2, this.player3]) {
-            if (player) {
-                if (player.isActive()) {
-                    activePlayer = player;
-                    break;
-                }
-            }
-        }
-        if (activePlayer) {
-            // if player moves beyond the right edge of the world, start the next scene
-            if (activePlayer!.x > this.width) {
-                if (this.dg) this.dg.destroy();
-                this.scale.off('resize');
-                this.game.registry.set('previousScene', this.scene.key);
-                this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) + 1).toString()));
-            }
-
-            // if player moves beyond the left edge of the world, start the previous scene
-            if (this.scene.key !== 'GameScene1'){
-                if (activePlayer!.x < 0) {
-                    if (this.dg) this.dg.destroy();
-                    this.scale.off('resize');
-                    this.game.registry.set('previousScene', this.scene.key);
-                    this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) - 1).toString()));
-                }
-            }
-        }
-    }
-
     public setupPauseMenu() {
         // Pause Menu setup
         this.pauseMenu = this.add.container(0, 0).setScrollFactor(0);
@@ -841,6 +809,38 @@ export default class BaseScene extends Phaser.Scene {
 
         // on window resize, update pause menu
         this.scale.on('resize', this.resizeCallback, this);
+    }
+    
+    protected checkSceneTransition() {
+        // find active player
+        let activePlayer!: Player | Player2 | Player3;
+        for (let player of [this.player, this.player2, this.player3]) {
+            if (player) {
+                if (player.isActive()) {
+                    activePlayer = player;
+                    break;
+                }
+            }
+        }
+        if (activePlayer) {
+            // if player moves beyond the right edge of the world, start the next scene
+            if (activePlayer!.x > this.width) {
+                if (this.dg) this.dg.destroy();
+                this.scale.off('resize');
+                this.game.registry.set('previousScene', this.scene.key);
+                this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) + 1).toString()));
+            }
+
+            // if player moves beyond the left edge of the world, start the previous scene
+            if (this.scene.key !== 'GameScene1'){
+                if (activePlayer!.x < 0) {
+                    if (this.dg) this.dg.destroy();
+                    this.scale.off('resize');
+                    this.game.registry.set('previousScene', this.scene.key);
+                    this.scene.start(this.scene.key.replace(/\d+/, (match: string) => (parseInt(match) - 1).toString()));
+                }
+            }
+        }
     }
 
     public resizeCallback (gameSize: Phaser.Structs.Size) {
