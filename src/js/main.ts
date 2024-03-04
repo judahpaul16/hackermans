@@ -14,8 +14,8 @@ const config: Phaser.Types.Core.GameConfig = {
     height: window.innerHeight,
     scene: [
         BootScene,
-        MainMenuScene,
         IntroScene,
+        MainMenuScene,
         GameScene1,
         GameScene2,
         GameScene3,

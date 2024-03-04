@@ -107,7 +107,7 @@ export default class MainMenuScene extends Phaser.Scene {
                 mainMusic.setVolume(0.35);
             // Start the next scene
             // this.scale.off('resize');
-            this.scene.start('IntroScene');
+            this.scene.start('GameScene1');
             this.game.registry.set('previousScene', this.scene.key);
         }
     }

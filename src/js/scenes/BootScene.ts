@@ -159,6 +159,6 @@ export default class BootScene extends Phaser.Scene {
 
     create() {
         // Initialization after assets are loaded
-        this.scene.start('MainMenuScene');
+        this.scene.start('IntroScene');
     }
 }
