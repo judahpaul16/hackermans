@@ -46,6 +46,16 @@ export default class MainMenuScene extends Phaser.Scene {
             if (!this.sound.get('mainMusic')) this.sound.play('mainMusic', { loop: true, volume: 0.5 });
             // Set Logo
             this.logo = this.add.sprite(310, window.innerHeight / 2 + 20, 'logo').setAlpha(0);
+            // Insert semi-transparent rectangle to darken the background behind logo
+            let rect = this.add.rectangle(this.logo.x, this.logo.y + 25, 400, 150, 0x000000).setAlpha(0).setDepth(-1);
+            this.time.delayedCall(600, () => {
+                this.tweens.add({
+                    targets: rect,
+                    alpha: { from: 0, to: 0.4 },
+                    duration: 500,
+                    ease: 'Linear'
+                });
+            });
             this.time.delayedCall(1000, () => {
                 this.tweens.add({
                     targets: this.logo,
@@ -97,7 +107,7 @@ export default class MainMenuScene extends Phaser.Scene {
                 mainMusic.setVolume(0.35);
             // Start the next scene
             // this.scale.off('resize');
-            this.scene.start('GameScene1');
+            this.scene.start('IntroScene');
             this.game.registry.set('previousScene', this.scene.key);
         }
     }

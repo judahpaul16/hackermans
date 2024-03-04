@@ -6,6 +6,7 @@ import GameScene2 from './scenes/GameScene2';
 import GameScene3 from './scenes/GameScene3';
 import CreditsScene from './scenes/CreditsScene';
 import GameOverScene from './scenes/GameOverScene';
+import IntroScene from './scenes/IntroScene';
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
@@ -14,6 +15,7 @@ const config: Phaser.Types.Core.GameConfig = {
     scene: [
         BootScene,
         MainMenuScene,
+        IntroScene,
         GameScene1,
         GameScene2,
         GameScene3,

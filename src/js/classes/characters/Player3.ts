@@ -34,9 +34,9 @@ export default class Player3 extends Player {
     public crouchKey: string = 'crouchingP3';
     public dialogue: { [key: string]: string } = {
         'anonymuskDialogue1':
-                "[sighs] Things haven't been the same since the 7/11 attacks.\n" +
-                "But... if you follow my lead, you might just\n" +
-                "make it out of here alive."
+                "[sighs] Things haven't been the same since the 7/11\n" +
+                "attacks. But... if you follow my lead, you might\n" +
+                "just make it out of here alive."
     }
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
