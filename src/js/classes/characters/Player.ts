@@ -63,7 +63,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public currentState: PlayerState = PlayerState.STANDING;
     public dialogue: { [key: string]: string } = {
         "anonymouseDialogue1":
-                "!!!",
+                "... Where..? Where am I?",
     }
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {

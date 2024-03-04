@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 
 export default class IntroScene extends Phaser.Scene {
     private typewriterText!: Phaser.GameObjects.Text;
-    private message: string = '$> Wake up, Moose...\n\n$> Not everything is as it seems...\n\n$> The Matrix has you...\n\n$> Follow the white rabbit...\n\n|';
+    private message: string = '$> Wake up, Anon...\n\n$> Not everything is as it seems...\n\n$> The Matrix has you...\n\n$> Follow the white rabbit...\n\n|';
     private currentIndex: number = 0;
     private typingFinished: boolean = false;
     
