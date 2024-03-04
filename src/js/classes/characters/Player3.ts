@@ -34,18 +34,9 @@ export default class Player3 extends Player {
     public crouchKey: string = 'crouchingP3';
     public dialogue: { [key: string]: string } = {
         'anonymuskDialogue1':
-                "[sighs] You shouldn't have come here Mouse. It's bad.\n" +
-                "Things haven't been the same since the 7/11 attacks.\n" +
+                "[sighs] Things haven't been the same since the 7/11 attacks.\n" +
                 "But... if you follow my lead, you might just\n" +
-                "make it out of here alive.\n" +
-                "I cooked this Hackermans droid a few days ago.\n" +
-                "He could provide useful intel on the\n" +
-                "Hackermans Corporation. That is... if I\n" +
-                "can get him to talk. His voice box is\n" +
-                "written in Java [dead language] so it's kind of\n" +
-                "a lost cause without rewriting the whole stack.\n" +
-                "His name is 'Moose'. He'll be joining us.\n" +
-                "Now let's go. We don't have much time.",
+                "make it out of here alive."
     }
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame?: string | number) {
