@@ -47,7 +47,7 @@ export default class MainMenuScene extends Phaser.Scene {
             // Set Logo
             this.logo = this.add.sprite(310, window.innerHeight / 2 + 20, 'logo').setAlpha(0);
             // Insert semi-transparent rectangle to darken the background behind logo
-            let rect = this.add.rectangle(this.logo.x, this.logo.y + 25, 400, 150, 0x000000).setAlpha(0).setDepth(-1);
+            let rect = this.add.rectangle(this.logo.x, this.logo.y + 25, 350, 375, 0x000000).setAlpha(0).setDepth(-1);
             this.time.delayedCall(600, () => {
                 this.tweens.add({
                     targets: rect,
@@ -63,17 +63,17 @@ export default class MainMenuScene extends Phaser.Scene {
                     duration: 1000,
                     ease: 'Linear'
                 });
-                this.logo.setScale(0.75);
+                this.logo.setScale(0.3);
                 this.logo.play('logoAnimation');
             });
             // Set the Main Menu Text
             this.time.delayedCall(2500, () => {
-                this.mainMenuText = this.add.text(this.logo.x, this.logo.y + 65, 'Press any key to enter\nthe city...', {
-                    fontSize: '20px',
-                    color: '#333333',
+                this.mainMenuText = this.add.text(this.logo.x, this.logo.y + 165, 'Press any key to enter\nthe city...', {
+                    fontSize: '14px',
+                    fontFamily: '"Press Start 2P"',
+                    color: '#ffffff',
                     fontStyle: 'bold',
                     align: 'center',
-                    strokeThickness: 2
                 }).setOrigin(0.5).setAlpha(0);
                 // Ellipses animation
                 let ellipses = '';
@@ -115,7 +115,8 @@ export default class MainMenuScene extends Phaser.Scene {
     private insertCoinMenu() {
         // Center
         this.insertCoin = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY - 50, 'Insert Coin', {
-            fontSize: '20px',
+            fontSize: '14px',
+            fontFamily: '"Press Start 2P"',
             color: '#fff',
             align: 'center'
         }).setOrigin(0.5);

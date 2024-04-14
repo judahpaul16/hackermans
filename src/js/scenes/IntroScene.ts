@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
+import WebFontFile from '../classes/utils/WebFontFile';
 
 export default class IntroScene extends Phaser.Scene {
     private typewriterText!: Phaser.GameObjects.Text;
-    private message: string = '$> Wake up, Anon...\n\n$> Not everything is as it seems...\n\n$> The Matrix has you...\n\n$> Follow the white rabbit...\n\n|';
+    private message: string = '$> Wake up, Anon...\n\n$> Nothing is what it seems...\n\n$> Follow the white rabbit...\n\n|';
     private currentIndex: number = 0;
     private typingFinished: boolean = false;
     
@@ -10,8 +11,13 @@ export default class IntroScene extends Phaser.Scene {
         super({ key: 'IntroScene' });
     }
 
+    preload(): void {
+        // Load fonts
+        this.load.addFile(new WebFontFile(this.load, 'Press Start 2P'));
+    }
+
     create(): void {
-        this.typewriterText = this.add.text(30, 30, '', { font: '18px monospace', color: '#0f0' });
+        this.typewriterText = this.add.text(30, 30, '', { fontSize: '18px', fontFamily: '"Press Start 2P"', color: '#0f0' });
 
         this.time.addEvent({
             delay: 100,

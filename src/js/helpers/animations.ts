@@ -22,7 +22,7 @@ export function setupAnimations(scene: any) {
     const animations = [
         // UI
         generateAnimationProps('coinAnimation', 'coin', 'coin', 1, 8, 15, -1, 2),
-        generateAnimationProps('logoAnimation', 'logo', 'logo_', 1, 29, 15, -1, 4),
+        generateAnimationProps('logoAnimation', 'logo', 'logo_', 0, 3, 4, -1, 4),
         generateAnimationProps('cloud', 'cloud', 'cloud', 1, 4, 7, -1, 4),
         generateAnimationProps('chat_bubble', 'chat_bubble', 'chat', 0, 3, 7, 0, 2),
         generateAnimationProps('chat_bubble_reverse', 'chat_bubble', 'chat', 3, 0, 7, 0, 2),

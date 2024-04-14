@@ -1,4 +1,5 @@
-# :video_game: Hackermans &copy;
+![Hackermans](src/assets/sprites/ui/logo.gif)
+---
 A 2D cyberpunk platformer game made with Phaser.JS and TypeScript. Live [here](https://hackermans.judahpaul.com/).
 
 ## Prerequisites

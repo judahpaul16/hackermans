@@ -294,6 +294,7 @@
     "vary": "^1.1.2",
     "watchpack": "^2.4.0",
     "wbuf": "^1.7.3",
+    "webfontloader": "^1.6.28",
     "webpack-dev-middleware": "^5.3.3",
     "webpack-merge": "^5.9.0",
     "webpack-sources": "^3.2.3",
@@ -310,6 +311,7 @@
   "devDependencies": {
     "@babel/core": "^7.22.9",
     "@babel/preset-env": "^7.22.9",
+    "@types/webfontloader": "^1.6.38",
     "babel-loader": "^9.1.3",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.3",
