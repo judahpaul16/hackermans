@@ -1,5 +1,11 @@
 ![Hackermans](src/assets/sprites/ui/logo.gif)
 ---
+
+![Phaser Version](https://img.shields.io/badge/Phaser-v3.60.0-blue?style=flat-square)
+![GitHub license](https://img.shields.io/github/license/judahpaul16/hackermans?style=flat-square)
+![GitHub repo size](https://img.shields.io/github/repo-size/judahpaul16/hackermans?style=flat-square)
+![GitHub last commit](https://img.shields.io/github/last-commit/judahpaul16/hackermans?style=flat-square)
+
 A 2D cyberpunk platformer game made with Phaser.JS and TypeScript. Live [here](https://hackermans.judahpaul.com/).
 
 ## Prerequisites
