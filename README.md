@@ -1,12 +1,19 @@
-![Hackermans](src/assets/sprites/ui/logo.gif)
+<p align="center" >
+<img src="src/assets/sprites/ui/logo.gif" width=250 />
+</p>
+
 ---
 
-![Phaser Version](https://img.shields.io/badge/Phaser-v3.60.0-blue?style=flat-square)
-![GitHub license](https://img.shields.io/github/license/judahpaul16/hackermans?style=flat-square)
-![GitHub repo size](https://img.shields.io/github/repo-size/judahpaul16/hackermans?style=flat-square)
-![GitHub last commit](https://img.shields.io/github/last-commit/judahpaul16/hackermans?style=flat-square)
+<p align="center" >
+<img src="https://img.shields.io/badge/Phaser-v3.60.0-blue?style=flat-square" />
+<img src="https://img.shields.io/github/license/judahpaul16/hackermans?style=flat-square" />
+<img src="https://img.shields.io/github/repo-size/judahpaul16/hackermans?style=flat-square" />
+<img src="https://img.shields.io/github/last-commit/judahpaul16/hackermans?style=flat-square" />
+</p>
 
-A 2D cyberpunk platformer game made with Phaser.JS and TypeScript. Live [here](https://hackermans.judahpaul.com/).
+<p align="center" >
+A 2D cyberpunk platformer game made with Phaser.JS and TypeScript. Live <a href="https://hackermans.judahpaul.com/" target="_blank">here.</a>
+</p>
 
 ## Prerequisites
 
@@ -29,12 +36,13 @@ A 2D cyberpunk platformer game made with Phaser.JS and TypeScript. Live [here](h
 1. Start the development server by running the following command:
     ```bash
     npm start
-
+   ```
+   
 ---
 
-![Screenshot 1](screenshots/1.png)  
-
-![Screenshot 2](screenshots/2.png)
+<p align="center">
+<img src="screenshots/gameplay.gif"><img>
+</p>
 
 ## Useful Links
 | Phaser | LeshyLabs | More Stuff |
