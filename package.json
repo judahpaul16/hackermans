@@ -324,7 +324,7 @@
     "webpack-dev-server": "^4.15.1"
   },
   "scripts": {
-    "start": "rimraf ./dist/assets && webpack --mode development && http-server . -c-1",
+    "start": "npm run build && webpack serve --mode development --open",
     "build": "rimraf ./dist/assets && webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
